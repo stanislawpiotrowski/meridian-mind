@@ -1,7 +1,5 @@
 {
   "permissions": {
-    "allow": [
-      "PowerShell(Set-Clipboard *)"
-    ]
+    "allow": ["PowerShell(Set-Clipboard *)", "WebFetch(domain:developers.cloudflare.com)"]
   }
 }

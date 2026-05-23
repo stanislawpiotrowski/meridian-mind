@@ -5,10 +5,10 @@ recommended_platform: Cloudflare Workers
 runner_up: Netlify
 context_type: mvp
 tech_stack:
-  language: JavaScript / TypeScript
-  framework: Astro (10x-astro-starter)
-  runtime: Cloudflare Workers (via @astrojs/cloudflare adapter)
-  auth_db: Supabase (external — email+password auth + Postgres)
+language: JavaScript / TypeScript
+framework: Astro (10x-astro-starter)
+runtime: Cloudflare Workers (via @astrojs/cloudflare adapter)
+auth_db: Supabase (external — email+password auth + Postgres)
 ---
 
 ## Recommendation
@@ -105,45 +105,47 @@ The team treated "Cloudflare Pages in the tech-stack" as "Cloudflare will be eas
 
 1. **Install wrangler** (already likely present in the 10x-astro-starter, but verify version):
 
-   ```bash
-   npm install -g wrangler
-   wrangler --version   # should be 3.x or 4.x
-   ```
+```bash
+npm install -g wrangler
+wrangler --version   # should be 3.x or 4.x
+```
 
 2. **Authenticate wrangler** with your Cloudflare account:
 
-   ```bash
-   wrangler login
-   ```
+```bash
+wrangler login
+```
 
-   This opens a browser OAuth flow. After login, wrangler stores credentials in `~/.wrangler/config/default.toml`.
+This opens a browser OAuth flow. After login, wrangler stores credentials in `~/.wrangler/config/default.toml`.
 
 3. **Verify `wrangler.toml` targets Workers** (not Pages). The `@astrojs/cloudflare` adapter in Astro 6 requires Workers. Your `wrangler.toml` should have:
 
-   ```toml
-   name = "meridian-mind"
-   main = "dist/_worker.js"          # Astro outputs the worker entrypoint here
-   compatibility_date = "2025-01-01"
-   compatibility_flags = ["nodejs_compat"]
-   ```
+```toml
+name = "meridian-mind"
+main = "dist/_worker.js"          # Astro outputs the worker entrypoint here
+compatibility_date = "2025-01-01"
+compatibility_flags = ["nodejs_compat"]
+```
 
-   If you see `[site]` or `bucket = "./dist"` config, that's the Pages format — remove it and follow the [Astro Cloudflare adapter docs](https://docs.astro.build/en/guides/integrations-guide/cloudflare/).
+If you see `[site]` or `bucket = "./dist"` config, that's the Pages format — remove it and follow the [Astro Cloudflare adapter docs](https://docs.astro.build/en/guides/integrations-guide/cloudflare/).
 
 4. **Add Supabase credentials as Workers Secrets** (not in `wrangler.toml`):
 
-   ```bash
-   wrangler secret put SUPABASE_URL
-   wrangler secret put SUPABASE_ANON_KEY
-   ```
+```bash
+wrangler secret put SUPABASE_URL
+wrangler secret put SUPABASE_ANON_KEY
+```
 
-   These are prompted interactively. They are encrypted at rest and injected at request time only.
+These are prompted interactively. They are encrypted at rest and injected at request time only.
 
 5. **First production deploy**:
-   ```bash
-   npm run build        # Astro build → dist/_worker.js
-   wrangler deploy      # pushes dist/_worker.js to Cloudflare Workers
-   ```
-   Verify with `wrangler tail` to stream live logs from the deployed worker.
+
+```bash
+npm run build        # Astro build → dist/_worker.js
+wrangler deploy      # pushes dist/_worker.js to Cloudflare Workers
+```
+
+Verify with `wrangler tail` to stream live logs from the deployed worker.
 
 ## Out of Scope
 
