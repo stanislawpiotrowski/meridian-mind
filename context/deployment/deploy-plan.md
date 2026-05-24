@@ -3,7 +3,7 @@ project: meridian-mind
 deployed_at: 2026-05-25
 platform: cloudflare-workers
 worker_name: meridian-mind
-worker_url: https://meridian-mind.<account>.workers.dev
+worker_url: https://meridian-mind.stanislaw-piotrowski.workers.dev
 deploy_trigger: workers-builds-on-push-to-master
 status: live
 ---
@@ -14,13 +14,13 @@ This file is the audit trail consumed by downstream milestone-planning skills as
 
 ## Live environment
 
-| Key             | Value                                                                                                |
-| --------------- | ---------------------------------------------------------------------------------------------------- |
-| **Worker URL**  | `https://meridian-mind.<account>.workers.dev` _(replace `<account>` with your Cloudflare subdomain)_ |
-| **Worker name** | `meridian-mind`                                                                                      |
-| **Platform**    | Cloudflare Workers (via `@astrojs/cloudflare` adapter)                                               |
-| **Runtime**     | Astro 6.3.1 SSR, `nodejs_compat` compatibility flag                                                  |
-| **Deploy date** | 2026-05-25                                                                                           |
+| Key             | Value                                                                                                           |
+| --------------- | --------------------------------------------------------------------------------------------------------------- |
+| **Worker URL**  | `https://meridian-mind.stanislaw-piotrowski.workers.dev` _(replace `<account>` with your Cloudflare subdomain)_ |
+| **Worker name** | `meridian-mind`                                                                                                 |
+| **Platform**    | Cloudflare Workers (via `@astrojs/cloudflare` adapter)                                                          |
+| **Runtime**     | Astro 6.3.1 SSR, `nodejs_compat` compatibility flag                                                             |
+| **Deploy date** | 2026-05-25                                                                                                      |
 
 ## Deploy trigger
 
@@ -47,11 +47,11 @@ Both stores must be populated — Workers Builds keeps build-time and runtime en
 
 ## Supabase auth wiring
 
-| Setting                     | Value                                         |
-| --------------------------- | --------------------------------------------- |
-| **Site URL**                | `https://meridian-mind.<account>.workers.dev` |
-| **Redirect URLs allowlist** | `https://meridian-mind.<account>.workers.dev` |
-| **Email auth**              | Enabled                                       |
+| Setting                     | Value                                                    |
+| --------------------------- | -------------------------------------------------------- |
+| **Site URL**                | `https://meridian-mind.stanislaw-piotrowski.workers.dev` |
+| **Redirect URLs allowlist** | `https://meridian-mind.stanislaw-piotrowski.workers.dev` |
+| **Email auth**              | Enabled                                                  |
 
 ## Who can deploy
 
