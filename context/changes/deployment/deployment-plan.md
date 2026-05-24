@@ -71,9 +71,9 @@ These cannot be automated. Work through each subsection in order; the end state 
 
 Small config alignments so Cloudflare's project metadata matches the repo's.
 
-- [ ] Update `wrangler.jsonc` line 3: `"name": "10x-astro-starter"` → `"name": "meridian-mind"` (must match the Cloudflare Worker name created in Phase 4 — otherwise `wrangler tail` / `wrangler rollback` won't find the project)
-- [ ] Update `context/foundation/tech-stack.md` frontmatter: `deployment_target: cloudflare-pages` → `deployment_target: cloudflare-workers` (per user decision; brings the upstream contract in line with the adapter reality and `infrastructure.md`)
-- [ ] Commit both changes with message `chore: align project name with cloudflare workers target` and push to `master` so the renamed worker is what Cloudflare picks up
+- [x] Update `wrangler.jsonc` line 3: `"name": "10x-astro-starter"` → `"name": "meridian-mind"` (must match the Cloudflare Worker name created in Phase 4 — otherwise `wrangler tail` / `wrangler rollback` won't find the project)
+- [x] Update `context/foundation/tech-stack.md` frontmatter: `deployment_target: cloudflare-pages` → `deployment_target: cloudflare-workers` (per user decision; brings the upstream contract in line with the adapter reality and `infrastructure.md`)
+- [x] Commit both changes with message `chore: align project name with cloudflare workers target` and push to `master` so the renamed worker is what Cloudflare picks up
 
 ### Phase 3 — Optional: local sanity check with `wrangler dev`
 
