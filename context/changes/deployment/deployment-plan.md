@@ -18,8 +18,8 @@ These cannot be automated. Work through each subsection in order; the end state 
 
 #### 1.1 Cloudflare account + CLI configuration
 
-- [ ] **Create a Cloudflare account** if you don't have one — sign up at `https://dash.cloudflare.com/sign-up`. Free tier is sufficient for MVP (100k requests/day, no credit card required). Verify the email Cloudflare sends before continuing.
-- [ ] **Verify `wrangler` is installed** — it's already a devDependency at v4.90.0 (`package.json` line 55), so a fresh `npm install` in this repo gives you `npx wrangler` out of the box. Confirm with:
+- [x] **Create a Cloudflare account** if you don't have one — sign up at `https://dash.cloudflare.com/sign-up`. Free tier is sufficient for MVP (100k requests/day, no credit card required). Verify the email Cloudflare sends before continuing.
+- [x] **Verify `wrangler` is installed** — it's already a devDependency at v4.90.0 (`package.json` line 55), so a fresh `npm install` in this repo gives you `npx wrangler` out of the box. Confirm with:
 
   ```powershell
   npx wrangler --version
@@ -27,7 +27,7 @@ These cannot be automated. Work through each subsection in order; the end state 
 
   Expected: prints `4.90.0` (or newer). A global install (`npm install -g wrangler`) is unnecessary — `npx wrangler` uses the repo-pinned version and avoids version skew.
 
-- [ ] **Log into Cloudflare** via the OAuth browser flow:
+- [x] **Log into Cloudflare** via the OAuth browser flow:
 
   ```powershell
   npx wrangler login
@@ -35,7 +35,7 @@ These cannot be automated. Work through each subsection in order; the end state 
 
   Opens your default browser, walks you through a permissions consent screen, and stores an OAuth token at `~/.wrangler/config/default.toml` (Windows: `C:\Users\<you>\.wrangler\config\default.toml`). If you have multiple Cloudflare accounts (personal vs work), Cloudflare prompts you to pick one — choose the one that will own the `meridian-mind` Worker.
 
-- [ ] **Verify authentication**:
+- [x] **Verify authentication**:
 
   ```powershell
   npx wrangler whoami
@@ -43,29 +43,29 @@ These cannot be automated. Work through each subsection in order; the end state 
 
   Expected: your account email + account ID + a list of accessible accounts. Note the **Account ID** — useful when troubleshooting deploy errors or filing Cloudflare support tickets.
 
-- [ ] **If you logged into the wrong account**, run `npx wrangler logout` and repeat the login step. Wrangler does not support multiple simultaneous sessions on one machine.
+- [x] **If you logged into the wrong account**, run `npx wrangler logout` and repeat the login step. Wrangler does not support multiple simultaneous sessions on one machine.
 
 #### 1.2 Supabase production project
 
-- [ ] **Create a Supabase account** at `https://supabase.com/dashboard/sign-up` (GitHub OAuth or email). Free tier covers ~500MB DB + 50k monthly active users — plenty for MVP.
-- [ ] **Create a new project**: Dashboard → **New project**. Fill in:
+- [x] **Create a Supabase account** at `https://supabase.com/dashboard/sign-up` (GitHub OAuth or email). Free tier covers ~500MB DB + 50k monthly active users — plenty for MVP.
+- [x] **Create a new project**: Dashboard → **New project**. Fill in:
   - **Name**: `meridian-mind` (or `meridian-mind-prod` if you anticipate a separate staging project later)
   - **Database password**: generate a strong one and **save it to your password manager immediately** — Supabase does NOT show it again. You'll need it for future `npx supabase db push` migrations. The DB password is separate from the API keys; losing it requires a dashboard reset.
   - **Region**: pick the one closest to your expected users — e.g. `eu-central-1` (Frankfurt) for European users, `us-east-1` (N. Virginia) for US East. Cloudflare Workers run globally, so the Supabase region becomes your latency floor for any DB-backed request.
   - **Pricing plan**: Free is fine for MVP.
-- [ ] **Wait ~2 minutes** for the project to provision (spinner in the dashboard; switches to project view once ready).
-- [ ] **Locate the production credentials**: navigate to **Project Settings → API**:
+- [x] **Wait ~2 minutes** for the project to provision (spinner in the dashboard; switches to project view once ready).
+- [x] **Locate the production credentials**: navigate to **Project Settings → API**:
   - **`SUPABASE_URL`**: copy the value labeled **Project URL** — looks like `https://<random-ref>.supabase.co`
   - **`SUPABASE_KEY`**: under **Project API Keys**, copy the **`anon` `public`** key (a long JWT starting with `eyJ...`). **DO NOT** copy the `service_role` `secret` key — that key bypasses Row Level Security and must never be deployed to a public-facing Worker (see Edge Case 8).
-- [ ] **Save both values to your password manager** (or a temporary secure note) — you'll paste them into the Cloudflare dashboard in Phase 4, and again into Supabase auth callbacks in Phase 5. They are not git-secret in the cryptographic sense (the anon key is designed to ship to browsers), but treat them as deployment configuration that does not live in the repo.
-- [ ] **Verify email auth is enabled**: Supabase dashboard → **Authentication → Providers → Email** should show enabled (it is by default in fresh projects). The `src/pages/api/auth/signup.ts` route requires email auth to be active.
-- [ ] **Set the Site URL placeholder** to a non-empty value so Supabase doesn't fall back to `http://localhost:3000` on first deploy. You can put `https://meridian-mind.workers.dev` for now — Phase 5 will overwrite this with the actual deployed URL once Phase 4 reveals your Workers subdomain.
+- [x] **Save both values to your password manager** (or a temporary secure note) — you'll paste them into the Cloudflare dashboard in Phase 4, and again into Supabase auth callbacks in Phase 5. They are not git-secret in the cryptographic sense (the anon key is designed to ship to browsers), but treat them as deployment configuration that does not live in the repo.
+- [x] **Verify email auth is enabled**: Supabase dashboard → **Authentication → Providers → Email** should show enabled (it is by default in fresh projects). The `src/pages/api/auth/signup.ts` route requires email auth to be active.
+- [x] **Set the Site URL placeholder** to a non-empty value so Supabase doesn't fall back to `http://localhost:3000` on first deploy. You can put `https://meridian-mind.workers.dev` for now — Phase 5 will overwrite this with the actual deployed URL once Phase 4 reveals your Workers subdomain.
 
 #### 1.3 GitHub repository accessibility
 
-- [ ] **Push the `meridian-mind` repo** to GitHub (public or private both work; private requires authorizing the Cloudflare GitHub App in Phase 4).
-- [ ] **Verify the default branch is `master`** — `git branch --show-current` should print `master`. Workers Builds will watch this branch by default in Phase 4.
-- [ ] **Confirm the latest commit on `master` is what you want to deploy first** — `git log -1 --oneline`. Workers Builds triggers on push, so whatever's on `master` when you finish Phase 4 will be the first build.
+- [x] **Push the `meridian-mind` repo** to GitHub (public or private both work; private requires authorizing the Cloudflare GitHub App in Phase 4).
+- [x] **Verify the default branch is `master`** — `git branch --show-current` should print `master`. Workers Builds will watch this branch by default in Phase 4.
+- [x] **Confirm the latest commit on `master` is what you want to deploy first** — `git log -1 --oneline`. Workers Builds triggers on push, so whatever's on `master` when you finish Phase 4 will be the first build.
 
 ### Phase 2 — Local repo prep (agent work)
 
