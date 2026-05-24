@@ -14,13 +14,58 @@ This plan covers a first production deploy and the operational gates around it. 
 
 ### Phase 1 — Prerequisites (human gates)
 
-These cannot be automated; confirm each is true before moving on.
+These cannot be automated. Work through each subsection in order; the end state should be: a working Cloudflare CLI on your machine, a live Supabase production project, and credentials in your password manager ready to paste into the Cloudflare dashboard in Phase 4.
 
-- [ ] **Cloudflare account** exists and you can log into `dash.cloudflare.com`
-- [ ] **Supabase production project** created via the Supabase dashboard (separate from the local `supabase/config.toml` dev setup)
-- [ ] **Production `SUPABASE_URL`** copied from Supabase → Project Settings → API (`https://<ref>.supabase.co`)
-- [ ] **Production `SUPABASE_KEY`** copied from Supabase → Project Settings → API → `anon` `public` key (NOT the service-role key — anon is correct for client-readable SSR)
-- [ ] **GitHub repo** `meridian-mind` is pushed to a remote Cloudflare can read (must be reachable when you authorize Cloudflare's GitHub App in Phase 4)
+#### 1.1 Cloudflare account + CLI configuration
+
+- [ ] **Create a Cloudflare account** if you don't have one — sign up at `https://dash.cloudflare.com/sign-up`. Free tier is sufficient for MVP (100k requests/day, no credit card required). Verify the email Cloudflare sends before continuing.
+- [ ] **Verify `wrangler` is installed** — it's already a devDependency at v4.90.0 (`package.json` line 55), so a fresh `npm install` in this repo gives you `npx wrangler` out of the box. Confirm with:
+
+  ```powershell
+  npx wrangler --version
+  ```
+
+  Expected: prints `4.90.0` (or newer). A global install (`npm install -g wrangler`) is unnecessary — `npx wrangler` uses the repo-pinned version and avoids version skew.
+
+- [ ] **Log into Cloudflare** via the OAuth browser flow:
+
+  ```powershell
+  npx wrangler login
+  ```
+
+  Opens your default browser, walks you through a permissions consent screen, and stores an OAuth token at `~/.wrangler/config/default.toml` (Windows: `C:\Users\<you>\.wrangler\config\default.toml`). If you have multiple Cloudflare accounts (personal vs work), Cloudflare prompts you to pick one — choose the one that will own the `meridian-mind` Worker.
+
+- [ ] **Verify authentication**:
+
+  ```powershell
+  npx wrangler whoami
+  ```
+
+  Expected: your account email + account ID + a list of accessible accounts. Note the **Account ID** — useful when troubleshooting deploy errors or filing Cloudflare support tickets.
+
+- [ ] **If you logged into the wrong account**, run `npx wrangler logout` and repeat the login step. Wrangler does not support multiple simultaneous sessions on one machine.
+
+#### 1.2 Supabase production project
+
+- [ ] **Create a Supabase account** at `https://supabase.com/dashboard/sign-up` (GitHub OAuth or email). Free tier covers ~500MB DB + 50k monthly active users — plenty for MVP.
+- [ ] **Create a new project**: Dashboard → **New project**. Fill in:
+  - **Name**: `meridian-mind` (or `meridian-mind-prod` if you anticipate a separate staging project later)
+  - **Database password**: generate a strong one and **save it to your password manager immediately** — Supabase does NOT show it again. You'll need it for future `npx supabase db push` migrations. The DB password is separate from the API keys; losing it requires a dashboard reset.
+  - **Region**: pick the one closest to your expected users — e.g. `eu-central-1` (Frankfurt) for European users, `us-east-1` (N. Virginia) for US East. Cloudflare Workers run globally, so the Supabase region becomes your latency floor for any DB-backed request.
+  - **Pricing plan**: Free is fine for MVP.
+- [ ] **Wait ~2 minutes** for the project to provision (spinner in the dashboard; switches to project view once ready).
+- [ ] **Locate the production credentials**: navigate to **Project Settings → API**:
+  - **`SUPABASE_URL`**: copy the value labeled **Project URL** — looks like `https://<random-ref>.supabase.co`
+  - **`SUPABASE_KEY`**: under **Project API Keys**, copy the **`anon` `public`** key (a long JWT starting with `eyJ...`). **DO NOT** copy the `service_role` `secret` key — that key bypasses Row Level Security and must never be deployed to a public-facing Worker (see Edge Case 8).
+- [ ] **Save both values to your password manager** (or a temporary secure note) — you'll paste them into the Cloudflare dashboard in Phase 4, and again into Supabase auth callbacks in Phase 5. They are not git-secret in the cryptographic sense (the anon key is designed to ship to browsers), but treat them as deployment configuration that does not live in the repo.
+- [ ] **Verify email auth is enabled**: Supabase dashboard → **Authentication → Providers → Email** should show enabled (it is by default in fresh projects). The `src/pages/api/auth/signup.ts` route requires email auth to be active.
+- [ ] **Set the Site URL placeholder** to a non-empty value so Supabase doesn't fall back to `http://localhost:3000` on first deploy. You can put `https://meridian-mind.workers.dev` for now — Phase 5 will overwrite this with the actual deployed URL once Phase 4 reveals your Workers subdomain.
+
+#### 1.3 GitHub repository accessibility
+
+- [ ] **Push the `meridian-mind` repo** to GitHub (public or private both work; private requires authorizing the Cloudflare GitHub App in Phase 4).
+- [ ] **Verify the default branch is `master`** — `git branch --show-current` should print `master`. Workers Builds will watch this branch by default in Phase 4.
+- [ ] **Confirm the latest commit on `master` is what you want to deploy first** — `git log -1 --oneline`. Workers Builds triggers on push, so whatever's on `master` when you finish Phase 4 will be the first build.
 
 ### Phase 2 — Local repo prep (agent work)
 
@@ -30,13 +75,29 @@ Small config alignments so Cloudflare's project metadata matches the repo's.
 - [ ] Update `context/foundation/tech-stack.md` frontmatter: `deployment_target: cloudflare-pages` → `deployment_target: cloudflare-workers` (per user decision; brings the upstream contract in line with the adapter reality and `infrastructure.md`)
 - [ ] Commit both changes with message `chore: align project name with cloudflare workers target` and push to `master` so the renamed worker is what Cloudflare picks up
 
-### Phase 3 — Cloudflare CLI auth (local verification path)
+### Phase 3 — Optional: local sanity check with `wrangler dev`
 
-The CLI is needed for `wrangler tail` (live logs) and `wrangler rollback` after deploy. Not needed for the deploy itself (Workers Builds owns that).
+CLI login is already done in Phase 1.1. This phase is an OPTIONAL smoke test — boot the Worker locally before connecting Cloudflare's Git integration. Phase 6 verifies the same things against the real production environment (more reliable), so you can skip this and go straight to Phase 4 if you prefer.
 
-- [ ] Run `npx wrangler login` — opens a browser, OAuth flow, stores token in `~/.wrangler/config/default.toml`
-- [ ] Verify with `npx wrangler whoami` — should print your account email + account ID
-- [ ] (Optional sanity check) `npx wrangler dev` runs the worker locally on `http://localhost:8787` — this is an _emulator_, not the real Workers runtime, so passing here does NOT prove production correctness (see Edge Cases)
+- [ ] Create a local `.env` file at the repo root with your Supabase credentials from Phase 1.2:
+
+  ```
+  SUPABASE_URL=https://<your-ref>.supabase.co
+  SUPABASE_KEY=eyJ...
+  ```
+
+  This file is git-ignored (verify with `git status` — it should not appear as untracked). Astro's `astro:env/server` reads it during local dev only.
+
+- [ ] Build and boot:
+
+  ```powershell
+  npm run build
+  npx wrangler dev
+  ```
+
+  Opens the worker locally on `http://localhost:8787`. Test signup/signin to confirm the Supabase wiring works end-to-end against your production Supabase project.
+
+- [ ] **Caveat**: `wrangler dev` is an _emulator_. It polyfills more Node.js APIs than the real Workers runtime and has no CPU cap. Code passing here can still fail on actual Workers (see Edge Case 5). Treat this as a smoke test, not a guarantee.
 
 ### Phase 4 — Connect repo to Workers Builds (Cloudflare dashboard)
 
