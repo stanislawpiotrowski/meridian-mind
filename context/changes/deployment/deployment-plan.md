@@ -103,19 +103,19 @@ CLI login is already done in Phase 1.1. This phase is an OPTIONAL smoke test —
 
 This is a one-time human setup in the Cloudflare dashboard.
 
-- [ ] Cloudflare dashboard → **Workers & Pages** → **Create** → **Import a repository**
-- [ ] Authorize Cloudflare's GitHub App on your account/org; grant access to the `meridian-mind` repo only (not full-account)
-- [ ] Select repo `meridian-mind`, branch `master`
-- [ ] **Worker name**: enter exactly `meridian-mind` (MUST match `wrangler.jsonc` `name` set in Phase 2)
-- [ ] **Build configuration**:
+- [x] Cloudflare dashboard → **Workers & Pages** → **Create** → **Import a repository**
+- [x] Authorize Cloudflare's GitHub App on your account/org; grant access to the `meridian-mind` repo only (not full-account)
+- [x] Select repo `meridian-mind`, branch `master`
+- [x] **Worker name**: enter exactly `meridian-mind` (MUST match `wrangler.jsonc` `name` set in Phase 2)
+- [x] **Build configuration**:
   - Build command: `npm run build`
   - Deploy command: `npx wrangler deploy` (default — leave as-is)
   - Root directory: `/` (default)
   - Node version: `22` (matches `.github/workflows/ci.yml` line 17)
-- [ ] **Build variables and secrets** (Settings → Build → Build variables and secrets) — needed at _build time_ because `astro:env/server` validates the schema during `astro build`:
+- [x] **Build variables and secrets** (Settings → Build → Build variables and secrets) — needed at _build time_ because `astro:env/server` validates the schema during `astro build`:
   - Add `SUPABASE_URL` — type: **Secret** (encrypted)
   - Add `SUPABASE_KEY` — type: **Secret** (encrypted)
-- [ ] **Runtime variables and secrets** (Settings → Variables and Secrets) — needed at _request time_ for SSR pages calling Supabase:
+- [x] **Runtime variables and secrets** (Settings → Variables and Secrets) — needed at _request time_ for SSR pages calling Supabase:
   - Add `SUPABASE_URL` — type: **Secret**
   - Add `SUPABASE_KEY` — type: **Secret**
   - These are duplicates of the build vars by design — Workers Builds keeps the two phases separated; setting only one half causes silent failure (see Edge Cases)
@@ -124,27 +124,27 @@ This is a one-time human setup in the Cloudflare dashboard.
 
 After Phase 4 the Worker is reachable at `https://meridian-mind.<account>.workers.dev`. Supabase needs to know about this URL or every auth flow (signup confirmation email, password reset link) will redirect to a localhost or default URL and fail.
 
-- [ ] Supabase dashboard → **Authentication** → **URL Configuration**
-- [ ] Set **Site URL** to `https://meridian-mind.<account>.workers.dev` (replace `<account>` with your Workers subdomain — visible in Cloudflare dashboard after Phase 4)
-- [ ] Add the same URL to **Redirect URLs** (allowlist)
-- [ ] If you plan to use a custom domain later (out of scope for MVP), add it here at the same time
+- [x] Supabase dashboard → **Authentication** → **URL Configuration**
+- [x] Set **Site URL** to `https://meridian-mind.<account>.workers.dev` (replace `<account>` with your Workers subdomain — visible in Cloudflare dashboard after Phase 4)
+- [x] Add the same URL to **Redirect URLs** (allowlist)
+- [x] If you plan to use a custom domain later (out of scope for MVP), add it here at the same time
 
 ### Phase 6 — First production deploy + verification
 
-- [ ] Trigger first build — either push any commit to `master`, or in Cloudflare dashboard → your Worker → **Deployments** tab → **Retry deployment** / **Deploy now**
-- [ ] Watch the build log in Cloudflare dashboard (Deployments tab → click the running build); expect `npm ci` → `npm run build` → `wrangler deploy` → green checkmark
-- [ ] Visit `https://meridian-mind.<account>.workers.dev` — landing page should render (SSR)
-- [ ] Test the signup flow at `/signup` (route exists at `src/pages/api/auth/signup.ts`); a confirmation email should appear in your Supabase inbox
-- [ ] Click the confirmation link; should land back on the deployed worker (not localhost) — proves Phase 5 wired up correctly
-- [ ] Test the signin flow at `/signin` and verify session cookie is set
-- [ ] In a separate terminal, run `npx wrangler tail` — live-stream logs from the production worker; confirm no `1015` (CPU exceeded) errors or unhandled exceptions on the auth flow
+- [x] Trigger first build — either push any commit to `master`, or in Cloudflare dashboard → your Worker → **Deployments** tab → **Retry deployment** / **Deploy now**
+- [x] Watch the build log in Cloudflare dashboard (Deployments tab → click the running build); expect `npm ci` → `npm run build` → `wrangler deploy` → green checkmark
+- [x] Visit `https://meridian-mind.<account>.workers.dev` — landing page should render (SSR)
+- [x] Test the signup flow at `/signup` (route exists at `src/pages/api/auth/signup.ts`); a confirmation email should appear in your Supabase inbox
+- [x] Click the confirmation link; should land back on the deployed worker (not localhost) — proves Phase 5 wired up correctly
+- [x] Test the signin flow at `/signin` and verify session cookie is set
+- [x] In a separate terminal, run `npx wrangler tail` — live-stream logs from the production worker; confirm no `1015` (CPU exceeded) errors or unhandled exceptions on the auth flow
 
 ### Phase 7 — Persist deploy artifact (agent work)
 
 The Module 1 Lesson 5 contract says the approved deploy plan lives at `context/deployment/deploy-plan.md`. Milestone-planning skills downstream consume this as ground truth for "what's already deployed".
 
-- [ ] Create `context/deployment/` directory
-- [ ] Write `context/deployment/deploy-plan.md` capturing: deployed worker URL, build/runtime env vars configured, deploy trigger (Workers Builds on push to `master`), rollback command, who can deploy (anyone with master commit access via Cloudflare's GitHub App)
+- [x] Create `context/deployment/` directory
+- [x] Write `context/deployment/deploy-plan.md` capturing: deployed worker URL, build/runtime env vars configured, deploy trigger (Workers Builds on push to `master`), rollback command, who can deploy (anyone with master commit access via Cloudflare's GitHub App)
 
 ---
 
