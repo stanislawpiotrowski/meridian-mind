@@ -153,17 +153,19 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ## Backlog Handoff
 
-| Roadmap ID | Change ID                  | Suggested issue title                       | Ready for `/10x-plan` | Notes                                             |
-| ---------- | -------------------------- | ------------------------------------------- | --------------------- | ------------------------------------------------- |
-| F-01       | domain-data-schema         | Foundation: domain data schema + RLS        | yes                   | No prerequisites; unblocks the whole graph        |
-| F-02       | interactive-map-foundation | Foundation: interactive map + distance util | yes                   | No prerequisites; de-risks the `skills` blocker   |
-| S-01       | csv-set-import-and-list    | Import a CSV set and list sets              | no                    | Needs F-01 done first                             |
-| S-02       | first-study-session        | First full study session (north star)       | no                    | Needs F-01, F-02, S-01 — the validation milestone |
-| S-03       | prioritized-return-session | Prioritized return session (SRS queue)      | no                    | Needs S-02 to have produced per-item history      |
-| S-04       | delete-set                 | Delete an imported set                      | no                    | Needs F-01, S-01; parallel with the study loop    |
-| S-05       | csv-malformed-row-handling | CSV import: report malformed rows           | no                    | Nice-to-have; needs S-01                          |
+| Roadmap ID | Change ID                  | GitHub issue                                                        | Suggested issue title                       | Ready for `/10x-plan` | Notes                                             |
+| ---------- | -------------------------- | ------------------------------------------------------------------- | ------------------------------------------- | --------------------- | ------------------------------------------------- |
+| F-01       | domain-data-schema         | [#1](https://github.com/stanislawpiotrowski/meridian-mind/issues/1) | Foundation: domain data schema + RLS        | yes                   | No prerequisites; unblocks the whole graph        |
+| F-02       | interactive-map-foundation | [#2](https://github.com/stanislawpiotrowski/meridian-mind/issues/2) | Foundation: interactive map + distance util | yes                   | No prerequisites; de-risks the `skills` blocker   |
+| S-01       | csv-set-import-and-list    | [#3](https://github.com/stanislawpiotrowski/meridian-mind/issues/3) | Import a CSV set and list sets              | no                    | Needs F-01 done first                             |
+| S-02       | first-study-session        | [#4](https://github.com/stanislawpiotrowski/meridian-mind/issues/4) | First full study session (north star)       | no                    | Needs F-01, F-02, S-01 — the validation milestone |
+| S-03       | prioritized-return-session | [#5](https://github.com/stanislawpiotrowski/meridian-mind/issues/5) | Prioritized return session (SRS queue)      | no                    | Needs S-02 to have produced per-item history      |
+| S-04       | delete-set                 | [#6](https://github.com/stanislawpiotrowski/meridian-mind/issues/6) | Delete an imported set                      | no                    | Needs F-01, S-01; parallel with the study loop    |
+| S-05       | csv-malformed-row-handling | [#7](https://github.com/stanislawpiotrowski/meridian-mind/issues/7) | CSV import: report malformed rows           | no                    | Nice-to-have; needs S-01                          |
 
 This table is the clean handoff to Jira/Linear or any MCP-backed backlog. One row per `F-NN` / `S-NN`.
+
+**Migrated to GitHub Issues on 2026-05-26.** Epic [#8 · Roadmap: MeridianMind MVP](https://github.com/stanislawpiotrowski/meridian-mind/issues/8) tracks all 7 as a stream-grouped checklist. Taxonomy: labels `roadmap:foundation|slice`, `status:ready|proposed`, `priority:must-have|nice-to-have`, `north-star`; milestone `MVP v1`.
 
 ## Open Roadmap Questions
 
