@@ -138,10 +138,11 @@ create policy sets_owner on sets for all to authenticated
 
 #### Manual Verification:
 
-- Two-account isolation: signed in as account A, create a set + flashcard; signed in as account B, a `select` over each table returns zero of A's rows, and update/delete of A's rows affects nothing
+- Two-account isolation **through an authenticated client** (NOT the SQL editor — it runs as the owner role and bypasses RLS): create a set + flashcard as account A via supabase-js/PostgREST using A's access token; then with account B's access token, a `select` over each table returns zero of A's rows and update/delete of A's rows affects nothing
 - CHECK constraints reject `latitude = 200`, `longitude = -500`, and `distance_km = -1` on direct insert
 - Cascade: deleting a `sets` row removes its flashcards, sessions, and history; no orphans remain
 - RLS default-deny confirmed: the `anon` role can read no rows from any table
+- The wired `SUPABASE_KEY` is the **anon/publishable** key, not `service_role` — decode the key's JWT and confirm its `role` claim is `anon` (a `service_role` key would bypass RLS app-wide and silently void all isolation). This is a precondition for the isolation test above being meaningful.
 
 **Implementation Note**: After Phase 1 automated verification passes, pause for manual confirmation that the isolation, constraint, and cascade checks succeeded before proceeding to Phase 2 (which reads the applied schema to generate types).
 
@@ -177,7 +178,7 @@ Generate TypeScript types from the now-applied schema, parameterize the Supabase
 
 **Intent**: Provide one example set (~10 flashcards) for local inspection of the list query and RLS once a local stack exists; runnable manually against any environment.
 
-**Contract**: Inserts a deterministic test user into `auth.users` (fixed UUID, following the documented Supabase auth-user seed pattern), then one `sets` row and ~10 `flashcards` owned by it. Idempotent (guard with fixed UUIDs / `on conflict do nothing`). For-local-use; remote verification in Phase 1 uses real accounts, not this seed.
+**Contract**: Inserts a deterministic test user into `auth.users` (fixed UUID, following the documented Supabase auth-user seed pattern), then one `sets` row and ~10 `flashcards` owned by it. Idempotent (guard with fixed UUIDs / `on conflict do nothing`). For-local-use only — exercised on a local stack once Docker exists; **must not be run against the remote project** (it would insert a synthetic `auth.users` row into live auth). Remote verification in Phase 1 uses real accounts, not this seed.
 
 #### 4. npm scripts
 
@@ -199,7 +200,7 @@ Generate TypeScript types from the now-applied schema, parameterize the Supabase
 #### Manual Verification:
 
 - Autocomplete/type errors behave correctly: a throwaway `supabase.from('flashcards').select('latitude')` type-checks and a bogus column name is flagged by the editor
-- Seed, when run against a local/remote DB, produces one set with ~10 flashcards visible to its owner
+- `supabase/seed.sql` is syntactically valid (parses without error). Functional exercise (it produces one set with ~10 flashcards visible to its owner) is deferred to a local stack once Docker is available — **do NOT run the seed against the remote project**, as it inserts a synthetic `auth.users` row that would pollute the live auth store
 
 **Implementation Note**: After Phase 2 automated verification passes, pause for manual confirmation before considering F-01 complete.
 
@@ -219,7 +220,7 @@ Generate TypeScript types from the now-applied schema, parameterize the Supabase
 
 1. Apply the migration: `npx supabase db push`; confirm exit 0 and `migration list --linked` shows it.
 2. In the Supabase SQL editor, confirm all four tables exist with `rowsecurity = true`.
-3. Create accounts A and B via the live signup flow. As A, insert a set + flashcard (via SQL editor using A's `auth.uid()`, or an authenticated client). As B, confirm `select` over each table returns none of A's rows.
+3. Create accounts A and B via the live signup flow and capture each one's access token (JWT). Using **A's token** through supabase-js or a raw PostREST `curl` (so the request runs as the `authenticated` role and RLS applies — the SQL editor must NOT be used here, it runs as the owner role and bypasses RLS), insert a set + flashcard. Then using **B's token**, confirm `select` over each table returns none of A's rows and that update/delete of A's row ids affect nothing.
 4. Attempt inserts with `latitude = 200` / `longitude = -500` / `distance_km = -1`; confirm each is rejected.
 5. Delete A's set; confirm its flashcards, sessions, and history are gone.
 6. Generate types, wire the client, run `npm run typecheck` and `npm run lint`.
@@ -256,10 +257,11 @@ At PRD scale (`data_volume: small`, `qps: low`, 1–3 sets of 50–300 items) th
 
 #### Manual
 
-- [ ] 1.5 Two-account isolation: account B sees/affects none of account A's rows across all tables
+- [ ] 1.5 Two-account isolation via authenticated clients (not SQL editor): account B sees/affects none of account A's rows across all tables
 - [ ] 1.6 CHECK constraints reject out-of-range latitude/longitude and negative distance
 - [ ] 1.7 Deleting a set cascades to its flashcards, sessions, and history with no orphans
 - [ ] 1.8 `anon` role can read no rows (RLS default-deny)
+- [ ] 1.9 Wired `SUPABASE_KEY` is the anon/publishable key (`role` claim = `anon`, not `service_role`)
 
 ### Phase 2: Typed client, seed & dev ergonomics
 
@@ -273,4 +275,4 @@ At PRD scale (`data_volume: small`, `qps: low`, 1–3 sets of 50–300 items) th
 #### Manual
 
 - [ ] 2.5 A typed query type-checks and a bogus column name is flagged by the editor
-- [ ] 2.6 Seed produces one set with ~10 flashcards visible to its owner
+- [ ] 2.6 `supabase/seed.sql` parses (syntactically valid); functional run deferred to a local stack — not run against remote
