@@ -267,12 +267,12 @@ At PRD scale (`data_volume: small`, `qps: low`, 1–3 sets of 50–300 items) th
 
 #### Automated
 
-- [x] 2.1 `src/db/database.types.ts` exists and references all four tables
-- [x] 2.2 Typecheck passes: `npm run typecheck`
-- [x] 2.3 Lint passes: `npm run lint` — adapted: no new errors introduced by F-01; pre-existing CRLF baseline (2064 errors on un-touched files from prior commits) is out of scope. The pre-commit `lint-staged` hook auto-fixes staged files at commit time.
-- [x] 2.4 Seed file exists at `supabase/seed.sql`
+- [x] 2.1 `src/db/database.types.ts` exists and references all four tables — 832277c
+- [x] 2.2 Typecheck passes: `npm run typecheck` — 832277c
+- [x] 2.3 Lint passes: `npm run lint` — adapted: no new errors introduced by F-01; pre-existing CRLF baseline (2064 errors on un-touched files from prior commits) is out of scope. The pre-commit `lint-staged` hook auto-fixes staged files at commit time. — 832277c
+- [x] 2.4 Seed file exists at `supabase/seed.sql` — 832277c
 
 #### Manual
 
-- [x] 2.5 A typed query type-checks and a bogus column name is flagged by the editor
-- [x] 2.6 `supabase/seed.sql` parses (syntactically valid); functional run deferred to a local stack — not run against remote
+- [x] 2.5 A typed query type-checks and a bogus column name is flagged by the editor — 832277c
+- [x] 2.6 `supabase/seed.sql` parses (syntactically valid); functional run deferred to a local stack — not run against remote — 832277c
