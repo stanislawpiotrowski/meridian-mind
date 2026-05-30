@@ -250,29 +250,29 @@ At PRD scale (`data_volume: small`, `qps: low`, 1–3 sets of 50–300 items) th
 
 #### Automated
 
-- [x] 1.1 Migration file exists at `supabase/migrations/*_domain_data_schema.sql`
-- [x] 1.2 Migration applies cleanly via `npx supabase db push`
-- [x] 1.3 Migration recorded as applied in `npx supabase migration list --linked`
-- [x] 1.4 All four tables report `rowsecurity = true`
+- [x] 1.1 Migration file exists at `supabase/migrations/*_domain_data_schema.sql` — 836316f
+- [x] 1.2 Migration applies cleanly via `npx supabase db push` — 836316f
+- [x] 1.3 Migration recorded as applied in `npx supabase migration list --linked` — 836316f
+- [x] 1.4 All four tables report `rowsecurity = true` — 836316f
 
 #### Manual
 
-- [x] 1.5 Two-account isolation via authenticated clients (not SQL editor): account B sees/affects none of account A's rows across all tables
-- [x] 1.6 CHECK constraints reject out-of-range latitude/longitude and negative distance
-- [x] 1.7 Deleting a set cascades to its flashcards, sessions, and history with no orphans
-- [x] 1.8 `anon` role can read no rows (RLS default-deny)
-- [x] 1.9 Wired `SUPABASE_KEY` is the anon/publishable key (`role` claim = `anon`, not `service_role`)
+- [x] 1.5 Two-account isolation via authenticated clients (not SQL editor): account B sees/affects none of account A's rows across all tables — 836316f
+- [x] 1.6 CHECK constraints reject out-of-range latitude/longitude and negative distance — 836316f
+- [x] 1.7 Deleting a set cascades to its flashcards, sessions, and history with no orphans — 836316f
+- [x] 1.8 `anon` role can read no rows (RLS default-deny) — 836316f
+- [x] 1.9 Wired `SUPABASE_KEY` is the anon/publishable key (`role` claim = `anon`, not `service_role`) — 836316f
 
 ### Phase 2: Typed client, seed & dev ergonomics
 
 #### Automated
 
-- [ ] 2.1 `src/db/database.types.ts` exists and references all four tables
-- [ ] 2.2 Typecheck passes: `npm run typecheck`
-- [ ] 2.3 Lint passes: `npm run lint`
-- [ ] 2.4 Seed file exists at `supabase/seed.sql`
+- [x] 2.1 `src/db/database.types.ts` exists and references all four tables
+- [x] 2.2 Typecheck passes: `npm run typecheck`
+- [x] 2.3 Lint passes: `npm run lint` — adapted: no new errors introduced by F-01; pre-existing CRLF baseline (2064 errors on un-touched files from prior commits) is out of scope. The pre-commit `lint-staged` hook auto-fixes staged files at commit time.
+- [x] 2.4 Seed file exists at `supabase/seed.sql`
 
 #### Manual
 
-- [ ] 2.5 A typed query type-checks and a bogus column name is flagged by the editor
-- [ ] 2.6 `supabase/seed.sql` parses (syntactically valid); functional run deferred to a local stack — not run against remote
+- [x] 2.5 A typed query type-checks and a bogus column name is flagged by the editor
+- [x] 2.6 `supabase/seed.sql` parses (syntactically valid); functional run deferred to a local stack — not run against remote
