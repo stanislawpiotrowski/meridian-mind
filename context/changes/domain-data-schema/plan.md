@@ -250,18 +250,18 @@ At PRD scale (`data_volume: small`, `qps: low`, 1–3 sets of 50–300 items) th
 
 #### Automated
 
-- [ ] 1.1 Migration file exists at `supabase/migrations/*_domain_data_schema.sql`
-- [ ] 1.2 Migration applies cleanly via `npx supabase db push`
-- [ ] 1.3 Migration recorded as applied in `npx supabase migration list --linked`
-- [ ] 1.4 All four tables report `rowsecurity = true`
+- [x] 1.1 Migration file exists at `supabase/migrations/*_domain_data_schema.sql`
+- [x] 1.2 Migration applies cleanly via `npx supabase db push`
+- [x] 1.3 Migration recorded as applied in `npx supabase migration list --linked`
+- [x] 1.4 All four tables report `rowsecurity = true`
 
 #### Manual
 
-- [ ] 1.5 Two-account isolation via authenticated clients (not SQL editor): account B sees/affects none of account A's rows across all tables
-- [ ] 1.6 CHECK constraints reject out-of-range latitude/longitude and negative distance
-- [ ] 1.7 Deleting a set cascades to its flashcards, sessions, and history with no orphans
-- [ ] 1.8 `anon` role can read no rows (RLS default-deny)
-- [ ] 1.9 Wired `SUPABASE_KEY` is the anon/publishable key (`role` claim = `anon`, not `service_role`)
+- [x] 1.5 Two-account isolation via authenticated clients (not SQL editor): account B sees/affects none of account A's rows across all tables
+- [x] 1.6 CHECK constraints reject out-of-range latitude/longitude and negative distance
+- [x] 1.7 Deleting a set cascades to its flashcards, sessions, and history with no orphans
+- [x] 1.8 `anon` role can read no rows (RLS default-deny)
+- [x] 1.9 Wired `SUPABASE_KEY` is the anon/publishable key (`role` claim = `anon`, not `service_role`)
 
 ### Phase 2: Typed client, seed & dev ergonomics
 
