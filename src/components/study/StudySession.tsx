@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import InteractiveMap, { type Marker } from "@/components/map/InteractiveMap";
 import { haversine, type LatLng } from "@/lib/geo";
 import { isCorrect } from "@/lib/study";
 import type { Bbox } from "@/lib/mapProjection";
 import { Button } from "@/components/ui/button";
+import SessionSummary from "@/components/study/SessionSummary";
 
 export interface StudyFlashcard {
   id: string;
@@ -56,6 +57,22 @@ async function postAttempt(sessionId: string, flashcardId: string, distanceKm: n
   }
 }
 
+/**
+ * Mark the session complete (background, retried once). Failure is non-fatal:
+ * the session is functionally finished and would simply auto-resume to an empty
+ * queue, which the page/island treats as "show summary".
+ */
+async function postComplete(sessionId: string): Promise<void> {
+  for (let i = 0; i < 2; i++) {
+    try {
+      const res = await fetch(`/api/study/sessions/${sessionId}/complete`, { method: "POST" });
+      if (res.ok) return;
+    } catch {
+      // retry
+    }
+  }
+}
+
 export default function StudySession({ sessionId, flashcards, priorAttempts, bbox, thresholdKm }: StudySessionProps) {
   // Seed the in-memory record from prior attempts (resume). Verdict is recomputed
   // locally so the threshold stays the single source of truth.
@@ -79,6 +96,16 @@ export default function StudySession({ sessionId, flashcards, priorAttempts, bbo
 
   const done = currentIndex >= flashcards.length;
   const currentCard = done ? null : flashcards[currentIndex];
+
+  // Stamp completion once when the queue empties — whether reached by finishing
+  // the last card or by entering an already-fully-answered session (resume).
+  const completedRef = useRef(false);
+  useEffect(() => {
+    if (done && !completedRef.current) {
+      completedRef.current = true;
+      void postComplete(sessionId);
+    }
+  }, [done, sessionId]);
 
   function handleMapClick(p: LatLng) {
     if (phase !== "awaiting-click" || !currentCard) return;
@@ -117,15 +144,7 @@ export default function StudySession({ sessionId, flashcards, priorAttempts, bbo
   const correct = distanceKm !== null ? isCorrect(distanceKm, thresholdKm) : null;
 
   if (done) {
-    // Placeholder — replaced by the session summary in Phase 3.
-    return (
-      <div className="rounded-2xl border border-white/10 bg-white/10 p-8 text-center text-white backdrop-blur-xl">
-        <p className="text-blue-100/80">Session complete — {results.length} answered.</p>
-        <a href="/sets" className="mt-4 inline-block text-purple-200 underline-offset-4 hover:underline">
-          Back to sets
-        </a>
-      </div>
-    );
+    return <SessionSummary results={results} flashcards={flashcards} />;
   }
 
   return (
