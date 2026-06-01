@@ -1,0 +1,23 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import MapDemo from "@/components/map/MapDemo";
+
+// Intentionally auth-free: /map-demo is NOT in PROTECTED_ROUTES. It is the
+// isolation/showcase surface for the F-02 map foundation (no Supabase, no sets).
+---
+
+<Layout title="Map Demo">
+  <div class="bg-cosmic relative min-h-screen w-full overflow-hidden">
+    <div class="relative z-10 mx-auto max-w-4xl p-4 sm:p-8">
+      <h1 class="mb-2 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
+        Interactive Map Demo
+      </h1>
+      <p class="mb-6 text-blue-100/70">
+        Click anywhere to drop a guess. The target marker, connector line, and great-circle distance (km) appear
+        instantly. Toggle the framing between the whole world and Poland.
+      </p>
+
+      <MapDemo client:only="react" />
+    </div>
+  </div>
+</Layout>

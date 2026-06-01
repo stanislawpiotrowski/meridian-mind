@@ -23,19 +23,25 @@ export interface MapProjection {
   path: GeoPath;
 }
 
-/** Build a GeoJSON polygon covering the bbox, for `fitExtent` framing. */
+/**
+ * Build the geo object `fitExtent` frames to from a bbox.
+ *
+ * Uses a MultiPoint of the four corners rather than a Polygon on purpose:
+ * d3-geo treats polygons as *spherical*, so a hand-built ring with the wrong
+ * winding order is interpreted as its complement (the whole planet minus the
+ * box), and fitExtent then frames the entire world. A point set carries no
+ * winding ambiguity — fitExtent only needs the geographic bounds, which the
+ * corners give exactly.
+ */
 function bboxToGeoObject(bbox: Bbox): GeoGeometryObjects {
   const [[west, south], [east, north]] = bbox;
   return {
-    type: "Polygon",
+    type: "MultiPoint",
     coordinates: [
-      [
-        [west, south],
-        [east, south],
-        [east, north],
-        [west, north],
-        [west, south],
-      ],
+      [west, south],
+      [east, south],
+      [east, north],
+      [west, north],
     ],
   };
 }
