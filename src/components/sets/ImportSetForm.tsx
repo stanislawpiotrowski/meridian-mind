@@ -24,7 +24,17 @@ export default function ImportSetForm() {
     setError(null);
 
     try {
-      const csv = await file.text();
+      // file.text() always decodes as UTF-8, which mangles Windows-1250 CSVs
+      // (the Polish Excel default): bytes like 0xB3 ("ł") aren't valid UTF-8 and
+      // become U+FFFD ("�"). Decode bytes ourselves — UTF-8 strict first, then
+      // fall back to Windows-1250 so diacritics survive import.
+      const buf = await file.arrayBuffer();
+      let csv: string;
+      try {
+        csv = new TextDecoder("utf-8", { fatal: true }).decode(buf);
+      } catch {
+        csv = new TextDecoder("windows-1250").decode(buf);
+      }
       const response = await fetch("/api/sets", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
