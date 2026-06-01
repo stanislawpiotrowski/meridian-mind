@@ -1,7 +1,7 @@
 ---
 change_id: first-study-session
 title: First full study session (north star) — spatial-click quiz loop end-to-end
-status: plan_reviewed
+status: implementing
 created: 2026-06-01
 updated: 2026-06-01
 archived_at: null

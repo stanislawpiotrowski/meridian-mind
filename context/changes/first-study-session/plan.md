@@ -275,9 +275,9 @@ No schema changes. Two post-MVP seams are documented but not built: the per-set 
 
 #### Automated
 
-- [ ] 1.1 Type checking passes: `npm run typecheck`
-- [ ] 1.2 Linting passes: `npm run lint`
-- [ ] 1.3 Build passes: `npm run build`
+- [x] 1.1 Type checking passes: `npm run typecheck`
+- [x] 1.2 Linting passes: `npm run lint`
+- [x] 1.3 Build passes: `npm run build`
 
 #### Manual
 
