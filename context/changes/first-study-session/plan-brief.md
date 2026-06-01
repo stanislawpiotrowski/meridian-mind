@@ -16,22 +16,22 @@ All three prerequisites are already built: the F-01 schema (`sets`, `flashcards`
 
 ## Key Decisions Made
 
-| Decision                | Choice                                                | Why                                                                                                         | Source      |
-| ----------------------- | ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ----------- |
-| Mid-session persistence | Server-recorded attempts (resume from DB)             | Single source of truth; honors the cross-device guardrail; reuses append-only `study_history`               | Plan        |
-| API surface             | 3 endpoints: start/resume, attempt, complete          | Clean lifecycle boundaries, each self-guards 401                                                            | Plan        |
-| Correct/incorrect       | Fixed distance threshold                              | Deterministic, right granularity for continent-scale MVP sets                                               | Plan        |
-| Threshold value         | **300 km**, as a configurable parameter               | Demanding but fair; built as a named default with a documented per-set-override seam (no hardcoded literal) | Plan (user) |
-| Map framing             | Auto-fit to set's bounding box (padded)               | Every set is sensibly framed; reuses F-02's `bbox` prop                                                     | Plan        |
-| Queue order             | Stable insertion order (`created_at`)                 | Deterministic; resume = set-difference, no stored shuffle                                                   | Plan        |
-| Summary                 | Client-side, in-memory                                | Data already in hand; `study_history` stays the durable analytics source for S-03                           | Plan (user) |
-| Resume UX               | Auto-resume open session silently                     | Zero-friction match to "never lose state"; restart is post-MVP                                              | Plan        |
-| Within-card             | Lock on first click, then reveal                      | Matches active-recall intent; one clean attempt per card                                                    | Plan        |
-| Write timing            | Render feedback instantly; POST attempt in background | Meets p95 < 500 ms NFR by construction                                                                      | Plan        |
+| Decision                | Choice                                                              | Why                                                                                                         | Source      |
+| ----------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ----------- |
+| Mid-session persistence | Server-recorded attempts (resume from DB)                           | Single source of truth; honors the cross-device guardrail; reuses append-only `study_history`               | Plan        |
+| API surface             | 2 endpoints (attempt, complete) + shared `ensureOpenSession` helper | Session create-or-resume runs server-side from the page (no SSR self-fetch); endpoints self-guard 401       | Plan        |
+| Correct/incorrect       | Fixed distance threshold                                            | Deterministic, right granularity for continent-scale MVP sets                                               | Plan        |
+| Threshold value         | **300 km**, as a configurable parameter                             | Demanding but fair; built as a named default with a documented per-set-override seam (no hardcoded literal) | Plan (user) |
+| Map framing             | Auto-fit to set's bounding box (padded)                             | Every set is sensibly framed; reuses F-02's `bbox` prop                                                     | Plan        |
+| Queue order             | Stable insertion order (`created_at`)                               | Deterministic; resume = set-difference, no stored shuffle                                                   | Plan        |
+| Summary                 | Client-side, in-memory                                              | Data already in hand; `study_history` stays the durable analytics source for S-03                           | Plan (user) |
+| Resume UX               | Auto-resume open session silently                                   | Zero-friction match to "never lose state"; restart is post-MVP                                              | Plan        |
+| Within-card             | Lock on first click, then reveal                                    | Matches active-recall intent; one clean attempt per card                                                    | Plan        |
+| Write timing            | Render feedback instantly; POST attempt in background               | Meets p95 < 500 ms NFR by construction                                                                      | Plan        |
 
 ## Scope
 
-**In scope:** `/study/[setId]` page, `StudySession` island, 3 session-lifecycle API routes, a `study.ts` scoring/config module (threshold + verdict + bbox helper), `/study` route guard, the summary panel.
+**In scope:** `/study/[setId]` page, `StudySession` island, 2 in-session API routes (attempt, complete) + a shared `ensureOpenSession` helper, a `study.ts` scoring/config module (threshold + verdict + bbox helper), `/study` route guard, the summary panel.
 
 **Out of scope:** prioritized ordering (S-03), delete-set (S-04), malformed-CSV UX (S-05), scale-adaptive units (Open Q #1), per-set threshold override (seam only), explicit restart/pause affordances.
 
@@ -41,11 +41,11 @@ Server-load the set + flashcards + open session + prior attempts in the `.astro`
 
 ## Phases at a Glance
 
-| Phase                 | What it delivers                                           | Key risk                                                   |
-| --------------------- | ---------------------------------------------------------- | ---------------------------------------------------------- |
-| 1. API + lib + guard  | 3 endpoints, `study.ts`, `/study` middleware guard         | Start/resume must be idempotent (one open session per set) |
-| 2. Page + island      | Server-load + full click→feedback→advance loop with resume | Resume correctness (next-card = first un-attempted)        |
-| 3. Summary + complete | In-memory summary panel + `completed_at` stamping          | Double-complete / all-answered-on-entry edge cases         |
+| Phase                 | What it delivers                                              | Key risk                                                                |
+| --------------------- | ------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| 1. API + lib + guard  | 2 endpoints + `ensureOpenSession`, `study.ts`, `/study` guard | Create-or-resume race accepted for MVP (deterministic most-recent read) |
+| 2. Page + island      | Server-load + full click→feedback→advance loop with resume    | Resume correctness (next-card = first un-attempted)                     |
+| 3. Summary + complete | In-memory summary panel + `completed_at` stamping             | Double-complete / all-answered-on-entry edge cases                      |
 
 **Prerequisites:** F-01, F-02, S-01 — all met. **Estimated effort:** ~3 sessions, one per phase.
 

@@ -45,7 +45,7 @@ Verification: the loop runs against a real imported set; `study_history` accrues
 
 ## Implementation Approach
 
-Three thin endpoints own the session lifecycle; all page/island data-loading otherwise follows the existing server-load-then-island pattern. The island holds the full in-memory record of the session (each card's guess, distance, verdict), which doubles as the summary source. Feedback is always local math; persistence is a background concern that never gates the UI. Resume is reconstructed by server-loading the open session's recorded attempts into the island's initial state.
+Two thin endpoints (attempt, complete) own the in-session writes; session create-or-resume is a shared server-side helper the page calls during its normal server-load (no write-on-GET concern beyond an idempotent insert, and no SSR self-fetch). All page/island data-loading otherwise follows the existing server-load-then-island pattern. The island holds the full in-memory record of the session (each card's guess, distance, verdict), which doubles as the summary source. Feedback is always local math; persistence is a background concern that never gates the UI. Resume is reconstructed by server-loading the open session's recorded attempts into the island's initial state.
 
 Correctness/scoring lives in one small module (`src/lib/study.ts`) so the threshold is a single named default threaded as a parameter — not duplicated across the API and the island.
 
@@ -59,7 +59,7 @@ Correctness/scoring lives in one small module (`src/lib/study.ts`) so the thresh
 
 ### Overview
 
-Stand up the backend the island talks to: a scoring/config module, three self-guarding API routes for the session lifecycle, and the middleware guard for `/study`.
+Stand up the backend the island talks to: a scoring/config module, a shared server-side session create-or-resume helper, two self-guarding API routes for in-session writes (attempt, complete), and the middleware guard for `/study`.
 
 ### Changes Required:
 
@@ -71,13 +71,15 @@ Stand up the backend the island talks to: a scoring/config module, three self-gu
 
 **Contract**: Exports `DEFAULT_CORRECT_THRESHOLD_KM = 300` and a pure `isCorrect(distanceKm: number, thresholdKm?: number): boolean` (defaulting to the constant). Depends only on numbers — no DOM, no d3, mirrors the dependency-free style of `src/lib/geo.ts`. A comment names the future seam: a `correct_threshold_km` column on `sets` would flow into `thresholdKm` here.
 
-#### 2. Start / resume session endpoint
+#### 2. Session create-or-resume helper (shared server-side)
 
-**File**: `src/pages/api/study/sessions/index.ts` (new)
+**File**: `src/lib/studySession.ts` (new)
 
-**Intent**: Create a new study session for a set, or return the existing open (incomplete) one, so entry to `/study/[setId]` always lands on a single canonical session. Returns the session id (flashcards are loaded by the page, not this endpoint).
+**Intent**: One canonical place to get the open session for a `(user, set)` — create it if none exists, return the existing open one otherwise — so entry to `/study/[setId]` always lands on a single session. Called server-side by the study page (Phase 2), not over HTTP, so there is no SSR self-fetch and no duplicated query. Replaces what would otherwise be a `POST /api/study/sessions` endpoint (now unnecessary — the page is the only caller and runs server-side).
 
-**Contract**: `POST` with body `{ setId: string }`. Self-guards 401 like `src/pages/api/sets/index.ts:6-13`. Verifies the set belongs to the user (RLS already enforces this; a missing/foreign set yields 404). Looks up an existing `study_sessions` row for `(user_id, set_id)` with `completed_at IS NULL`; if found returns `{ sessionId }`, else inserts one and returns its id. JSON `{ sessionId: string }`.
+**Contract**: Exports `ensureOpenSession(supabase, userId, setId): Promise<string>` returning the session id. Looks up an existing `study_sessions` row for `(user_id, set_id)` with `completed_at IS NULL` (order by `started_at desc`, take the first — see F2 stance below); if found returns its id, else inserts one (`user_id`, `set_id`) and returns the new id. Takes an already-constructed typed Supabase client (the page builds it via `createClient`); RLS scopes all access to the owner, so a foreign/missing set simply yields no rows and the page redirects. Pure data-access — no `Response`/HTTP concerns.
+
+> **F2 stance (duplicate open sessions):** create-or-resume is a read-then-insert with no DB uniqueness guarantee. For the single-student MVP we consciously accept the race and resolve reads deterministically by taking the most-recent open session (`order by started_at desc limit 1`). A hardening option — a partial unique index `create unique index … on study_sessions (user_id, set_id) where completed_at is null` — is recorded here as a post-MVP seam, not built now.
 
 #### 3. Record attempt endpoint
 
@@ -113,7 +115,7 @@ Stand up the backend the island talks to: a scoring/config module, three self-gu
 
 #### Manual Verification:
 
-- `POST /api/study/sessions` with a valid `setId` returns a session id; a second call returns the _same_ id (resume), and after completion returns a _new_ id.
+- `ensureOpenSession` returns a session id; called twice mid-session it returns the _same_ id (resume), and after completion a fresh call returns a _new_ id (verifiable via the page: reload mid-session keeps the session; reload after finishing starts a new one).
 - `POST /api/study/sessions/<id>/attempts` inserts a `study_history` row visible in Supabase; a foreign/invalid session or set is rejected.
 - `POST /api/study/sessions/<id>/complete` sets `completed_at`.
 - Hitting `/study/<anything>` while signed out redirects to `/auth/signin`.
@@ -136,7 +138,7 @@ Create the `/study/[setId]` page (server-loads set, flashcards, open session + i
 
 **Intent**: Gate auth, load the set and its flashcards (insertion order), ensure/resume a session, load any prior attempts for rehydration, compute the auto-fit bbox, and mount the island. Follows the server-load pattern of `src/pages/sets/index.astro`.
 
-**Contract**: Reads `Astro.params.setId`; redirects to `/auth/signin` if no `locals.user`. Loads the set (404/redirect to `/sets` if not owned/found), its `flashcards` ordered by `created_at` (`id, name, latitude, longitude`), the open session id (reusing the Phase-1 start/resume logic — either call the endpoint server-side or replicate the open-session query directly against Supabase), and that session's existing `study_history` rows (`flashcard_id, distance_km`). Computes a padded bbox from the flashcards' min/max lat/lng. Passes to the island: `sessionId`, `setId`, ordered `flashcards`, `priorAttempts`, `bbox`, and `thresholdKm` (from `DEFAULT_CORRECT_THRESHOLD_KM`). Handles the 0-card set with a message and no island.
+**Contract**: Reads `Astro.params.setId`; redirects to `/auth/signin` if no `locals.user`. Loads the set (404/redirect to `/sets` if not owned/found), its `flashcards` ordered by `created_at` (`id, name, latitude, longitude`), the open session id via `ensureOpenSession(supabase, user.id, setId)` (Phase 1 #2 — the single create-or-resume path), and that session's existing `study_history` rows (`flashcard_id, distance_km`). Computes a padded bbox from the flashcards' min/max lat/lng. Passes to the island: `sessionId`, `setId`, ordered `flashcards`, `priorAttempts`, `bbox`, and `thresholdKm` (from `DEFAULT_CORRECT_THRESHOLD_KM`). Handles the 0-card set with a message and no island.
 
 **Contract (bbox helper)**: a small pure function (co-located in the page or added to `src/lib/study.ts`) `boundingBox(points: LatLng[], padFraction): Bbox` returning `[[west,south],[east,north]]`, padded so markers aren't flush to the edge. Reuses the `Bbox` type from `src/lib/mapProjection.ts`.
 
@@ -146,7 +148,7 @@ Create the `/study/[setId]` page (server-loads set, flashcards, open session + i
 
 **Intent**: Drive the full quiz loop over `InteractiveMap`: present the current card's name, lock the guess on first click, render instant feedback, POST the attempt in the background, advance on Acknowledge, and resume from prior attempts. Holds the in-memory session record that Phase 3 summarizes.
 
-**Contract**: Props `{ sessionId, setId, flashcards: {id,name,latitude,longitude}[], priorAttempts: {flashcardId, distanceKm}[], bbox, thresholdKm }`. Internal state per card: phase `awaiting-click` → `revealed`. On first map click while `awaiting-click`: set guess, compute `distanceKm = haversine(guess, target)` and `verdict = isCorrect(distanceKm, thresholdKm)`, transition to `revealed`, and fire-and-forget `POST /api/study/sessions/[id]/attempts` (retry once on failure). Render via `InteractiveMap` with `markers=[guess?, target]`, `connector` on in `revealed`. Acknowledge advances `currentIndex` to the next card. Initial `currentIndex` and the in-memory results array are seeded from `priorAttempts` (cards already attempted are marked done; the loop starts at the first un-attempted card). Uses existing UI primitives (`Button`) and the cosmic styling of sibling components. While `awaiting-click`, the target marker is NOT shown (active recall — FR-009); it's revealed only after the click.
+**Contract**: Props `{ sessionId, setId, flashcards: {id,name,latitude,longitude}[], priorAttempts: {flashcardId, distanceKm}[], bbox, thresholdKm }`. Internal state per card: phase `awaiting-click` → `revealed`. On first map click while `awaiting-click`: set guess, compute `distanceKm = haversine(guess, target)` and `verdict = isCorrect(distanceKm, thresholdKm)`, transition to `revealed`, and fire-and-forget `POST /api/study/sessions/[id]/attempts` (retry once on failure). The marker array is **phase-derived**: `[]` while `awaiting-click` (target hidden — active recall, FR-009), and `[guess, target]` only once `revealed` (with `connector` on). Never pass the `target` marker before the click. Acknowledge advances `currentIndex` to the next card. Initial `currentIndex` and the in-memory results array are seeded from `priorAttempts` (cards already attempted are marked done; the loop starts at the first un-attempted card). Uses existing UI primitives (`Button`) and the cosmic styling of sibling components.
 
 #### 3. Map demo reference
 
@@ -253,7 +255,7 @@ The click→feedback path is pure client-side `haversine` math (no network), sat
 
 ## Migration Notes
 
-No schema changes. The future per-set threshold override (a `correct_threshold_km` column on `sets`) is documented as a seam in `src/lib/study.ts` but not implemented.
+No schema changes. Two post-MVP seams are documented but not built: the per-set threshold override (a `correct_threshold_km` column on `sets`, noted in `src/lib/study.ts`) and a partial unique index on `study_sessions (user_id, set_id) where completed_at is null` to make one-open-session-per-set a hard DB invariant (F2 — MVP accepts the race and reads the most-recent open session deterministically).
 
 ## References
 
@@ -279,7 +281,7 @@ No schema changes. The future per-set threshold override (a `correct_threshold_k
 
 #### Manual
 
-- [ ] 1.4 Start/resume endpoint returns same session id mid-session, new id after completion
+- [ ] 1.4 ensureOpenSession returns same session id mid-session, new id after completion
 - [ ] 1.5 Attempt endpoint inserts a study_history row; foreign/invalid session rejected
 - [ ] 1.6 Complete endpoint sets completed_at
 - [ ] 1.7 `/study/<id>` redirects to signin when signed out
