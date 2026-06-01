@@ -2,9 +2,9 @@ import { useMemo, useRef } from "react";
 import { feature } from "topojson-client";
 import type { Topology } from "topojson-specification";
 import type { FeatureCollection } from "geojson";
-// Bundled world-atlas `countries-110m.json` (copied to src/assets at build time);
+// Bundled world-atlas `countries-50m.json` (copied to src/assets at build time);
 // imported as JSON so the basemap loads with no runtime fetch/CORS dependency.
-import worldTopo from "@/assets/world-110m.json";
+import worldTopo from "@/assets/world-50m.json";
 import { createMapProjection, type Bbox } from "@/lib/mapProjection";
 import { haversine, type LatLng } from "@/lib/geo";
 

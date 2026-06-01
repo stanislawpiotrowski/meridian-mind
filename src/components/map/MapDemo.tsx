@@ -13,7 +13,20 @@ const POLAND_BBOX: Bbox = [
   [24.15, 54.84],
 ];
 
-type Framing = "world" | "poland";
+// Continental Europe: British Isles + Iberia in the west to western Russia in
+// the east, Mediterranean to North Cape. Iceland sits at the western edge.
+const EUROPE_BBOX: Bbox = [
+  [-11, 34],
+  [40, 71],
+];
+
+type Framing = "world" | "europe" | "poland";
+
+const FRAMING_BBOX: Record<Framing, Bbox | undefined> = {
+  world: undefined,
+  europe: EUROPE_BBOX,
+  poland: POLAND_BBOX,
+};
 
 export default function MapDemo() {
   const [framing, setFraming] = useState<Framing>("world");
@@ -35,6 +48,14 @@ export default function MapDemo() {
           World
         </Button>
         <Button
+          variant={framing === "europe" ? "default" : "outline"}
+          onClick={() => {
+            setFraming("europe");
+          }}
+        >
+          Europe
+        </Button>
+        <Button
           variant={framing === "poland" ? "default" : "outline"}
           onClick={() => {
             setFraming("poland");
@@ -49,7 +70,7 @@ export default function MapDemo() {
           className="aspect-[2/1] w-full"
           connector
           markers={markers}
-          bbox={framing === "poland" ? POLAND_BBOX : undefined}
+          bbox={FRAMING_BBOX[framing]}
           onMapClick={(p) => {
             setGuess(p);
           }}
