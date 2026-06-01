@@ -52,7 +52,7 @@ export default function SessionSummary({ results, flashcards }: SessionSummaryPr
 
       {mostMissed.length > 0 ? (
         <div>
-          <h3 className="mb-2 text-sm font-semibold text-blue-100/80">Most missed</h3>
+          <h3 className="mb-2 text-sm font-semibold text-blue-100/80">Largest distances</h3>
           <ul className="divide-y divide-white/10 overflow-hidden rounded-xl border border-white/10 bg-white/5">
             {mostMissed.map((r) => (
               <li key={r.flashcardId} className="flex items-center justify-between px-4 py-2.5">
