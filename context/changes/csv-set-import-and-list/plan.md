@@ -306,14 +306,14 @@ No schema migration (F-01 schema is reused as-is). Confirm both F-01 migrations 
 
 #### Automated
 
-- [x] 3.1 Type checking passes: `npm run typecheck`
-- [x] 3.2 Linting passes on touched files: `npx eslint src/components/sets/ImportSetForm.tsx src/pages/sets/index.astro`
-- [x] 3.3 Build succeeds with the island: `npm run build`
+- [x] 3.1 Type checking passes: `npm run typecheck` — 6a4e7e2
+- [x] 3.2 Linting passes on touched files: `npx eslint src/components/sets/ImportSetForm.tsx src/pages/sets/index.astro` — 6a4e7e2
+- [x] 3.3 Build succeeds with the island: `npm run build` — 6a4e7e2
 
 #### Manual
 
-- [x] 3.4 File select prefills editable name from filename (sans `.csv`)
-- [x] 3.5 Valid CSV imports and redirects to `/sets`, new set on top
-- [x] 3.6 Malformed CSV shows generic error via `ServerError`; nothing created
-- [x] 3.7 Submit button disabled + loading label during request
-- [x] 3.8 End-to-end import (~50–300 rows) appears listed with correct count
+- [x] 3.4 File select prefills editable name from filename (sans `.csv`) — 6a4e7e2
+- [x] 3.5 Valid CSV imports and redirects to `/sets`, new set on top — 6a4e7e2
+- [x] 3.6 Malformed CSV shows generic error via `ServerError`; nothing created — 6a4e7e2
+- [x] 3.7 Submit button disabled + loading label during request — 6a4e7e2
+- [x] 3.8 End-to-end import (~50–300 rows) appears listed with correct count — 6a4e7e2
