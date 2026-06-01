@@ -273,17 +273,17 @@ No schema migration (F-01 schema is reused as-is). Confirm both F-01 migrations 
 
 #### Automated
 
-- [ ] 1.1 Type checking passes: `npm run typecheck`
-- [ ] 1.2 Linting passes on touched files: `npx eslint src/lib/csv.ts src/pages/api/sets/index.ts`
-- [ ] 1.3 Build succeeds with the new route: `npm run build`
-- [ ] 1.4 `papaparse` + `@types/papaparse` present in `package.json` and the lockfile
+- [x] 1.1 Type checking passes: `npm run typecheck`
+- [x] 1.2 Linting passes on touched files: `npx eslint src/lib/csv.ts src/pages/api/sets/index.ts`
+- [x] 1.3 Build succeeds with the new route: `npm run build`
+- [x] 1.4 `papaparse` + `@types/papaparse` present in `package.json` and the lockfile`
 
 #### Manual
 
-- [ ] 1.5 Valid CSV POST → 200; set + flashcards rows created with caller's `user_id`
-- [ ] 1.6 Malformed CSV POST → 400 generic error; no rows created
-- [ ] 1.7 Unauthenticated POST → 401; nothing created
-- [ ] 1.8 No orphan empty set if the flashcard insert fails
+- [x] 1.5 Valid CSV POST → 200; set + flashcards rows created with caller's `user_id`
+- [x] 1.6 Malformed CSV POST → 400 generic error; no rows created
+- [x] 1.7 Unauthenticated POST → 401; nothing created
+- [x] 1.8 No orphan empty set if the flashcard insert fails
 
 ### Phase 2: Sets page + list + gating (FR-005)
 
