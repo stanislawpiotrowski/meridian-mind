@@ -61,6 +61,7 @@ The deliberate architecture, per the planning decisions:
 - **SSR boundary.** Mount as `client:only="react"`. Do not reference `window`/`document` at module top-level in any file that could be imported during SSR; keep all DOM access inside the island. `wrangler dev` will not catch a leak here — the build + a real render on `/map-demo` is the check.
 - **fitExtent framing.** The projection module must (re)compute `fitExtent` from the current `bbox` (or world default) **and** the rendered SVG size. On container resize or bbox change, the projection must be recomputed or click inversion drifts. Use a measured container size (e.g. a ref + `ResizeObserver`, or a fixed aspect-ratio viewBox) — a fixed `viewBox` with `preserveAspectRatio` is the simplest correct option and avoids resize math for the static MVP.
 - **Coordinate order discipline.** d3-geo speaks `[longitude, latitude]`; the app contract speaks `{ lat, lng }`. Convert at exactly one boundary (inside the projection module) so the rest of the app never juggles order — a classic source of silent lat/lng swaps.
+- **Screen→user-space transform on click (second half of the click boundary).** The projection is built at the fixed `viewBox` dimensions, but a click event delivers `clientX/clientY` in CSS pixels and the SVG is CSS-scaled to fill its container — those pixels are **not** in viewBox user-space. Passing raw `clientX/clientY` straight into `invert()` reads correct only when the rendered SVG happens to equal the viewBox size 1:1; otherwise clicks drift (and any aspect-ratio mismatch makes it worse at Poland framing). Map the event point through `svg.getScreenCTM().inverse()` (via `createSVGPoint`/`DOMPoint.matrixTransform`) to viewBox coordinates **before** calling `invert`. This is the screen-side companion to the lat/lng-order conversion and belongs at the same single boundary.
 - **Marker/line overlay.** Markers and the connector line are SVG elements positioned via `projection([lng,lat])` (the forward direction), layered above the country paths in the same SVG so they share the coordinate system. The km label is plain text from `haversine`.
 
 ---
@@ -159,7 +160,7 @@ interface InteractiveMapProps {
 }
 ```
 
-Behavior: build the projection from `mapProjection.ts` sized to the SVG (fixed `viewBox` + `preserveAspectRatio` for the static MVP — see Critical Implementation Details); convert the bundled TopoJSON to GeoJSON via `topojson-client` and render country `<path>`s (blank, subtle stroke on the cosmic palette); on SVG click, convert event point → `invert` → call `onMapClick`; render markers via `project` (visually distinct guess vs target); when `connector` and both markers exist, draw a line and a km label from `haversine`. Mount only as `client:only="react"`. Imports via `@/` alias. No quiz/session state, no data fetching.
+Behavior: build the projection from `mapProjection.ts` sized to the SVG (fixed `viewBox` + `preserveAspectRatio` for the static MVP — see Critical Implementation Details); convert the bundled TopoJSON to GeoJSON via `topojson-client` and render country `<path>`s (blank, subtle stroke on the cosmic palette); on SVG click, map the event point to viewBox user-space via `svg.getScreenCTM().inverse()` (see Critical Implementation Details), then `invert` → call `onMapClick`; render markers via `project` (visually distinct guess vs target); when `connector` and both markers exist, draw a line and a km label from `haversine`. Mount only as `client:only="react"`. Imports via `@/` alias. No quiz/session state, no data fetching.
 
 ### Success Criteria:
 
@@ -286,4 +287,5 @@ No schema migration (F-02 is pure frontend). New runtime dependencies: `d3-geo`,
 - [ ] 3.5 Click drops guess marker, reveals target, draws connector line + km
 - [ ] 3.6 Distance is plausible vs a known pair
 - [ ] 3.7 Poland framing re-frames the map; clicks stay coordinate-accurate
-- [ ] 3.8 No console/SSR/hydration errors; public route works signed out
+- [ ] 3.8 No console/SSR/hydration errors
+- [ ] 3.9 Public route works signed out
