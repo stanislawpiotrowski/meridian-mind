@@ -252,14 +252,14 @@ No schema migration (F-02 is pure frontend). New runtime dependencies: `d3-geo`,
 
 #### Automated
 
-- [ ] 1.1 Type checking passes: `npm run typecheck`
-- [ ] 1.2 Linting passes on touched files: `npx eslint src/lib/geo.ts`
-- [ ] 1.3 Build succeeds with the new deps + asset import: `npm run build`
-- [ ] 1.4 Map deps in `dependencies`, type deps in `devDependencies`, lockfile updated
+- [x] 1.1 Type checking passes: `npm run typecheck`
+- [x] 1.2 Linting passes on touched files: `npx eslint src/lib/geo.ts`
+- [x] 1.3 Build succeeds with the new deps + asset import: `npm run build`
+- [x] 1.4 Map deps in `dependencies`, type deps in `devDependencies`, lockfile updated
 
 #### Manual
 
-- [ ] 1.5 `haversine` reason-checked against a known city pair
+- [x] 1.5 `haversine` reason-checked against a known city pair
 
 ### Phase 2: InteractiveMap island + projection module
 
