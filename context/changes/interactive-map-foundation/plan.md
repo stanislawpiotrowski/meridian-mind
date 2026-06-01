@@ -277,15 +277,15 @@ No schema migration (F-02 is pure frontend). New runtime dependencies: `d3-geo`,
 
 #### Automated
 
-- [x] 3.1 Type checking passes: `npm run typecheck`
-- [x] 3.2 Linting passes on touched files: `npx eslint src/pages/map-demo.astro`
-- [x] 3.3 Build succeeds with the new route: `npm run build`
+- [x] 3.1 Type checking passes: `npm run typecheck` — 3e5d7c2
+- [x] 3.2 Linting passes on touched files: `npx eslint src/pages/map-demo.astro` — 3e5d7c2
+- [x] 3.3 Build succeeds with the new route: `npm run build` — 3e5d7c2
 
 #### Manual
 
-- [x] 3.4 `/map-demo` loads without login; blank world map renders
-- [x] 3.5 Click drops guess marker, reveals target, draws connector line + km
-- [x] 3.6 Distance is plausible vs a known pair
-- [x] 3.7 Poland framing re-frames the map; clicks stay coordinate-accurate
-- [x] 3.8 No console/SSR/hydration errors
-- [x] 3.9 Public route works signed out
+- [x] 3.4 `/map-demo` loads without login; blank world map renders — 3e5d7c2
+- [x] 3.5 Click drops guess marker, reveals target, draws connector line + km — 3e5d7c2
+- [x] 3.6 Distance is plausible vs a known pair — 3e5d7c2
+- [x] 3.7 Poland framing re-frames the map; clicks stay coordinate-accurate — 3e5d7c2
+- [x] 3.8 No console/SSR/hydration errors — 3e5d7c2
+- [x] 3.9 Public route works signed out — 3e5d7c2
