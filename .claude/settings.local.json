@@ -7,7 +7,10 @@
       "Bash(grep -A50 \"^C:\\\\\\\\\\\\\\\\PROJECTS\\\\\\\\\\\\\\\\10x_Devs\\\\\\\\\\\\\\\\meridian-mind\\\\\\\\\\\\\\\\src\\\\\\\\\\\\\\\\lib\\\\\\\\\\\\\\\\supabase.ts$\" /tmp/lint.out)",
       "Bash(grep -A20 \"^C:\\\\\\\\\\\\\\\\PROJECTS\\\\\\\\\\\\\\\\10x_Devs\\\\\\\\\\\\\\\\meridian-mind\\\\\\\\\\\\\\\\eslint.config.js$\" /tmp/lint.out)",
       "PowerShell(git add *)",
-      "Bash(echo \"EMPTY=$?\")"
+      "Bash(echo \"EMPTY=$?\")",
+      "PowerShell(npx eslint src/lib/study.ts src/lib/studySession.ts \"src/pages/api/study/sessions/[id]/attempts.ts\" \"src/pages/api/study/sessions/[id]/complete.ts\" src/middleware.ts)",
+      "PowerShell(Write-Output \"autocrlf: $\\(git config --get core.autocrlf\\)\"; Write-Output \"eol: $\\(git config --get core.eol\\)\"; git ls-files --eol src/components/auth/SignUpForm.tsx)",
+      "PowerShell(npm run *)"
     ]
   }
 }
