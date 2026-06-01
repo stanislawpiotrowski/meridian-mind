@@ -281,10 +281,10 @@ No schema changes. Two post-MVP seams are documented but not built: the per-set 
 
 #### Manual
 
-- [ ] 1.4 ensureOpenSession returns same session id mid-session, new id after completion
-- [ ] 1.5 Attempt endpoint inserts a study_history row; foreign/invalid session rejected
-- [ ] 1.6 Complete endpoint sets completed_at
-- [ ] 1.7 `/study/<id>` redirects to signin when signed out
+- [x] 1.4 ensureOpenSession returns same session id mid-session, new id after completion
+- [x] 1.5 Attempt endpoint inserts a study_history row; foreign/invalid session rejected
+- [x] 1.6 Complete endpoint sets completed_at
+- [x] 1.7 `/study/<id>` redirects to signin when signed out
 
 ### Phase 2: Study page + quiz island
 
@@ -296,24 +296,24 @@ No schema changes. Two post-MVP seams are documented but not built: the per-set 
 
 #### Manual
 
-- [ ] 2.4 First card shows over an auto-framed map of the set's region
-- [ ] 2.5 Click locks guess; reveals target + connector + km + correct/incorrect verdict
-- [ ] 2.6 Acknowledge advances; target hidden again until next click
-- [ ] 2.7 Every flashcard appears once, in insertion order
-- [ ] 2.8 Tab-close mid-session then reopen resumes at next unanswered card with answers preserved
-- [ ] 2.9 0-card set shows graceful message, creates no session
+- [x] 2.4 First card shows over an auto-framed map of the set's region
+- [x] 2.5 Click locks guess; reveals target + connector + km + correct/incorrect verdict
+- [x] 2.6 Acknowledge advances; target hidden again until next click
+- [x] 2.7 Every flashcard appears once, in insertion order
+- [x] 2.8 Tab-close mid-session then reopen resumes at next unanswered card with answers preserved
+- [x] 2.9 0-card set shows graceful message, creates no session — verified by inspection (defensive-only; unreachable via import by design)
 
 ### Phase 3: Session summary + completion
 
 #### Automated
 
-- [x] 3.1 Type checking passes: `npm run typecheck`
-- [x] 3.2 Linting passes: `npm run lint`
-- [x] 3.3 Build passes: `npm run build`
+- [x] 3.1 Type checking passes: `npm run typecheck` — 7d4e33b
+- [x] 3.2 Linting passes: `npm run lint` — 7d4e33b
+- [x] 3.3 Build passes: `npm run build` — 7d4e33b
 
 #### Manual
 
-- [ ] 3.4 Summary shows correct count, accuracy %, most-missed list ordered by distance
-- [ ] 3.5 completed_at set; revisiting starts a fresh session
-- [ ] 3.6 All-answered session opens directly on the summary
-- [ ] 3.7 Summary "back to sets" link returns to /sets
+- [x] 3.4 Summary shows correct count, accuracy %, most-missed list ordered by distance
+- [x] 3.5 completed_at set; revisiting starts a fresh session
+- [x] 3.6 All-answered session opens directly on the summary
+- [x] 3.7 Summary "back to sets" link returns to /sets
