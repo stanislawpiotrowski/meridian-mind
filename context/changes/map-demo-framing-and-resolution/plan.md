@@ -120,15 +120,15 @@ No schema change. Asset delta only: add `src/assets/world-50m.json`, remove `src
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `npm run typecheck`
-- [x] 1.2 Linting passes on touched files: `npx eslint src/components/map/InteractiveMap.tsx src/components/map/MapDemo.tsx`
-- [x] 1.3 Build succeeds with the 50m asset: `npm run build`
-- [x] 1.4 `world-110m.json` removed; `world-50m.json` exists
+- [x] 1.1 Type checking passes: `npm run typecheck` — 6612d92
+- [x] 1.2 Linting passes on touched files: `npx eslint src/components/map/InteractiveMap.tsx src/components/map/MapDemo.tsx` — 6612d92
+- [x] 1.3 Build succeeds with the 50m asset: `npm run build` — 6612d92
+- [x] 1.4 `world-110m.json` removed; `world-50m.json` exists — 6612d92
 
 #### Manual
 
-- [x] 1.5 `/map-demo` borders visibly crisper (no blocky 110m edges)
-- [x] 1.6 Three buttons (World/Europe/Poland); active highlighted
-- [x] 1.7 Europe re-frames on the continent; clicks coordinate-accurate
-- [x] 1.8 World/Poland still work; connector + km still render
-- [x] 1.9 No console/SSR/hydration errors
+- [x] 1.5 `/map-demo` borders visibly crisper (no blocky 110m edges) — 6612d92
+- [x] 1.6 Three buttons (World/Europe/Poland); active highlighted — 6612d92
+- [x] 1.7 Europe re-frames on the continent; clicks coordinate-accurate — 6612d92
+- [x] 1.8 World/Poland still work; connector + km still render — 6612d92
+- [x] 1.9 No console/SSR/hydration errors — 6612d92

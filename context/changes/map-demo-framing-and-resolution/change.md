@@ -1,7 +1,7 @@
 ---
 change_id: map-demo-framing-and-resolution
 title: Higher-res basemap + Europe framing toggle on /map-demo
-status: implementing
+status: implemented
 created: 2026-06-01
 updated: 2026-06-01
 archived_at: null
