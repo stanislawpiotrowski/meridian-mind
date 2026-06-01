@@ -252,26 +252,26 @@ No schema migration (F-02 is pure frontend). New runtime dependencies: `d3-geo`,
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `npm run typecheck`
-- [x] 1.2 Linting passes on touched files: `npx eslint src/lib/geo.ts`
-- [x] 1.3 Build succeeds with the new deps + asset import: `npm run build`
-- [x] 1.4 Map deps in `dependencies`, type deps in `devDependencies`, lockfile updated
+- [x] 1.1 Type checking passes: `npm run typecheck` — 9990a63
+- [x] 1.2 Linting passes on touched files: `npx eslint src/lib/geo.ts` — 9990a63
+- [x] 1.3 Build succeeds with the new deps + asset import: `npm run build` — 9990a63
+- [x] 1.4 Map deps in `dependencies`, type deps in `devDependencies`, lockfile updated — 9990a63
 
 #### Manual
 
-- [x] 1.5 `haversine` reason-checked against a known city pair
+- [x] 1.5 `haversine` reason-checked against a known city pair — 9990a63
 
 ### Phase 2: InteractiveMap island + projection module
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npm run typecheck`
-- [ ] 2.2 Linting passes on touched files: `npx eslint src/lib/mapProjection.ts src/components/map/InteractiveMap.tsx`
-- [ ] 2.3 Build succeeds with the island: `npm run build`
+- [x] 2.1 Type checking passes: `npm run typecheck`
+- [x] 2.2 Linting passes on touched files: `npx eslint src/lib/mapProjection.ts src/components/map/InteractiveMap.tsx`
+- [x] 2.3 Build succeeds with the island: `npm run build`
 
 #### Manual
 
-- [ ] 2.4 Component compiles and imports cleanly; no SSR/`window` errors at build
+- [x] 2.4 Component compiles and imports cleanly; no SSR/`window` errors at build
 
 ### Phase 3: /map-demo verification surface
 
