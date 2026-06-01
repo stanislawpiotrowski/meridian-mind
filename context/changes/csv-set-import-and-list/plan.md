@@ -273,34 +273,34 @@ No schema migration (F-01 schema is reused as-is). Confirm both F-01 migrations 
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `npm run typecheck`
-- [x] 1.2 Linting passes on touched files: `npx eslint src/lib/csv.ts src/pages/api/sets/index.ts`
-- [x] 1.3 Build succeeds with the new route: `npm run build`
-- [x] 1.4 `papaparse` + `@types/papaparse` present in `package.json` and the lockfile`
+- [x] 1.1 Type checking passes: `npm run typecheck` — 211b788
+- [x] 1.2 Linting passes on touched files: `npx eslint src/lib/csv.ts src/pages/api/sets/index.ts` — 211b788
+- [x] 1.3 Build succeeds with the new route: `npm run build` — 211b788
+- [x] 1.4 `papaparse` + `@types/papaparse` present in `package.json` and the lockfile` — 211b788
 
 #### Manual
 
-- [x] 1.5 Valid CSV POST → 200; set + flashcards rows created with caller's `user_id`
-- [x] 1.6 Malformed CSV POST → 400 generic error; no rows created
-- [x] 1.7 Unauthenticated POST → 401; nothing created
-- [x] 1.8 No orphan empty set if the flashcard insert fails
+- [x] 1.5 Valid CSV POST → 200; set + flashcards rows created with caller's `user_id` — 211b788
+- [x] 1.6 Malformed CSV POST → 400 generic error; no rows created — 211b788
+- [x] 1.7 Unauthenticated POST → 401; nothing created — 211b788
+- [x] 1.8 No orphan empty set if the flashcard insert fails — 211b788
 
 ### Phase 2: Sets page + list + gating (FR-005)
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npm run typecheck`
-- [ ] 2.2 Linting passes on touched files: `npx eslint src/pages/sets/index.astro src/middleware.ts src/components/Topbar.astro`
-- [ ] 2.3 Build succeeds with the new page: `npm run build`
+- [x] 2.1 Type checking passes: `npm run typecheck`
+- [x] 2.2 Linting passes on touched files: `npx eslint src/pages/sets/index.astro src/middleware.ts src/components/Topbar.astro`
+- [x] 2.3 Build succeeds with the new page: `npm run build`
 
 #### Manual
 
-- [ ] 2.4 `/sets` lists sets with name, formatted date, correct count, newest first
-- [ ] 2.5 `/sets` shows the empty state with no sets
-- [ ] 2.6 Home nav shows a working "My sets" link to `/sets` when logged in
-- [ ] 2.7 Signed-out visit to `/sets` redirects to `/auth/signin`
-- [ ] 2.8 A second user does not see the first user's sets
-- [ ] 2.9 Each set row links to `/study/<id>` (404 until S-02 expected)
+- [x] 2.4 `/sets` lists sets with name, formatted date, correct count, newest first
+- [x] 2.5 `/sets` shows the empty state with no sets
+- [x] 2.6 Home nav shows a working "My sets" link to `/sets` when logged in
+- [x] 2.7 Signed-out visit to `/sets` redirects to `/auth/signin`
+- [x] 2.8 A second user does not see the first user's sets
+- [x] 2.9 Each set row links to `/study/<id>` (404 until S-02 expected)
 
 ### Phase 3: Import UI (FR-004 client)
 
