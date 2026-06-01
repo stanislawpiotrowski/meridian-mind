@@ -289,31 +289,31 @@ No schema migration (F-01 schema is reused as-is). Confirm both F-01 migrations 
 
 #### Automated
 
-- [x] 2.1 Type checking passes: `npm run typecheck`
-- [x] 2.2 Linting passes on touched files: `npx eslint src/pages/sets/index.astro src/middleware.ts src/components/Topbar.astro`
-- [x] 2.3 Build succeeds with the new page: `npm run build`
+- [x] 2.1 Type checking passes: `npm run typecheck` — d46b066
+- [x] 2.2 Linting passes on touched files: `npx eslint src/pages/sets/index.astro src/middleware.ts src/components/Topbar.astro` — d46b066
+- [x] 2.3 Build succeeds with the new page: `npm run build` — d46b066
 
 #### Manual
 
-- [x] 2.4 `/sets` lists sets with name, formatted date, correct count, newest first
-- [x] 2.5 `/sets` shows the empty state with no sets
-- [x] 2.6 Home nav shows a working "My sets" link to `/sets` when logged in
-- [x] 2.7 Signed-out visit to `/sets` redirects to `/auth/signin`
-- [x] 2.8 A second user does not see the first user's sets
-- [x] 2.9 Each set row links to `/study/<id>` (404 until S-02 expected)
+- [x] 2.4 `/sets` lists sets with name, formatted date, correct count, newest first — d46b066
+- [x] 2.5 `/sets` shows the empty state with no sets — d46b066
+- [x] 2.6 Home nav shows a working "My sets" link to `/sets` when logged in — d46b066
+- [x] 2.7 Signed-out visit to `/sets` redirects to `/auth/signin` — d46b066
+- [x] 2.8 A second user does not see the first user's sets — d46b066
+- [x] 2.9 Each set row links to `/study/<id>` (404 until S-02 expected) — d46b066
 
 ### Phase 3: Import UI (FR-004 client)
 
 #### Automated
 
-- [ ] 3.1 Type checking passes: `npm run typecheck`
-- [ ] 3.2 Linting passes on touched files: `npx eslint src/components/sets/ImportSetForm.tsx src/pages/sets/index.astro`
-- [ ] 3.3 Build succeeds with the island: `npm run build`
+- [x] 3.1 Type checking passes: `npm run typecheck`
+- [x] 3.2 Linting passes on touched files: `npx eslint src/components/sets/ImportSetForm.tsx src/pages/sets/index.astro`
+- [x] 3.3 Build succeeds with the island: `npm run build`
 
 #### Manual
 
-- [ ] 3.4 File select prefills editable name from filename (sans `.csv`)
-- [ ] 3.5 Valid CSV imports and redirects to `/sets`, new set on top
-- [ ] 3.6 Malformed CSV shows generic error via `ServerError`; nothing created
-- [ ] 3.7 Submit button disabled + loading label during request
-- [ ] 3.8 End-to-end import (~50–300 rows) appears listed with correct count
+- [x] 3.4 File select prefills editable name from filename (sans `.csv`)
+- [x] 3.5 Valid CSV imports and redirects to `/sets`, new set on top
+- [x] 3.6 Malformed CSV shows generic error via `ServerError`; nothing created
+- [x] 3.7 Submit button disabled + loading label during request
+- [x] 3.8 End-to-end import (~50–300 rows) appears listed with correct count

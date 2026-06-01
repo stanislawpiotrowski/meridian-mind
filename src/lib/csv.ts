@@ -11,10 +11,25 @@ export type CsvParseResult = { ok: true; rows: ParsedFlashcard[] } | { ok: false
 const MAX_ROWS = 1000;
 const MAX_NAME_LENGTH = 200;
 
+/**
+ * Normalize a coordinate cell to use a period as the decimal separator.
+ * Handles European-locale CSV exports where comma is used instead of period
+ * (e.g. "41,063919" → "41.063919"). Values that already contain a period, or
+ * that contain both "," and "." (thousands-separator notation), are left unchanged
+ * and will fail the Number() check if they are not valid coordinates.
+ */
+function normalizeCoordCell(cell: string): string {
+  if (cell.includes(",") && !cell.includes(".")) {
+    return cell.replace(",", ".");
+  }
+  return cell;
+}
+
 export function parseAndValidateCsv(raw: string): CsvParseResult {
   const result = Papa.parse<Record<string, string>>(raw, {
     header: true,
     skipEmptyLines: true,
+    delimiter: "", // empty string = auto-detect; supports "," and ";" (common in European exports)
   });
 
   // Verify required headers are present
@@ -54,8 +69,8 @@ export function parseAndValidateCsv(raw: string): CsvParseResult {
       return { ok: false, error: "Each row must have non-empty latitude and longitude values." };
     }
 
-    const latitude = Number(latCell);
-    const longitude = Number(lngCell);
+    const latitude = Number(normalizeCoordCell(latCell));
+    const longitude = Number(normalizeCoordCell(lngCell));
 
     if (!Number.isFinite(latitude)) {
       return { ok: false, error: "Latitude must be a valid number." };
