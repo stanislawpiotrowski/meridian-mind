@@ -5,7 +5,8 @@
       "WebFetch(domain:developers.cloudflare.com)",
       "Bash(grep -B1 \"src\\\\\\\\\\\\\\\\lib\\\\\\\\\\\\\\\\supabase.ts$\" /tmp/lint.out)",
       "Bash(grep -A50 \"^C:\\\\\\\\\\\\\\\\PROJECTS\\\\\\\\\\\\\\\\10x_Devs\\\\\\\\\\\\\\\\meridian-mind\\\\\\\\\\\\\\\\src\\\\\\\\\\\\\\\\lib\\\\\\\\\\\\\\\\supabase.ts$\" /tmp/lint.out)",
-      "Bash(grep -A20 \"^C:\\\\\\\\\\\\\\\\PROJECTS\\\\\\\\\\\\\\\\10x_Devs\\\\\\\\\\\\\\\\meridian-mind\\\\\\\\\\\\\\\\eslint.config.js$\" /tmp/lint.out)"
+      "Bash(grep -A20 \"^C:\\\\\\\\\\\\\\\\PROJECTS\\\\\\\\\\\\\\\\10x_Devs\\\\\\\\\\\\\\\\meridian-mind\\\\\\\\\\\\\\\\eslint.config.js$\" /tmp/lint.out)",
+      "PowerShell(git add *)"
     ]
   }
 }
