@@ -25,7 +25,7 @@ F-01 landed the schema: `sets` + `flashcards` tables with RLS (`(select auth.uid
 | Malformed rows   | Reject whole import, one generic error                 | Keeps S-01 thin and atomic; per-row reporting is S-05.                                                                    |
 | Placement        | Dedicated `/sets` page, import inline                  | Clean "pick a set" home for S-02; room for S-04 delete.                                                                   |
 | Auth gating      | Add `/sets` to `PROTECTED_ROUTES`; API self-guards 401 | Middleware is allowlist-based; a 302→HTML redirect would corrupt a fetch.                                                 |
-| List row         | Name + date + count, rows inert                        | Fulfills FR-005; S-02 wires the "Study" action.                                                                           |
+| List row         | Name + date + count; row links to `/study/:id`         | Honors the planning choice and satisfies "pick one to study"; link 404s until S-02 (accepted).                            |
 | Post-import      | Client redirect to `/sets`, new set on top             | The list is the confirmation.                                                                                             |
 | Insert atomicity | Set-first, then bulk flashcards; best-effort cleanup   | PostgREST isn't transactional; avoids a Postgres RPC/migration.                                                           |
 

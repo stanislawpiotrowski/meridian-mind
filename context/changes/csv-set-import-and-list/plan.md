@@ -26,7 +26,7 @@ The browser island reads the chosen file as text and POSTs JSON `{ name, csv }`;
 
 ## Desired End State
 
-A signed-in user reaches `/sets` from the home nav, sees an inline import card and a newest-first list of their sets (name, created date, flashcard count), or an empty state. They pick a `.csv`, the name field prefills from the filename and is editable, they import, and on success they land back on `/sets` with the new set at the top. A malformed file (bad/missing column, out-of-range coordinate, empty) is rejected whole with a single friendly message and creates nothing. A second user never sees the first user's sets. Visiting `/sets` while signed out redirects to `/auth/signin`.
+A signed-in user reaches `/sets` from the home nav, sees an inline import card and a newest-first list of their sets (name, created date, flashcard count) — each row linking to its study page at `/study/<id>` — or an empty state. They pick a `.csv`, the name field prefills from the filename and is editable, they import, and on success they land back on `/sets` with the new set at the top. A malformed file (bad/missing column, out-of-range coordinate, empty) is rejected whole with a single friendly message and creates nothing. A second user never sees the first user's sets. Visiting `/sets` while signed out redirects to `/auth/signin`.
 
 Verify: `npm run typecheck`, scoped lint on touched files, and `npm run build` all pass; the manual flows in each phase's Success Criteria hold.
 
@@ -44,7 +44,7 @@ Verify: `npm run typecheck`, scoped lint on touched files, and `npm run build` a
 
 - **Per-row malformed reporting** (1-indexed row, field, reason, import-valid-only vs cancel) — that's **S-05**. Here, any bad row → one generic error, import nothing.
 - **Deleting sets** — **S-04** (the `/api/sets/` folder leaves room for `[id].ts` later).
-- **Studying / making list rows clickable to a session** — **S-02** owns `/study/<id>`; rows are inert this slice.
+- **Building the study session / quiz loop** — **S-02** owns `/study/<id>` and everything behind it. List rows link to `/study/<set.id>` (honoring the planning decision, so "pick one to study" works literally), but that target 404s until S-02 ships — an accepted dead-end for this slice.
 - **Non-UTF-8 encodings** — out of scope (S-05 / Open Roadmap Question).
 - **Editing a set or flashcard after import**, **CSV export** — PRD Non-Goals.
 - **Transactional multi-row insert via a Postgres RPC** — using best-effort cleanup instead (see Critical Implementation Details); revisit only if orphan sets prove to be a real problem.
@@ -55,7 +55,7 @@ Verify: `npm run typecheck`, scoped lint on touched files, and `npm run build` a
 
 Build bottom-up in three independently verifiable phases: (1) the import backend (dependency + parse/validate module + `POST /api/sets`), verifiable by an API call; (2) the `/sets` page, its server-rendered list, the middleware gate, and a nav link, so the redirect target exists and FR-005 is met; (3) the import island mounted on `/sets`, closing the loop so an upload appears in the list. Each phase ends green on typecheck/scoped-lint/build before the next.
 
-Note on convention: the auth forms submit as native `<form method="POST">` and let the server redirect. This slice instead uses a **fetch + JSON island** because it must read a `File` in the browser and send a structured body. That is a deliberate new pattern for this codebase, justified by the file-read requirement; it reuses the existing `Button` and `ServerError` primitives so the surface still looks native.
+Note on convention: the auth forms submit as native `<form method="POST">` and let the server redirect. This slice instead uses a **fetch + JSON island** because it must read a `File` in the browser and send a structured body. That is a deliberate new pattern for this codebase, justified by the file-read requirement; it reuses the existing `Button` and `ServerError` primitives so the surface still looks native. Because this is the first JSON route + fetch island, it sets the convention S-02/S-03/S-04 will copy — earmark it for `/10x-lesson` if the S-02 review echoes the same pattern choice.
 
 ## Critical Implementation Details
 
@@ -72,7 +72,7 @@ Note on convention: the auth forms submit as native `<form method="POST">` and l
 
 ### Overview
 
-Add the CSV dependency, a pure parse-and-validate module, and the `POST /api/sets` route that turns a raw CSV + name into a `set` row plus its `flashcards`, enforcing per-user ownership and atomic all-or-nothing semantics.
+Add the CSV dependency, a pure parse-and-validate module, and the `POST /api/sets` route that turns a raw CSV + name into a `set` row plus its `flashcards`, enforcing per-user ownership and atomic all-or-nothing semantics. The Phase-1 `npm run build` (a Cloudflare Workers build) doubles as the papaparse-in-Workers smoke test — this is the parser's first use in that runtime, so don't defer it.
 
 ### Changes Required:
 
@@ -96,7 +96,7 @@ Add the CSV dependency, a pure parse-and-validate module, and the `POST /api/set
 - Required headers present (exact lowercase): `name`, `latitude`, `longitude`.
 - At least one data row; reject an empty file/zero rows.
 - A sane upper bound on row count (reject absurd inputs, e.g. > 1000 rows) to protect the Worker — generic error.
-- Each row: `name` trimmed length 1..200 (application bound — the DB does not enforce length); `latitude`/`longitude` parse to finite numbers within `[-90,90]` / `[-180,180]`.
+- Each row: `name` trimmed length 1..200 (application bound — the DB does not enforce length). For `latitude`/`longitude`: **reject the row if the trimmed cell is empty/blank** (guard against `Number("") === 0` silently becoming a valid `(0,0)`), then require the trimmed cell to be a complete finite numeric literal (`Number(cell)` with `Number.isFinite`, which also rejects `"12abc"` → `NaN`); finally enforce the ranges `[-90,90]` / `[-180,180]`.
 - On all-valid: `{ ok: true, rows }` with coordinates coerced to `number` and `name` trimmed.
 
 #### 3. Create-set API route
@@ -108,7 +108,8 @@ Add the CSV dependency, a pure parse-and-validate module, and the `POST /api/set
 **Contract**: `export const POST: APIRoute`. Request JSON `{ name: string, csv: string }`. Behavior:
 
 - Guard auth via `context.locals.user`; if absent → `401 { error }`.
-- Parse the JSON body; validate `name` (trimmed 1..200) and that `csv` is a non-empty string; else `400 { error }`.
+- Parse the JSON body inside a try/catch — a malformed/empty body (`request.json()` throws `SyntaxError`) → `400 { error }`, not an uncaught 500.
+- Validate `name` (trimmed 1..200) and that `csv` is a non-empty string; else `400 { error }`.
 - `parseAndValidateCsv(csv)`; on `!ok` → `400 { error }`.
 - `createClient(context.request.headers, context.cookies)`; if `null` → `500 { error: "Supabase is not configured" }` (mirrors the existing routes' null-check).
 - Insert `sets` row `{ user_id: locals.user.id, name }`, `.select("id").single()`; on error → `500 { error }`.
@@ -120,17 +121,17 @@ Add the CSV dependency, a pure parse-and-validate module, and the `POST /api/set
 
 #### Automated Verification:
 
-- [ ] Type checking passes: `npm run typecheck`
-- [ ] Linting passes on touched files: `npx eslint src/lib/csv.ts src/pages/api/sets/index.ts`
-- [ ] Build succeeds with the new route: `npm run build`
-- [ ] `papaparse` + `@types/papaparse` present in `package.json` and the lockfile
+- Type checking passes: `npm run typecheck`
+- Linting passes on touched files: `npx eslint src/lib/csv.ts src/pages/api/sets/index.ts`
+- Build succeeds with the new route: `npm run build`
+- `papaparse` + `@types/papaparse` present in `package.json` and the lockfile
 
 #### Manual Verification:
 
-- [ ] As an authenticated user, POST `{ name, csv }` with a valid CSV → 200; one `sets` row and N `flashcards` rows exist (Supabase Studio), all with the caller's `user_id`
-- [ ] POST with a malformed CSV (out-of-range coordinate / missing `latitude` column / empty file) → 400 with a generic error; no rows created
-- [ ] POST while unauthenticated → 401, nothing created
-- [ ] No orphan empty set remains if the flashcard insert fails (reason through / simulate)
+- As an authenticated user, POST `{ name, csv }` with a valid CSV → 200; one `sets` row and N `flashcards` rows exist (Supabase Studio), all with the caller's `user_id`
+- POST with a malformed CSV (out-of-range coordinate / missing `latitude` column / empty file) → 400 with a generic error; no rows created
+- POST while unauthenticated → 401, nothing created
+- No orphan empty set remains if the flashcard insert fails (reason through / simulate)
 
 **Implementation Note**: After completing this phase and all automated verification passes, pause for manual confirmation before proceeding to Phase 2.
 
@@ -150,7 +151,7 @@ Create the server-rendered `/sets` page that lists the user's sets newest-first 
 
 **Intent**: Show the signed-in user their sets so they can pick one to study (the pick action lands in S-02). Pure server read; no island needed for the list.
 
-**Contract**: In frontmatter, read `const { user } = Astro.locals` and, for type-safety + defense in depth, `if (!user) return Astro.redirect("/auth/signin")` (middleware already guards, but `user` is typed nullable). Create the client with `createClient(Astro.request.headers, Astro.cookies)`; if `null`, render an empty/config state (the `Layout` Banner already warns). Query `from("sets").select("id, name, created_at, flashcards(count)").eq("user_id", user.id).order("created_at", { ascending: false })`. Render inside `Layout` (with `Topbar`): a heading, a placeholder slot where the import island mounts in Phase 3, then either the list (each row: name, locale-formatted `created_at`, count via `row.flashcards[0]?.count ?? 0`, rendered **inert** — no link) or an empty-state prompt. Hand-rolled Tailwind matching the glassmorphism card style; no shadcn `Card`/`Table`.
+**Contract**: In frontmatter, read `const { user } = Astro.locals` and, for type-safety + defense in depth, `if (!user) return Astro.redirect("/auth/signin")` (middleware already guards, but `user` is typed nullable). Create the client with `createClient(Astro.request.headers, Astro.cookies)`; if `null`, render an empty/config state (the `Layout` Banner already warns). Query `from("sets").select("id, name, created_at, flashcards(count)").eq("user_id", user.id).order("created_at", { ascending: false })`. Render inside `Layout` (with `Topbar`): a heading, a placeholder slot where the import island mounts in Phase 3, then either the list (each row: name, locale-formatted `created_at`, count via `row.flashcards[0]?.count ?? 0`, the row linking to `/study/<set.id>`) or an empty-state prompt. Hand-rolled Tailwind matching the glassmorphism card style; no shadcn `Card`/`Table`.
 
 #### 2. Gate /sets in middleware
 
@@ -172,17 +173,18 @@ Create the server-rendered `/sets` page that lists the user's sets newest-first 
 
 #### Automated Verification:
 
-- [ ] Type checking passes: `npm run typecheck`
-- [ ] Linting passes on touched files: `npx eslint src/pages/sets/index.astro src/middleware.ts src/components/Topbar.astro`
-- [ ] Build succeeds with the new page: `npm run build`
+- Type checking passes: `npm run typecheck`
+- Linting passes on touched files: `npx eslint src/pages/sets/index.astro src/middleware.ts src/components/Topbar.astro`
+- Build succeeds with the new page: `npm run build`
 
 #### Manual Verification:
 
-- [ ] With ≥1 set (created via Phase 1 or manual insert), `/sets` lists each with name, formatted date, and correct item count, newest first
-- [ ] With no sets, `/sets` shows the empty state
-- [ ] The home page nav shows a working "My sets" link to `/sets` when logged in
-- [ ] Visiting `/sets` while signed out redirects to `/auth/signin`
-- [ ] A second user does not see the first user's sets
+- With ≥1 set (created via Phase 1 or manual insert), `/sets` lists each with name, formatted date, and correct item count, newest first
+- With no sets, `/sets` shows the empty state
+- The home page nav shows a working "My sets" link to `/sets` when logged in
+- Visiting `/sets` while signed out redirects to `/auth/signin`
+- A second user does not see the first user's sets
+- Each set row links to `/study/<id>` (the target 404s until S-02 — expected this slice)
 
 **Implementation Note**: After completing this phase and all automated verification passes, pause for manual confirmation before proceeding to Phase 3.
 
@@ -216,17 +218,17 @@ Add the `ImportSetForm` React island to `/sets`: pick a file, name prefilled-and
 
 #### Automated Verification:
 
-- [ ] Type checking passes: `npm run typecheck`
-- [ ] Linting passes on touched files: `npx eslint src/components/sets/ImportSetForm.tsx src/pages/sets/index.astro`
-- [ ] Build succeeds with the island: `npm run build`
+- Type checking passes: `npm run typecheck`
+- Linting passes on touched files: `npx eslint src/components/sets/ImportSetForm.tsx src/pages/sets/index.astro`
+- Build succeeds with the island: `npm run build`
 
 #### Manual Verification:
 
-- [ ] Selecting a `.csv` prefills the name from the filename (sans `.csv`); the name is editable before submit
-- [ ] Submitting a valid CSV imports and redirects to `/sets` with the new set at the top
-- [ ] Submitting a malformed CSV shows the generic error via `ServerError` and stays on the page (no set created)
-- [ ] The submit button is disabled and shows a loading label during the request
-- [ ] End-to-end: import a continent-scale CSV (~50–300 rows) → set appears listed with the right count (US-01 import→list portion); feels responsive (well within the import budget)
+- Selecting a `.csv` prefills the name from the filename (sans `.csv`); the name is editable before submit
+- Submitting a valid CSV imports and redirects to `/sets` with the new set at the top
+- Submitting a malformed CSV shows the generic error via `ServerError` and stays on the page (no set created)
+- The submit button is disabled and shows a loading label during the request
+- End-to-end: import a continent-scale CSV (~50–300 rows) → set appears listed with the right count (US-01 import→list portion); feels responsive (well within the import budget)
 
 **Implementation Note**: After completing this phase and all automated verification passes, the slice is functionally complete — confirm the full loop manually.
 
@@ -298,6 +300,7 @@ No schema migration (F-01 schema is reused as-is). Confirm both F-01 migrations 
 - [ ] 2.6 Home nav shows a working "My sets" link to `/sets` when logged in
 - [ ] 2.7 Signed-out visit to `/sets` redirects to `/auth/signin`
 - [ ] 2.8 A second user does not see the first user's sets
+- [ ] 2.9 Each set row links to `/study/<id>` (404 until S-02 expected)
 
 ### Phase 3: Import UI (FR-004 client)
 

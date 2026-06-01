@@ -1,9 +1,9 @@
 ---
 change_id: csv-set-import-and-list
 title: Import a CSV set and see it listed to pick
-status: planned
+status: plan_reviewed
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-01
 archived_at: null
 ---
 
