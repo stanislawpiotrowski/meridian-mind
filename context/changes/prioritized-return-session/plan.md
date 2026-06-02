@@ -177,14 +177,14 @@ The history scan is bounded by one user's attempts on one set (small per the PRD
 
 #### Automated
 
-- [ ] 1.1 Type checking passes: `npm run typecheck`
-- [ ] 1.2 Linting passes: `npm run lint`
+- [x] 1.1 Type checking passes: `npm run typecheck`
+- [x] 1.2 Linting passes: `npm run lint`
 
 #### Manual
 
-- [ ] 1.3 Four constants live at the top in `PRIORITIZATION_CONFIG`; scoring math isolated in `priorityScore`
-- [ ] 1.4 Never-seen item sorts ahead of any seen item
-- [ ] 1.5 Equal-score items retain original relative order (stable tie-break)
+- [x] 1.3 Four constants live at the top in `PRIORITIZATION_CONFIG`; scoring math isolated in `priorityScore`
+- [x] 1.4 Never-seen item sorts ahead of any seen item
+- [x] 1.5 Equal-score items retain original relative order (stable tie-break)
 
 ### Phase 2: Wire prioritization into the study page
 
