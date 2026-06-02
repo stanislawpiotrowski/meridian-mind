@@ -3,7 +3,7 @@ project: "MeridianMind"
 version: 1
 status: draft
 created: 2026-05-26
-updated: 2026-05-26
+updated: 2026-06-02
 prd_version: 1
 main_goal: speed
 top_blocker: skills
@@ -27,25 +27,30 @@ MeridianMind helps a university student cramming for a fixed-syllabus geography 
 
 ## At a glance
 
-| ID   | Change ID                  | Outcome (user can …)                                              | Prerequisites    | PRD refs                          | Status   |
-| ---- | -------------------------- | ----------------------------------------------------------------- | ---------------- | --------------------------------- | -------- |
-| F-01 | domain-data-schema         | (foundation) sets / flashcards / study-history tables + RLS       | —                | FR-004, FR-015, NFR-DataIsolation | ready    |
-| F-02 | interactive-map-foundation | (foundation) clickable map + lat/lon projection + haversine util  | —                | FR-010, FR-011, NFR-Latency       | ready    |
-| S-01 | csv-set-import-and-list    | import a CSV set and see it listed to pick                        | F-01             | FR-004, FR-005                    | proposed |
-| S-02 | first-study-session        | run a full quiz session end-to-end and see a summary              | F-01, F-02, S-01 | US-01, FR-008…FR-014, FR-015      | proposed |
-| S-03 | prioritized-return-session | return to an auto-prioritized queue of weak / stale items         | S-02, F-01       | US-02, FR-015, FR-016             | proposed |
-| S-04 | delete-set                 | delete a set they previously imported                             | F-01, S-01       | FR-006                            | proposed |
-| S-05 | csv-malformed-row-handling | see malformed CSV rows reported and choose import-valid or cancel | S-01             | US-03, FR-007                     | proposed |
+| ID   | Change ID                  | Outcome (user can …)                                                | Prerequisites    | PRD refs                          | Status   |
+| ---- | -------------------------- | ------------------------------------------------------------------- | ---------------- | --------------------------------- | -------- |
+| F-01 | domain-data-schema         | (foundation) sets / flashcards / study-history tables + RLS         | —                | FR-004, FR-015, NFR-DataIsolation | ready    |
+| F-02 | interactive-map-foundation | (foundation) clickable map + lat/lon projection + haversine util    | —                | FR-010, FR-011, NFR-Latency       | ready    |
+| S-01 | csv-set-import-and-list    | import a CSV set and see it listed to pick                          | F-01             | FR-004, FR-005                    | proposed |
+| S-02 | first-study-session        | run a full quiz session end-to-end and see a summary                | F-01, F-02, S-01 | US-01, FR-008…FR-014, FR-015      | proposed |
+| S-03 | prioritized-return-session | return to an auto-prioritized queue of weak / stale items           | S-02, F-01       | US-02, FR-015, FR-016             | proposed |
+| S-04 | delete-set                 | delete a set they previously imported                               | F-01, S-01       | FR-006                            | proposed |
+| S-05 | csv-malformed-row-handling | see malformed CSV rows reported and choose import-valid or cancel   | S-01             | US-03, FR-007                     | proposed |
+| S-06 | navigation-shell           | see a consistent nav bar on every screen, with no dead-ends         | —                | (UX / post-MVP)                   | proposed |
+| S-07 | dashboard-home             | land on a "what to do now" home after login (due / streak / resume) | F-01, S-03       | (post-MVP)                        | proposed |
+| S-08 | product-landing-and-quiz   | (logged-out) understand the product and try a 10-capital mini-quiz  | F-02             | (post-MVP)                        | proposed |
+| S-09 | starter-sets               | add a curated ready-made set in one click                           | S-01             | (post-MVP)                        | proposed |
 
 ## Streams
 
 Navigation aid — groups items that share a Prerequisites chain. Canonical ordering still lives in the dependency graph below; this table is the proposed reading order across parallel tracks.
 
-| Stream | Theme                  | Chain                             | Note                                                                            |
-| ------ | ---------------------- | --------------------------------- | ------------------------------------------------------------------------------- |
-| A      | Data & study loop      | `F-01` → `S-01` → `S-02` → `S-03` | Critical path. Contains the north star (`S-02`) and second validation (`S-03`). |
-| B      | Interactive map        | `F-02`                            | De-risks the `skills` blocker; runs parallel to A, joins at `S-02`.             |
-| C      | Set lifecycle & polish | `S-04` / `S-05`                   | Both branch off `S-01`, parallel with the study loop. `S-05` is nice-to-have.   |
+| Stream | Theme                   | Chain                             | Note                                                                                                               |
+| ------ | ----------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| A      | Data & study loop       | `F-01` → `S-01` → `S-02` → `S-03` | Critical path. Contains the north star (`S-02`) and second validation (`S-03`).                                    |
+| B      | Interactive map         | `F-02`                            | De-risks the `skills` blocker; runs parallel to A, joins at `S-02`.                                                |
+| C      | Set lifecycle & polish  | `S-04` / `S-05`                   | Both branch off `S-01`, parallel with the study loop. `S-05` is nice-to-have.                                      |
+| D      | Navigation & onboarding | `S-06` → `S-07`; `S-08`; `S-09`   | Post-MVP UX layer. `S-06` is cheapest (removes the Dashboard dead-end). `S-09` strengthens the `S-07` empty state. |
 
 ## Baseline
 
@@ -151,6 +156,60 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Risk:** Nice-to-have per PRD priority; sequenced last. Under the `speed` goal, ship only if time remains after the must-have path. Header/encoding validation contract is fully specified in US-03 acceptance criteria.
 - **Status:** proposed
 
+### S-06: Consistent navigation shell
+
+- **Outcome:** a top nav bar (with a logo linking home) renders on **every** authenticated screen — including the study session — so there are no dead-ends; today `/dashboard` renders no `Topbar` and traps the user. Link order surfaces "My sets" prominently.
+- **Change ID:** navigation-shell
+- **PRD refs:** — (UX polish; not a PRD FR)
+- **Prerequisites:** — (existing `src/components/Topbar.astro`, `src/pages/dashboard.astro`)
+- **Parallel with:** S-08, S-09
+- **Blockers:** —
+- **Unknowns:** —
+- **Risk:** Small, pure-UX. Cheapest item in stream D and removes the current navigation trap. Does **not** delete `/dashboard` — S-07 repurposes it. Sequence first in stream D.
+- **Status:** proposed
+
+### S-07: Dashboard as home
+
+- **Outcome:** after login the user lands on a decision screen instead of `/sets` directly: "Due today: N" + "Start session", a study streak, recent sets / "resume", and an empty state that points to add-a-ready-made-set or import-CSV.
+- **Change ID:** dashboard-home
+- **PRD refs:** — (post-MVP; builds on FR-015/FR-016 data)
+- **Prerequisites:** F-01 (data), S-03 (prioritization powers the "due today" count)
+- **Parallel with:** S-08, S-09
+- **Blockers:** —
+- **Unknowns:**
+  - "Due today" and streak counters require per-item review dates / session history. If absent, ship a "lite" version (recent sets + resume) first, counters later. Owner: user. Block: no.
+- **Risk:** Depends on the data model; consider a lite → full split. This is the screen that fixes the "nothing after login" problem.
+- **Status:** proposed
+
+### S-08: Product landing + teaser quiz
+
+- **Outcome:** `/` is rewritten from the generic "10x Astro Starter" template into a MeridianMind landing (spaced repetition / click-to-verify on the map / bring-your-own CSV) plus a mini-quiz: 10 random European capitals, click the map, distance feedback in km, end screen with a sign-up CTA. No account, no persistence (client-side only).
+- **Change ID:** product-landing-and-quiz
+- **PRD refs:** — (post-MVP; note PRD scopes public browsing out of MVP)
+- **Prerequisites:** F-02 (map component; reuse `/map-demo`, `/study/[setId]`)
+- **Parallel with:** S-06, S-09
+- **Blockers:** —
+- **Unknowns:**
+  - Quiz as a section on `/` vs a dedicated `/try` route. Owner: user. Block: no.
+- **Risk:** Medium — slimming the session component into a logged-out mode. Converts visitors by showing the mechanic rather than describing it.
+- **Status:** proposed
+
+### S-09: One-click starter sets
+
+- **Outcome:** curated CSV sets ship inside the app; "add" creates the user's **own copy** via the existing import path (reuse CSV validation / `ImportSetForm`). Entry points: the S-07 empty state and a "Start with a ready-made set" section in `/sets`.
+- **Change ID:** starter-sets
+- **PRD refs:** — (post-MVP; strengthens onboarding / S-07 empty state)
+- **Prerequisites:** S-01
+- **Parallel with:** S-06, S-08
+- **Blockers:** —
+- **Unknowns:**
+  - Behavior on double-click (allow duplicate vs block). Per-user copy keeps the data model unchanged. Owner: user. Block: no.
+- **Risk:** The real work is data — sourcing and **verifying** coordinates (especially Polish national-park centroids); the logic is trivial (reuse import). Three starter sets (format `name, latitude, longitude`):
+  - **A. Crown of the Earth — 9 peaks** (combined Bass+Messner, intentional). `name` carries elevation; continent classification only on the disputed entries: `Mount Everest (8848 m)`, `Aconcagua (6961 m)`, `Denali / McKinley (6190 m)`, `Kilimanjaro (5895 m)`, `Vinson Massif (4892 m)`, `Elbrus (5642 m, Europe per Messner/Bass)`, `Mont Blanc (4810 m, Europe per some geographers)`, `Puncak Jaya (4884 m, Oceania per Messner)`, `Mount Kosciuszko (2230 m, Australia per Bass)`.
+  - **B. European capitals — all 48.** `name` = bare name; point = city center.
+  - **C. National Parks of Poland — all 23.** `name` = bare name; point = park **centroid** (not the HQ).
+- **Status:** proposed
+
 ## Backlog Handoff
 
 | Roadmap ID | Change ID                  | GitHub issue                                                        | Suggested issue title                       | Ready for `/10x-plan` | Notes                                             |
@@ -162,6 +221,10 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-03       | prioritized-return-session | [#5](https://github.com/stanislawpiotrowski/meridian-mind/issues/5) | Prioritized return session (SRS queue)      | no                    | Needs S-02 to have produced per-item history      |
 | S-04       | delete-set                 | [#6](https://github.com/stanislawpiotrowski/meridian-mind/issues/6) | Delete an imported set                      | no                    | Needs F-01, S-01; parallel with the study loop    |
 | S-05       | csv-malformed-row-handling | [#7](https://github.com/stanislawpiotrowski/meridian-mind/issues/7) | CSV import: report malformed rows           | no                    | Nice-to-have; needs S-01                          |
+| S-06       | navigation-shell           | — (post-MVP)                                                        | Consistent navigation shell (no dead-ends)  | yes                   | No prerequisites; removes the Dashboard dead-end  |
+| S-07       | dashboard-home             | — (post-MVP)                                                        | Dashboard as "what to do now" home          | no                    | Needs F-01, S-03; lite-vs-full per data model     |
+| S-08       | product-landing-and-quiz   | — (post-MVP)                                                        | Product landing + 10-capital teaser quiz    | no                    | Needs F-02; logged-out, client-side only          |
+| S-09       | starter-sets               | — (post-MVP)                                                        | One-click curated starter sets              | no                    | Needs S-01; main work is verifying coordinates    |
 
 This table is the clean handoff to Jira/Linear or any MCP-backed backlog. One row per `F-NN` / `S-NN`.
 
