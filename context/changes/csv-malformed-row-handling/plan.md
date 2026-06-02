@@ -218,17 +218,17 @@ No schema migration (F-01 schema reused as-is). No new dependencies (papaparse a
 
 #### Automated
 
-- [ ] 1.1 Type checking passes: `npm run typecheck`
-- [ ] 1.2 Linting passes on touched files: `npx eslint src/lib/csv.ts src/pages/api/sets/index.ts`
-- [ ] 1.3 Build succeeds: `npm run build`
+- [x] 1.1 Type checking passes: `npm run typecheck`
+- [x] 1.2 Linting passes on touched files: `npx eslint src/lib/csv.ts src/pages/api/sets/index.ts`
+- [x] 1.3 Build succeeds: `npm run build`
 
 #### Manual
 
-- [ ] 1.4 All-valid CSV (no flag) → 200; set + N flashcards created
-- [ ] 1.5 Mixed CSV with `importValidOnly: true` → 200; set contains exactly the valid rows
-- [ ] 1.6 All-invalid CSV with `importValidOnly: true` → 400; no set created
-- [ ] 1.7 Invalid rows with no flag → 400; nothing created
-- [ ] 1.8 Missing header / empty / >1000 rows → 400 file-level error before row handling
+- [x] 1.4 All-valid CSV (no flag) → 200; set + N flashcards created
+- [x] 1.5 Mixed CSV with `importValidOnly: true` → 200; set contains exactly the valid rows
+- [x] 1.6 All-invalid CSV with `importValidOnly: true` → 400; no set created
+- [x] 1.7 Invalid rows with no flag → 400; nothing created
+- [x] 1.8 Missing header / empty / >1000 rows → 400 file-level error before row handling
 
 ### Phase 2: Pre-commit report UI
 

@@ -15,10 +15,12 @@ export const POST: APIRoute = async (context) => {
   // Parse JSON body — malformed body throws SyntaxError
   let name: unknown;
   let csv: unknown;
+  let importValidOnly = false;
   try {
     const body = (await context.request.json()) as Record<string, unknown>;
     name = body.name;
     csv = body.csv;
+    importValidOnly = body.importValidOnly === true;
   } catch {
     return new Response(JSON.stringify({ error: "Invalid request body." }), {
       status: 400,
@@ -42,10 +44,29 @@ export const POST: APIRoute = async (context) => {
     });
   }
 
-  // Parse and validate CSV rows
+  // Parse and validate CSV rows — server is authoritative; we re-validate the raw
+  // csv string and never trust a client-sent row array.
   const parsed = parseAndValidateCsv(csv);
   if (!parsed.ok) {
+    // File-level error (missing header, empty, over row cap).
     return new Response(JSON.stringify({ error: parsed.error }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  // Without the flag, preserve the all-or-nothing default: a malformed post is
+  // rejected (the client normally only posts unflagged when invalid is empty).
+  if (parsed.invalid.length > 0 && !importValidOnly) {
+    return new Response(JSON.stringify({ error: `${parsed.invalid.length} row(s) are invalid.` }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  // Zero-valid guard — never create an empty set (covers all-invalid + flag).
+  if (parsed.valid.length === 0) {
+    return new Response(JSON.stringify({ error: "No valid rows to import." }), {
       status: 400,
       headers: { "Content-Type": "application/json" },
     });
@@ -77,7 +98,7 @@ export const POST: APIRoute = async (context) => {
   const setId = setData.id;
 
   // Bulk-insert flashcards — denormalized user_id is required by RLS
-  const flashcardRows = parsed.rows.map((row) => ({
+  const flashcardRows = parsed.valid.map((row) => ({
     set_id: setId,
     user_id: user.id,
     name: row.name,
