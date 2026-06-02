@@ -126,9 +126,13 @@ export default function ImportSetForm() {
             <li key={row.row} className="border-b border-white/5 pb-2 last:border-0 last:pb-0">
               <span className="font-medium text-red-300">Row {row.row}</span>
               <ul className="mt-1 space-y-0.5 text-blue-100/80">
-                {row.errors.map((err, i) => (
-                  <li key={i}>
-                    <span className="font-medium">{err.field}</span>: {err.reason}
+                {row.errors.map((err) => (
+                  <li key={err.field}>
+                    <span className="font-medium">{err.field}</span>
+                    {row.values[err.field] !== "" && (
+                      <span className="text-blue-100/50"> “{row.values[err.field]}”</span>
+                    )}
+                    : {err.reason}
                   </li>
                 ))}
               </ul>
