@@ -186,15 +186,15 @@ Create an `AuthLayout` that owns the `bg-cosmic` shell + `Topbar` + content slot
 
 #### Automated
 
-- [x] 2.1 Type checking passes (`npm run typecheck`)
-- [x] 2.2 Linting passes (`npm run lint`)
-- [x] 2.3 Production build succeeds (`npm run build`)
-- [x] 2.4 All three migrated pages use AuthLayout (no stray Topbar imports)
+- [x] 2.1 Type checking passes (`npm run typecheck`) — a266019
+- [x] 2.2 Linting passes (`npm run lint`) — a266019
+- [x] 2.3 Production build succeeds (`npm run build`) — a266019
+- [x] 2.4 All three migrated pages use AuthLayout (no stray Topbar imports) — a266019
 
 #### Manual
 
-- [x] 2.5 /dashboard renders Topbar, "Dashboard" active, single Sign-out, cosmic top-aligned layout
-- [x] 2.6 /sets and /study unchanged aside from enhanced Topbar
-- [x] 2.7 All three screens share the same shell
-- [x] 2.8 Logo / My sets / Dashboard navigation works from every screen
-- [x] 2.9 Sign out works from each screen
+- [x] 2.5 /dashboard renders Topbar, "Dashboard" active, single Sign-out, cosmic top-aligned layout — a266019
+- [x] 2.6 /sets and /study unchanged aside from enhanced Topbar — a266019
+- [x] 2.7 All three screens share the same shell — a266019
+- [x] 2.8 Logo / My sets / Dashboard navigation works from every screen — a266019
+- [x] 2.9 Sign out works from each screen — a266019
