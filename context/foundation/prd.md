@@ -32,13 +32,16 @@ Grounding: the user's friends studying geography. Children, hobby learners, and 
 ## Success Criteria
 
 ### Primary
+
 - The cram student completes a full first session end-to-end: registers an account, imports a 50–300 item CSV (columns: name, latitude, longitude), starts a quiz against that set, sees object names one at a time, clicks on the interactive map for each, receives distance / accuracy feedback with the correct location revealed, and reaches a session summary at the end.
 - The student returns for a second session 1+ days later and the items they got wrong in the previous session have been prioritized to appear earlier and more often in the new queue.
 
 ### Secondary
+
 - 95th-percentile click → feedback latency stays under 500 ms.
 
 ### Guardrails
+
 - Imported sets and per-item study history persist losslessly across sessions and devices. A student can quit mid-session, switch from laptop to phone, return hours or days later, and never lose prior state.
 
 ## User Stories
@@ -50,6 +53,7 @@ Grounding: the user's friends studying geography. Children, hobby learners, and 
 - **Then** they see object names one at a time, click the map for each, receive per-click distance feedback with the correct location revealed, advance through every flashcard in the queue, and reach a session summary at the end
 
 #### Acceptance Criteria
+
 - The session queue contains every item in the chosen set exactly once
 - Per-click feedback is shown within 500 ms (p95) of the click (mirrors the Secondary success criterion)
 - Session summary shows: number of items answered, accuracy percentage, and the list of items the student got most wrong
@@ -62,6 +66,7 @@ Grounding: the user's friends studying geography. Children, hobby learners, and 
 - **Then** the queue prioritizes items the student got wrong in past sessions or has not seen recently, surfacing those items earlier and more often than items they have consistently answered correctly
 
 #### Acceptance Criteria
+
 - Items missed in the prior session appear in the new queue before items previously answered correctly
 - Items not seen for a longer time are surfaced before items seen recently
 - The student does not need to configure anything — prioritization is automatic
@@ -69,19 +74,20 @@ Grounding: the user's friends studying geography. Children, hobby learners, and 
 
 ### US-03 (nice-to-have): Student imports a CSV flashcard set with explicit handling of malformed rows
 
-Priority: **nice-to-have** *(see FR-007; the MVP-required CSV behavior is the happy path, covered by FR-004 + US-01 prerequisites. US-03 documents the contract if/when the nice-to-have ships.)*
+Priority: **nice-to-have** _(see FR-007; the MVP-required CSV behavior is the happy path, covered by FR-004 + US-01 prerequisites. US-03 documents the contract if/when the nice-to-have ships.)_
 
 - **Given** a registered, signed-in student with a CSV file containing flashcards (columns: `name`, `latitude`, `longitude`)
 - **When** they upload the CSV via the import screen
 - **Then** valid rows become flashcards in a new set, and invalid rows are surfaced explicitly to the student rather than silently dropped
 
 #### Acceptance Criteria
+
 - A CSV whose rows are all valid produces a set containing every row as a flashcard (covers FR-004; MVP-required)
 - A row is "invalid" if it: is missing the `name` value, is missing either coordinate, has a non-numeric coordinate, has a latitude outside `[-90, 90]`, or has a longitude outside `[-180, 180]`
-- Each invalid row is reported to the student *before the import finalizes*, with: row number (1-indexed for human readability), which field(s) failed validation, and a one-line reason per failure
+- Each invalid row is reported to the student _before the import finalizes_, with: row number (1-indexed for human readability), which field(s) failed validation, and a one-line reason per failure
 - The student is offered an explicit choice before commit: (a) proceed with only the valid rows imported into the new set, or (b) cancel the import to fix the source file and retry
 - If the student picks (a), the resulting set contains exactly the valid rows; invalid rows are not silently dropped — the student saw them first
-- The CSV's first row is expected to contain column headers `name`, `latitude`, `longitude` (case-insensitive); a file missing headers, with unrecognized headers, or with extra columns is reported as an error before row-level validation begins
+- The CSV's first row is expected to contain column headers including `name`, `latitude`, `longitude` (case-insensitive). A file missing any of these required headers is reported as a file-level error before row-level validation begins. Extra/unrecognized columns (e.g. `id`, `notes`) are tolerated and ignored — they do not block the import — so that real-world exports carrying additional columns import cleanly. _(Revised 2026-06-02 during S-05 planning: the earlier rule rejected extra columns; relaxed to a forgiving import for a smoother student experience.)_
 - The CSV is expected to be UTF-8 encoded. Files in other encodings (e.g., Windows-1250) may render geographic names with diacritics ("Wrocław", "Kraków") incorrectly; behavior with non-UTF-8 files is undefined for the MVP and may be addressed post-MVP
 
 ## Functional Requirements
@@ -89,9 +95,11 @@ Priority: **nice-to-have** *(see FR-007; the MVP-required CSV behavior is the ha
 ### Account & Authentication
 
 - **FR-001**: Student can register a new account with email and password. Priority: must-have
+
   > Socrates: Counter-argument considered: "Email + password adds friction for a one-time-use cram tool; magic-link / OAuth might be lower-abandonment." Resolution: kept — Phase 2 explicitly evaluated OAuth and magic-link and rejected both for cost-of-infra reasons; the timeline acknowledgment in Phase 3 already accepted the friction.
 
 - **FR-002**: Student can sign in with their existing email and password. Priority: must-have
+
   > Socrates: Counter-argument considered: "Persistent session cookies make manual sign-in rare; explicit sign-in is over-engineered." Resolution: kept — sign-in is the necessary counterpart to register; both exist regardless of cookie persistence.
 
 - **FR-003**: Student can sign out from any authenticated screen. Priority: nice-to-have
@@ -100,12 +108,15 @@ Priority: **nice-to-have** *(see FR-007; the MVP-required CSV behavior is the ha
 ### Set Management
 
 - **FR-004**: Student can upload a CSV file containing flashcard objects (columns: `name`, `latitude`, `longitude`). Priority: must-have
+
   > Socrates: Counter-argument considered: "Students get syllabi as PDF / slides / Word; CSV-only adds a manual conversion step that may kill adoption." Resolution: kept — CSV is universal and simplest; PDF / slide import is a clean post-MVP feature.
 
 - **FR-005**: Student can view a list of all sets they have imported and pick one to study. Priority: must-have
+
   > Socrates: Counter-argument considered: "A list view becomes noise once a student has 10+ sets; needs search/filter even at MVP." Resolution: kept — cram students typically have 1–3 sets in the MVP window; search/filter is post-MVP.
 
 - **FR-006**: Student can delete a set they previously imported. Priority: must-have
+
   > Socrates: Counter-argument considered: "Hard delete is risky; soft delete with undo is safer, especially for a cram student who could lose hours of study history." Resolution: kept — hard delete is simplest; confirmation dialog is implied (not separately FR'd). Soft delete with undo is post-MVP polish.
 
 - **FR-007**: When the app parses an imported CSV, malformed rows (missing name, missing or invalid lat/lon) are surfaced explicitly to the student rather than silently dropped. Priority: nice-to-have
@@ -114,21 +125,27 @@ Priority: **nice-to-have** *(see FR-007; the MVP-required CSV behavior is the ha
 ### Study Session (Quiz Loop)
 
 - **FR-008**: Student can start a study quiz against a chosen set. Priority: must-have
+
   > Socrates: Counter-argument considered: "Why force explicit 'start'? Auto-start when student picks a set — one less click." Resolution: kept — explicit start lets the student preview the set if they want; one click is not significant friction.
 
 - **FR-009**: Student sees the name of one object at a time during a quiz. Priority: must-have
+
   > Socrates: Counter-argument considered: "Showing the next few upcoming object names reduces cognitive load." Resolution: kept — one-at-a-time IS the active-recall mechanic; previewing breaks the spaced-repetition contract.
 
 - **FR-010**: Student can click anywhere on the interactive map to answer "where is this object?". Priority: must-have
+
   > Socrates: Counter-argument considered: "Free click might be too forgiving; drag-pin from a list could match cram-student mental models better." Resolution: kept — free click matches the cognitive task being tested (recall the location, then point). Drag-pin is a different mechanic; post-MVP variant.
 
 - **FR-011**: After each click, the student sees feedback: distance error (in km) between their click and the correct location, the correct location revealed on the map, and a clear correct / incorrect indicator. Priority: must-have
+
   > Socrates: Counter-argument considered: "Km feedback is meaningless for city-scale sets (districts within Warsaw); unit/scale should be adaptive or per-set configurable." Resolution: kept with Open Question — MVP target sets (countries, capitals, ranges) are continent-scale where km is the right granularity; sub-country sets would need scale-adaptive feedback. See `## Open Questions` #1.
 
 - **FR-012**: The quiz advances to the next flashcard after the student acknowledges feedback. Priority: must-have
+
   > Socrates: Counter-argument considered: "Auto-advance is impatient; student needs absorb-time on the correct location." Resolution: kept — the FR already specifies "after the student acknowledges feedback", which is a manual step; the apparent tension dissolves on close reading.
 
 - **FR-013**: A study session ends when all flashcards in its queue have been answered. Priority: must-have
+
   > Socrates: Counter-argument considered: "Long sets (300 items) force marathon sessions; should support in-session breaks." Resolution: kept — the lossless-persistence guardrail implies the student can quit the tab and resume mid-session; explicit "break" affordance is post-MVP.
 
 - **FR-014**: At session end, the student sees a summary (number of items shown, accuracy, items they struggled with). Priority: must-have
@@ -137,6 +154,7 @@ Priority: **nice-to-have** *(see FR-007; the MVP-required CSV behavior is the ha
 ### Cross-Session Persistence & Prioritization
 
 - **FR-015**: The app records per-item performance (last attempt's distance error, attempt count, last-seen time) and persists it across sessions. Priority: must-have
+
   > Socrates: Counter-argument considered: "Per-item data is sensitive (reveals what the student doesn't know); should be per-item deletable at any time." Resolution: kept — persistence is foundational. FR-006 (delete set) is set-level deletion; per-item deletion is over-engineering for MVP and can be added post-MVP if privacy concerns surface.
 
 - **FR-016**: When a student starts a new session against a previously-studied set, the queue is ordered to prioritize items the student got wrong or has not seen recently. Priority: must-have
@@ -144,7 +162,7 @@ Priority: **nice-to-have** *(see FR-007; the MVP-required CSV behavior is the ha
 
 ## Non-Functional Requirements
 
-- **Latency** — Per-click feedback is rendered within 500 ms (p95) of the click. *(Mirrors the Secondary success criterion.)*
+- **Latency** — Per-click feedback is rendered within 500 ms (p95) of the click. _(Mirrors the Secondary success criterion.)_
 - **Persistence reliability** — Imported sets and per-item study history survive any combination of session end, browser close, device change, and time gap without loss.
 - **Data isolation** — A user cannot observe, infer, or recover any data belonging to another user via the app's UI or any externally-reachable endpoint.
 - **Desktop browser support** — The app remains usable on the current and previous major versions of Chrome, Firefox, Safari, and Edge on desktop.
@@ -183,8 +201,8 @@ The following are explicitly out of scope for the MVP. They are recorded here so
 - **Mobile / responsive UI** — deferred. MVP is desktop-first; the multi-device persistence guardrail is satisfied by data sync, not by UI adaptation. Students can use the desktop site on tablets/phones but the layout will not be optimized for small screens.
 - **Configurable session length (pick N questions per session: All / 10 / 50 …)** — deferred to post-MVP. The MVP queue always contains the full ordered set, effectively "All". The post-MVP feature would let the student pick a target count at session start; the algorithm would then surface the top N items by priority (a small refinement of the locked business rule — truncating the priority-ordered queue at N). Default behavior if/when implemented: "All" (current behavior preserved as the unselected default).
 - **AI-generated flashcard sets (LLM creates the set from a prompt)** — deferred. The MVP wedge is bring-your-own-syllabus CSV import; LLM-generated sets blur the differentiator. Re-add post-MVP if the wedge is proven and a "starter set generation" feature would meaningfully help onboarding.
-- **AI-generated tutor feedback per click** — deferred. Per-click LLM-generated commentary (e.g., *"you were close — try a bit further west"*) would add a per-click LLM-infrastructure dependency that is heavy for MVP. The MVP gives factual distance feedback only (FR-011); narrative feedback is post-MVP if user value is demonstrated.
-- **Custom / advanced spaced-repetition scoring (SuperMemo, SM-2, hand-rolled scoring math)** — deferred. The MVP uses the simplest queue ordering that satisfies FR-016. Advanced scoring is not the differentiator — the *bundle* is the gap, not the algorithm sophistication. Re-add post-MVP only if retention quality becomes the binding constraint.
+- **AI-generated tutor feedback per click** — deferred. Per-click LLM-generated commentary (e.g., _"you were close — try a bit further west"_) would add a per-click LLM-infrastructure dependency that is heavy for MVP. The MVP gives factual distance feedback only (FR-011); narrative feedback is post-MVP if user value is demonstrated.
+- **Custom / advanced spaced-repetition scoring (SuperMemo, SM-2, hand-rolled scoring math)** — deferred. The MVP uses the simplest queue ordering that satisfies FR-016. Advanced scoring is not the differentiator — the _bundle_ is the gap, not the algorithm sophistication. Re-add post-MVP only if retention quality becomes the binding constraint.
 - **Social features and gamification** — deferred. Leaderboards, shared / public sets, streaks, badges, public profiles, comments, follow graphs, achievement systems. None matches the cram-student persona; all are common scope-creep traps for study apps. Re-add post-MVP only if user research shows these would change behavior.
 
 ## Open Questions
