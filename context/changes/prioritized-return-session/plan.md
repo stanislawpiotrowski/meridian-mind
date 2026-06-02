@@ -190,14 +190,14 @@ The history scan is bounded by one user's attempts on one set (small per the PRD
 
 #### Automated
 
-- [x] 2.1 Type checking passes: `npm run typecheck`
-- [x] 2.2 Linting passes: `npm run lint`
-- [x] 2.3 Production build succeeds: `npm run build`
+- [x] 2.1 Type checking passes: `npm run typecheck` — 9bf98a5
+- [x] 2.2 Linting passes: `npm run lint` — 9bf98a5
+- [x] 2.3 Production build succeeds: `npm run build` — 9bf98a5
 
 #### Manual
 
-- [x] 2.4 No-prior-session set orders by insertion order (S-02 parity)
-- [x] 2.5 Far-clicked items from a completed session appear earlier next session
-- [x] 2.6 Longer-unseen items appear ahead of recently-seen accurate items
-- [x] 2.7 A card added after the first session appears at the top next session
-- [x] 2.8 Mid-session resume lands on the correct card; order doesn't reshuffle while answering
+- [x] 2.4 No-prior-session set orders by insertion order (S-02 parity) — 9bf98a5
+- [x] 2.5 Far-clicked items from a completed session appear earlier next session — 9bf98a5
+- [x] 2.6 Longer-unseen items appear ahead of recently-seen accurate items — 9bf98a5
+- [x] 2.7 A card added after the first session appears at the top next session — 9bf98a5
+- [x] 2.8 Mid-session resume lands on the correct card; order doesn't reshuffle while answering — 9bf98a5
