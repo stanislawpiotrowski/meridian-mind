@@ -159,14 +159,14 @@ None — no schema change. Cascade and RLS were established in F-01.
 
 #### Automated
 
-- [x] 2.1 Type checking passes
-- [x] 2.2 Linting passes
-- [x] 2.3 Build succeeds
+- [x] 2.1 Type checking passes — 7b2cdf9
+- [x] 2.2 Linting passes — 7b2cdf9
+- [x] 2.3 Build succeeds — 7b2cdf9
 
 #### Manual
 
-- [x] 2.4 Delete button shows per row; study link still works
-- [x] 2.5 Cancel confirm leaves set in place
-- [x] 2.6 Confirm deletes set; gone after reload, dependents purged
-- [x] 2.7 Deleting last set shows empty state
-- [x] 2.8 Failed delete surfaces inline error, no reload
+- [x] 2.4 Delete button shows per row; study link still works — 7b2cdf9
+- [x] 2.5 Cancel confirm leaves set in place — 7b2cdf9
+- [x] 2.6 Confirm deletes set; gone after reload, dependents purged — 7b2cdf9
+- [x] 2.7 Deleting last set shows empty state — 7b2cdf9
+- [x] 2.8 Failed delete surfaces inline error, no reload — 7b2cdf9

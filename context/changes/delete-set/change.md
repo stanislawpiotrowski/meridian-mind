@@ -1,7 +1,7 @@
 ---
 change_id: delete-set
 title: Delete a set the user previously imported
-status: implementing
+status: implemented
 created: 2026-06-02
 updated: 2026-06-02
 archived_at: null
