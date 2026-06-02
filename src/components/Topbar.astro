@@ -1,5 +1,10 @@
 ---
 const { user } = Astro.locals;
+const pathname = Astro.url.pathname;
+
+const linkBase = "transition-colors hover:text-purple-100 hover:underline";
+const linkClass = (href: string) =>
+  pathname === href ? `text-purple-100 underline ${linkBase}` : `text-purple-300 ${linkBase}`;
 ---
 
 <div
@@ -8,16 +13,25 @@ const { user } = Astro.locals;
   {
     user ? (
       <>
-        <span class="text-blue-100/70">{user.email}</span>
         <div class="flex items-center gap-3">
-          <a href="/dashboard" class="text-purple-300 transition-colors hover:text-purple-100 hover:underline">
-            Dashboard
+          <a href="/sets" class="font-semibold text-white transition-colors hover:text-purple-100">
+            MeridianMind
           </a>
-          <a href="/sets" class="text-purple-300 transition-colors hover:text-purple-100 hover:underline">
+          <span class="text-blue-100/70">{user.email}</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <a href="/sets" class:list={[linkClass("/sets")]} aria-current={pathname === "/sets" ? "page" : undefined}>
             My sets
           </a>
+          <a
+            href="/dashboard"
+            class:list={[linkClass("/dashboard")]}
+            aria-current={pathname === "/dashboard" ? "page" : undefined}
+          >
+            Dashboard
+          </a>
           <form method="POST" action="/api/auth/signout">
-            <button type="submit" class="text-purple-300 transition-colors hover:text-purple-100 hover:underline">
+            <button type="submit" class:list={[`text-purple-300 ${linkBase}`]}>
               Sign out
             </button>
           </form>

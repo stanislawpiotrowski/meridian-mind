@@ -170,17 +170,17 @@ Create an `AuthLayout` that owns the `bg-cosmic` shell + `Topbar` + content slot
 
 #### Automated
 
-- [ ] 1.1 Type checking passes (`npm run typecheck`)
-- [ ] 1.2 Linting passes (`npm run lint`)
-- [ ] 1.3 Production build succeeds (`npm run build`)
+- [x] 1.1 Type checking passes (`npm run typecheck`)
+- [x] 1.2 Linting passes (`npm run lint`)
+- [x] 1.3 Production build succeeds (`npm run build`)
 
 #### Manual
 
-- [ ] 1.4 Logo + reordered links render on /sets; "My sets" highlighted active
-- [ ] 1.5 Logo click navigates to /sets
-- [ ] 1.6 /study renders Topbar cleanly with no primary link highlighted
-- [ ] 1.7 Public landing / (signed-out) is visually unchanged — no logo, signed-out links intact
-- [ ] 1.8 Sign out still works
+- [x] 1.4 Logo + reordered links render on /sets; "My sets" highlighted active
+- [x] 1.5 Logo click navigates to /sets
+- [x] 1.6 /study renders Topbar cleanly with no primary link highlighted
+- [x] 1.7 Public landing / (signed-out) is visually unchanged — no logo, signed-out links intact
+- [x] 1.8 Sign out still works
 
 ### Phase 2: AuthLayout and page migration
 
