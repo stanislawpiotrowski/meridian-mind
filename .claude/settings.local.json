@@ -10,7 +10,9 @@
       "Bash(echo \"EMPTY=$?\")",
       "PowerShell(npx eslint src/lib/study.ts src/lib/studySession.ts \"src/pages/api/study/sessions/[id]/attempts.ts\" \"src/pages/api/study/sessions/[id]/complete.ts\" src/middleware.ts)",
       "PowerShell(Write-Output \"autocrlf: $\\(git config --get core.autocrlf\\)\"; Write-Output \"eol: $\\(git config --get core.eol\\)\"; git ls-files --eol src/components/auth/SignUpForm.tsx)",
-      "PowerShell(npm run *)"
+      "PowerShell(npm run *)",
+      "Bash(echo \"EMPTY_DIFF_EXIT:$?\")",
+      "Skill(10x-impl-review)"
     ]
   }
 }
