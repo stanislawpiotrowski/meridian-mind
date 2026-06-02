@@ -25,14 +25,19 @@ import { DEFAULT_CORRECT_THRESHOLD_KM } from "@/lib/study";
  * - `stalenessRefMs`: elapsed-time horizon at which the staleness term saturates
  *   to 1. A small number of days so items unseen for a few days float fully up.
  */
-export const PRIORITIZATION_CONFIG = {
+export interface PrioritizationConfig {
+  wError: number;
+  wRecency: number;
+  errorRefKm: number;
+  stalenessRefMs: number;
+}
+
+export const PRIORITIZATION_CONFIG: PrioritizationConfig = Object.freeze({
   wError: 0.5,
   wRecency: 0.5,
   errorRefKm: DEFAULT_CORRECT_THRESHOLD_KM,
   stalenessRefMs: 3 * 24 * 60 * 60 * 1000, // 3 days
-};
-
-export type PrioritizationConfig = typeof PRIORITIZATION_CONFIG;
+});
 
 /** The most recent prior-session attempt for one flashcard, keyed externally by id. */
 export interface LastAttempt {
@@ -85,6 +90,9 @@ export function prioritizeQueue<T extends { id: string }>(
     score: priorityScore(lastAttempts.get(flashcard.id), now, config),
   }));
 
+  // Descending score, insertion index as tie-break. Two never-seen items both
+  // score +Infinity, so `b.score - a.score` is NaN — being falsy, it correctly
+  // falls through to the index tie-break. Keep both terms: do not "simplify".
   scored.sort((a, b) => b.score - a.score || a.index - b.index);
 
   return scored.map((entry) => entry.flashcard);
