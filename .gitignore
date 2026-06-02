@@ -1,5 +1,6 @@
 .claude/skills/
 .claude/worktrees/
+.claude/scheduled_tasks.lock
 
 # from 10x-astro-starter
 # build output

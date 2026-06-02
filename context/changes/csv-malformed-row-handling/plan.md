@@ -73,12 +73,15 @@ Refactor `parseAndValidateCsv` to partition rows into valid and invalid (with pe
 
 **Intent**: Replace the first-failure, all-or-nothing model with one that collects every invalid row and its per-field reasons, while still short-circuiting on file-level problems (missing required header, empty file, over the row cap). Keep `normalizeCoordCell`, the constants, and the exact validity rules (blank-coordinate guard, finite-number check, ranges, name 1..200) — only the _aggregation_ changes.
 
+**Header case-insensitivity** (closes a PRD gap, prd.md:84 — "headers … (case-insensitive)"). The current `headers.includes(col)` check is case-sensitive, so `Name,Latitude,Longitude` (a common Excel export) is wrongly rejected as a missing-header file-level error. Pass `transformHeader: (h) => h.trim().toLowerCase()` to the `Papa.parse` options so both the required-header check and downstream `row.name` / `row.latitude` / `row.longitude` access work regardless of source casing — no other code changes needed. Add `transformHeader` to the manual verification: a CSV with title-cased headers imports cleanly.
+
 **Contract**: Keep `ParsedFlashcard`. Add:
 
 - `interface RowFieldError { field: "name" | "latitude" | "longitude"; reason: string }`
 - `interface InvalidRow { row: number; values: { name: string; latitude: string; longitude: string }; errors: RowFieldError[] }` — `row` is the 1-indexed parsed-data ordinal; `values` carries the raw cells for display.
 - Change the success arm of `CsvParseResult` to `{ ok: true; valid: ParsedFlashcard[]; invalid: InvalidRow[] }`. The failure arm `{ ok: false; error: string }` stays and is used **only** for file-level errors (missing header, zero rows, over `MAX_ROWS`).
 - `parseAndValidateCsv(raw)`: file-level checks first (unchanged, return `{ ok:false, error }`). Then iterate rows; for each, accumulate `RowFieldError`s across all three fields (do not stop at the first failing field); a row with zero errors pushes to `valid`, otherwise an `InvalidRow` (with its 1-indexed ordinal and raw cell values) pushes to `invalid`. Return `{ ok: true, valid, invalid }`. Name-length violation is a `name` field error; blank/non-numeric/out-of-range coordinates are `latitude`/`longitude` field errors with the existing one-line messages.
+- **Guard undefined cells (ragged rows).** With papaparse `header:true`, a data row that has fewer cells than headers yields a row object with **missing keys** (`row.longitude` is `undefined`), so the current unguarded `row.longitude.trim()` would throw — crashing the whole parse on exactly the malformed shape this slice must report. Coerce every cell before trimming: `const name = (row.name ?? "").trim()` (same for `latitude`/`longitude`). A missing/blank `name` becomes a `name` field error; a missing/blank coordinate reuses the existing blank-coordinate field error. The raw `values` stored on the `InvalidRow` should likewise use `row.x ?? ""` so display never sees `undefined`. This makes ragged rows ordinary `InvalidRow`s instead of exceptions.
 
 #### 2. Extend the create-set route with `importValidOnly`
 
