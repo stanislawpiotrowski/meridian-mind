@@ -9,7 +9,7 @@ This is roadmap slice **S-06** — pure UX, no data model, API, or state changes
 ## Current State Analysis
 
 - **`src/components/Topbar.astro`** renders a signed-in bar (`user.email` + `Dashboard` / `My sets` / `Sign out`) or a signed-out bar (`Sign in` / `Sign up`). It reads `Astro.locals.user`. It has **no logo** and orders links `Dashboard → My sets`.
-- **`Topbar` is wired into exactly two pages** by hand: `src/pages/sets/index.astro:36` and `src/pages/study/[setId].astro:79`. Both wrap content in an identical `bg-cosmic relative min-h-screen w-full overflow-hidden` → `relative z-10 p-4 sm:p-8` shell and place `<Topbar />` at the top.
+- **`Topbar` is rendered in three places** by hand: `src/pages/sets/index.astro:36` and `src/pages/study/[setId].astro:79` (both wrap content in an identical `bg-cosmic relative min-h-screen w-full overflow-hidden` → `relative z-10 p-4 sm:p-8` shell with `<Topbar />` at the top), **and `src/components/Welcome.astro:28`**, which is what the public landing `/` renders (`src/pages/index.astro:7`). The Welcome usage shows the **signed-out** Topbar branch — Phase 1 must leave that branch untouched so `/` does not regress.
 - **`src/pages/dashboard.astro` does NOT render `Topbar`.** It is a vertically-centered card (`flex min-h-screen items-center justify-center`) with a welcome message and its own inline `POST /api/auth/signout` button — a navigational dead-end.
 - **`src/layouts/Layout.astro`** is the only layout: it injects config `Banner`s and renders a bare `<slot />`. Title defaults to `"10x Astro Starter"`. There is no authenticated-layout abstraction; nav consistency is an unenforced per-page convention.
 - Sign-out is a `<form method="POST" action="/api/auth/signout">` — this contract is reused, not changed.
@@ -53,7 +53,7 @@ Add a home-linking logo, reorder the signed-in links to surface "My sets," and h
 **Contract**:
 
 - Read `const pathname = Astro.url.pathname;` in the frontmatter.
-- Logo is an `<a href="/sets">` containing the MeridianMind wordmark, placed at the start of the bar (the email can move beside it or stay on the right — implementer's call within the existing flex layout).
+- Logo is an `<a href="/sets">` containing the MeridianMind wordmark, placed at the start of the bar (the email can move beside it or stay on the right — implementer's call within the existing flex layout). **The logo belongs to the signed-in branch only** — the signed-out branch (rendered on the public `/` via `Welcome.astro`) stays exactly as-is, so signed-out visitors get no `/sets` link that middleware would bounce to sign-in.
 - A link is "active" when `pathname === href` (use exact match; `/study/...` matching no primary link is the accepted graceful case). Apply a distinguishing class (e.g. the brighter `text-purple-100` + `underline`, or `aria-current="page"`) to the active link only.
 - Signed-in link order in markup: My sets, Dashboard, Sign out (logo precedes all).
 - Sign out remains the existing `<form method="POST" action="/api/auth/signout">` button.
@@ -62,7 +62,7 @@ Add a home-linking logo, reorder the signed-in links to surface "My sets," and h
 
 #### Automated Verification:
 
-- Type checking passes: `npm run astro check` (or the project's `npm run build` typecheck step)
+- Type checking passes: `npm run typecheck`
 - Linting passes: `npm run lint`
 - Production build succeeds: `npm run build`
 
@@ -71,6 +71,7 @@ Add a home-linking logo, reorder the signed-in links to surface "My sets," and h
 - On `/sets`, the logo and links render; "My sets" appears before "Dashboard"; the "My sets" link is highlighted as active.
 - Logo click navigates to `/sets`.
 - On `/study/[setId]`, no primary link is highlighted and the bar still renders cleanly (no error).
+- The public landing `/` (signed-out, via `Welcome.astro`) is visually unchanged — no logo, signed-out links intact.
 - Sign out still signs the user out.
 
 **Implementation Note**: After completing this phase and all automated verification passes, pause for manual confirmation before proceeding to Phase 2.
@@ -125,10 +126,10 @@ Create an `AuthLayout` that owns the `bg-cosmic` shell + `Topbar` + content slot
 
 #### Automated Verification:
 
-- Type checking passes: `npm run astro check`
+- Type checking passes: `npm run typecheck`
 - Linting passes: `npm run lint`
 - Production build succeeds: `npm run build`
-- No remaining direct `Topbar` imports in migrated pages: `grep -rL "AuthLayout" src/pages/dashboard.astro src/pages/sets/index.astro src/pages/study/[setId].astro` returns nothing (all three use AuthLayout)
+- All three pages import `AuthLayout` and none still import `Topbar` directly: `grep -l "AuthLayout" src/pages/dashboard.astro src/pages/sets/index.astro "src/pages/study/[setId].astro"` lists all three, and `grep -rn "import Topbar" src/pages` returns nothing (quote the bracketed `[setId]` path so the shell doesn't glob it)
 
 #### Manual Verification:
 
@@ -169,7 +170,7 @@ Create an `AuthLayout` that owns the `bg-cosmic` shell + `Topbar` + content slot
 
 #### Automated
 
-- [ ] 1.1 Type checking passes (`npm run astro check`)
+- [ ] 1.1 Type checking passes (`npm run typecheck`)
 - [ ] 1.2 Linting passes (`npm run lint`)
 - [ ] 1.3 Production build succeeds (`npm run build`)
 
@@ -178,13 +179,14 @@ Create an `AuthLayout` that owns the `bg-cosmic` shell + `Topbar` + content slot
 - [ ] 1.4 Logo + reordered links render on /sets; "My sets" highlighted active
 - [ ] 1.5 Logo click navigates to /sets
 - [ ] 1.6 /study renders Topbar cleanly with no primary link highlighted
-- [ ] 1.7 Sign out still works
+- [ ] 1.7 Public landing / (signed-out) is visually unchanged — no logo, signed-out links intact
+- [ ] 1.8 Sign out still works
 
 ### Phase 2: AuthLayout and page migration
 
 #### Automated
 
-- [ ] 2.1 Type checking passes (`npm run astro check`)
+- [ ] 2.1 Type checking passes (`npm run typecheck`)
 - [ ] 2.2 Linting passes (`npm run lint`)
 - [ ] 2.3 Production build succeeds (`npm run build`)
 - [ ] 2.4 All three migrated pages use AuthLayout (no stray Topbar imports)
