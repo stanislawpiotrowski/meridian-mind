@@ -170,31 +170,31 @@ Create an `AuthLayout` that owns the `bg-cosmic` shell + `Topbar` + content slot
 
 #### Automated
 
-- [x] 1.1 Type checking passes (`npm run typecheck`)
-- [x] 1.2 Linting passes (`npm run lint`)
-- [x] 1.3 Production build succeeds (`npm run build`)
+- [x] 1.1 Type checking passes (`npm run typecheck`) — 6a7f29c
+- [x] 1.2 Linting passes (`npm run lint`) — 6a7f29c
+- [x] 1.3 Production build succeeds (`npm run build`) — 6a7f29c
 
 #### Manual
 
-- [x] 1.4 Logo + reordered links render on /sets; "My sets" highlighted active
-- [x] 1.5 Logo click navigates to /sets
-- [x] 1.6 /study renders Topbar cleanly with no primary link highlighted
-- [x] 1.7 Public landing / (signed-out) is visually unchanged — no logo, signed-out links intact
-- [x] 1.8 Sign out still works
+- [x] 1.4 Logo + reordered links render on /sets; "My sets" highlighted active — 6a7f29c
+- [x] 1.5 Logo click navigates to /sets — 6a7f29c
+- [x] 1.6 /study renders Topbar cleanly with no primary link highlighted — 6a7f29c
+- [x] 1.7 Public landing / (signed-out) is visually unchanged — no logo, signed-out links intact — 6a7f29c
+- [x] 1.8 Sign out still works — 6a7f29c
 
 ### Phase 2: AuthLayout and page migration
 
 #### Automated
 
-- [ ] 2.1 Type checking passes (`npm run typecheck`)
-- [ ] 2.2 Linting passes (`npm run lint`)
-- [ ] 2.3 Production build succeeds (`npm run build`)
-- [ ] 2.4 All three migrated pages use AuthLayout (no stray Topbar imports)
+- [x] 2.1 Type checking passes (`npm run typecheck`)
+- [x] 2.2 Linting passes (`npm run lint`)
+- [x] 2.3 Production build succeeds (`npm run build`)
+- [x] 2.4 All three migrated pages use AuthLayout (no stray Topbar imports)
 
 #### Manual
 
-- [ ] 2.5 /dashboard renders Topbar, "Dashboard" active, single Sign-out, cosmic top-aligned layout
-- [ ] 2.6 /sets and /study unchanged aside from enhanced Topbar
-- [ ] 2.7 All three screens share the same shell
-- [ ] 2.8 Logo / My sets / Dashboard navigation works from every screen
-- [ ] 2.9 Sign out works from each screen
+- [x] 2.5 /dashboard renders Topbar, "Dashboard" active, single Sign-out, cosmic top-aligned layout
+- [x] 2.6 /sets and /study unchanged aside from enhanced Topbar
+- [x] 2.7 All three screens share the same shell
+- [x] 2.8 Logo / My sets / Dashboard navigation works from every screen
+- [x] 2.9 Sign out works from each screen
