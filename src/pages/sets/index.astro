@@ -3,6 +3,7 @@ import Layout from "@/layouts/Layout.astro";
 import Topbar from "@/components/Topbar.astro";
 import { createClient } from "@/lib/supabase";
 import ImportSetForm from "@/components/sets/ImportSetForm";
+import DeleteSetButton from "@/components/sets/DeleteSetButton";
 
 const { user } = Astro.locals;
 if (!user) return Astro.redirect("/auth/signin");
@@ -52,17 +53,17 @@ if (supabase) {
             <div class="overflow-hidden rounded-2xl border border-white/10 bg-white/10 backdrop-blur-xl">
               <ul class="divide-y divide-white/10">
                 {sets.map((set) => (
-                  <li>
-                    <a
-                      href={`/study/${set.id}`}
-                      class="flex items-center justify-between px-6 py-4 text-white transition-colors hover:bg-white/5"
-                    >
+                  <li class="flex items-center text-white transition-colors hover:bg-white/5">
+                    <a href={`/study/${set.id}`} class="flex flex-1 items-center justify-between px-6 py-4">
                       <div>
                         <p class="font-medium">{set.name}</p>
                         <p class="mt-0.5 text-sm text-blue-100/50">{new Date(set.created_at).toLocaleDateString()}</p>
                       </div>
                       <span class="ml-4 shrink-0 text-sm text-blue-100/60">{set.flashcards[0]?.count ?? 0} cards</span>
                     </a>
+                    <div class="pr-4">
+                      <DeleteSetButton client:load setId={set.id} setName={set.name} />
+                    </div>
                   </li>
                 ))}
               </ul>

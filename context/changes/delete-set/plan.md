@@ -145,28 +145,28 @@ None — no schema change. Cascade and RLS were established in F-01.
 
 #### Automated
 
-- [x] 1.1 Type checking passes
-- [x] 1.2 Linting passes
-- [x] 1.3 Build succeeds
+- [x] 1.1 Type checking passes — 91a3318
+- [x] 1.2 Linting passes — 91a3318
+- [x] 1.3 Build succeeds — 91a3318
 
 #### Manual
 
-- [ ] 1.4 DELETE own set returns 204 and purges dependents
-- [ ] 1.5 DELETE other user's set returns 204 but leaves it intact
-- [ ] 1.6 DELETE while signed out returns 401
+- [x] 1.4 DELETE own set returns 204 and purges dependents — 91a3318
+- [x] 1.5 DELETE other user's set returns 204 but leaves it intact — 91a3318
+- [x] 1.6 DELETE while signed out returns 401 — 91a3318
 
 ### Phase 2: Delete button UI
 
 #### Automated
 
-- [ ] 2.1 Type checking passes
-- [ ] 2.2 Linting passes
-- [ ] 2.3 Build succeeds
+- [x] 2.1 Type checking passes
+- [x] 2.2 Linting passes
+- [x] 2.3 Build succeeds
 
 #### Manual
 
-- [ ] 2.4 Delete button shows per row; study link still works
-- [ ] 2.5 Cancel confirm leaves set in place
-- [ ] 2.6 Confirm deletes set; gone after reload, dependents purged
-- [ ] 2.7 Deleting last set shows empty state
-- [ ] 2.8 Failed delete surfaces inline error, no reload
+- [x] 2.4 Delete button shows per row; study link still works
+- [x] 2.5 Cancel confirm leaves set in place
+- [x] 2.6 Confirm deletes set; gone after reload, dependents purged
+- [x] 2.7 Deleting last set shows empty state
+- [x] 2.8 Failed delete surfaces inline error, no reload
