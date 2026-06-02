@@ -74,7 +74,7 @@ A new dependency-free module holding the tunable config, the pure scoring functi
 
 - `PRIORITIZATION_CONFIG` — an exported config object holding the four tunable constants: `wError`, `wRecency` (default to equal weight, e.g. `0.5` / `0.5`), `errorRefKm` (anchored to `DEFAULT_CORRECT_THRESHOLD_KM` from `src/lib/study.ts`), and `stalenessRefMs` (a reference horizon, e.g. a small number of days expressed in ms). Documented as the single point of change.
 - `LastAttempt` type — `{ distanceKm: number; lastSeenAt: string }` (ISO timestamp), keyed externally by flashcard id.
-- `priorityScore(lastAttempt: LastAttempt | undefined, now: Date, config = PRIORITIZATION_CONFIG): number` — pure function. Returns a higher-is-more-urgent score. A `undefined` lastAttempt (never seen) returns the maximum score (top of queue). Otherwise: `errorTerm = min(distanceKm / errorRefKm, 1)`, `stalenessTerm = min((now - lastSeenAt) / stalenessRefMs, 1)`, `score = wError·errorTerm + wRecency·stalenessTerm`.
+- `priorityScore(lastAttempt: LastAttempt | undefined, now: Date, config = PRIORITIZATION_CONFIG): number` — pure function. Returns a higher-is-more-urgent score. A `undefined` lastAttempt (never seen) returns a sentinel **strictly above any achievable seen score** (use `Number.POSITIVE_INFINITY`) so a never-seen item always sorts ahead of every seen item — including one that is both maximally wrong and maximally stale (which can itself reach `wError + wRecency`). Otherwise: `errorTerm = min(distanceKm / errorRefKm, 1)`, `stalenessTerm = min((now - lastSeenAt) / stalenessRefMs, 1)`, `score = wError·errorTerm + wRecency·stalenessTerm`.
 - `prioritizeQueue<T extends { id: string }>(flashcards: T[], lastAttempts: Map<string, LastAttempt>, now: Date, config?): T[]` — returns a new array sorted by descending score, with **insertion order (original array index) as the tie-break** so equal-score items (notably an all-never-seen first session) preserve `created_at ASC`. Must be a stable, non-mutating sort.
 
 A snippet is not needed — the normalization formula is fully specified above and the rest follows existing lib patterns.
@@ -145,7 +145,7 @@ No automated test runner is configured (Module 3 concern). The scorer is written
 
 1. Seed: import a small set (~5 cards), run a full session deliberately clicking 2 cards far away and 3 accurately; finish to completion.
 2. Start a new session against the same set → confirm the 2 far-clicked cards appear before the 3 accurate ones.
-3. Wait/seed an older `last_seen_at` for one accurate card (or run a second session touching only some cards) → confirm the longer-unseen card rises.
+3. Wait/seed an older `last_seen_at` for one accurate card (or run a second session touching only some cards) → confirm the longer-unseen card rises. Note: `study_history.created_at` is append-only with `DEFAULT now()`, so the app cannot write a backdated timestamp — exercising the staleness term with a controlled age requires a **direct SQL insert into `study_history` with a backdated `created_at`**. Absent that, the staleness term is verified by reasoning over the pure, deterministic `priorityScore` (the time math is local and unit-testable).
 4. Add a new card to the set (re-import or DB insert) → start a session → confirm the new card is at the top.
 5. Start a session, answer 2 cards, reload the tab → confirm resume lands on card 3 and order is stable.
 6. Brand-new set, first session → confirm order equals insertion order (S-02 parity).
