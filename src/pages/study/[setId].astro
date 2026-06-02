@@ -4,6 +4,7 @@ import Topbar from "@/components/Topbar.astro";
 import { createClient } from "@/lib/supabase";
 import { ensureOpenSession } from "@/lib/studySession";
 import { boundingBox, DEFAULT_CORRECT_THRESHOLD_KM } from "@/lib/study";
+import { prioritizeQueue, type LastAttempt } from "@/lib/prioritize";
 import StudySession, { type StudyFlashcard, type PriorAttempt } from "@/components/study/StudySession";
 
 const { user } = Astro.locals;
@@ -33,6 +34,8 @@ const hasCards = flashcards.length > 0;
 
 let sessionId: string | null = null;
 let priorAttempts: PriorAttempt[] = [];
+// The queue passed to the island — reordered by priority once we have history.
+let queue: StudyFlashcard[] = flashcards;
 
 if (hasCards) {
   sessionId = await ensureOpenSession(supabase, user.id, setId);
@@ -44,6 +47,26 @@ if (hasCards) {
       .eq("session_id", sessionId);
 
     priorAttempts = (history ?? []).map((h) => ({ flashcardId: h.flashcard_id, distanceKm: h.distance_km }));
+
+    // Prior-session attempts (excluding the current open session, so the order
+    // stays stable as the student answers within it). Newest-first, keeping the
+    // first row per flashcard = its most recent attempt (FR-016).
+    const { data: priorHistory } = await supabase
+      .from("study_history")
+      .select("flashcard_id, distance_km, created_at")
+      .eq("user_id", user.id)
+      .eq("set_id", setId)
+      .neq("session_id", sessionId)
+      .order("created_at", { ascending: false });
+
+    const lastAttempts = new Map<string, LastAttempt>();
+    for (const row of priorHistory ?? []) {
+      if (!lastAttempts.has(row.flashcard_id)) {
+        lastAttempts.set(row.flashcard_id, { distanceKm: row.distance_km, lastSeenAt: row.created_at });
+      }
+    }
+
+    queue = prioritizeQueue(flashcards, lastAttempts, new Date());
   }
 }
 
@@ -73,7 +96,7 @@ const bbox = boundingBox(flashcards.map((f) => ({ lat: f.latitude, lng: f.longit
               client:load
               sessionId={sessionId}
               setId={setId}
-              flashcards={flashcards}
+              flashcards={queue}
               priorAttempts={priorAttempts}
               bbox={bbox}
               thresholdKm={DEFAULT_CORRECT_THRESHOLD_KM}

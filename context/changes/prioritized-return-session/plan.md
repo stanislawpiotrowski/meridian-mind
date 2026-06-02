@@ -177,27 +177,27 @@ The history scan is bounded by one user's attempts on one set (small per the PRD
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `npm run typecheck`
-- [x] 1.2 Linting passes: `npm run lint`
+- [x] 1.1 Type checking passes: `npm run typecheck` — 90a7758
+- [x] 1.2 Linting passes: `npm run lint` — 90a7758
 
 #### Manual
 
-- [x] 1.3 Four constants live at the top in `PRIORITIZATION_CONFIG`; scoring math isolated in `priorityScore`
-- [x] 1.4 Never-seen item sorts ahead of any seen item
-- [x] 1.5 Equal-score items retain original relative order (stable tie-break)
+- [x] 1.3 Four constants live at the top in `PRIORITIZATION_CONFIG`; scoring math isolated in `priorityScore` — 90a7758
+- [x] 1.4 Never-seen item sorts ahead of any seen item — 90a7758
+- [x] 1.5 Equal-score items retain original relative order (stable tie-break) — 90a7758
 
 ### Phase 2: Wire prioritization into the study page
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npm run typecheck`
-- [ ] 2.2 Linting passes: `npm run lint`
-- [ ] 2.3 Production build succeeds: `npm run build`
+- [x] 2.1 Type checking passes: `npm run typecheck`
+- [x] 2.2 Linting passes: `npm run lint`
+- [x] 2.3 Production build succeeds: `npm run build`
 
 #### Manual
 
-- [ ] 2.4 No-prior-session set orders by insertion order (S-02 parity)
-- [ ] 2.5 Far-clicked items from a completed session appear earlier next session
-- [ ] 2.6 Longer-unseen items appear ahead of recently-seen accurate items
-- [ ] 2.7 A card added after the first session appears at the top next session
-- [ ] 2.8 Mid-session resume lands on the correct card; order doesn't reshuffle while answering
+- [x] 2.4 No-prior-session set orders by insertion order (S-02 parity)
+- [x] 2.5 Far-clicked items from a completed session appear earlier next session
+- [x] 2.6 Longer-unseen items appear ahead of recently-seen accurate items
+- [x] 2.7 A card added after the first session appears at the top next session
+- [x] 2.8 Mid-session resume lands on the correct card; order doesn't reshuffle while answering
