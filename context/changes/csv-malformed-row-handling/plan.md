@@ -234,17 +234,17 @@ No schema migration (F-01 schema reused as-is). No new dependencies (papaparse a
 
 #### Automated
 
-- [x] 2.1 Type checking passes: `npm run typecheck`
-- [x] 2.2 Linting passes on touched files: `npx eslint src/components/sets/ImportSetForm.tsx`
-- [x] 2.3 Build succeeds: `npm run build`
+- [x] 2.1 Type checking passes: `npm run typecheck` — 8fb6be4
+- [x] 2.2 Linting passes on touched files: `npx eslint src/components/sets/ImportSetForm.tsx` — 8fb6be4
+- [x] 2.3 Build succeeds: `npm run build` — 8fb6be4
 
 #### Manual
 
-- [x] 2.4 All-valid CSV imports in one click, no report shown
-- [x] 2.5 Mixed CSV shows report with correct summary and every invalid row (row #, field, reason)
-- [x] 2.6 "Import N valid rows" creates a set with exactly the valid rows
-- [x] 2.7 "Cancel" returns to the form, nothing created
-- [x] 2.8 All-invalid CSV → report shown, import disabled, only Cancel
-- [x] 2.9 File-level error → single error via `ServerError`, no report
-- [x] 2.10 CSV with an extra column imports cleanly (extra ignored)
-- [x] 2.11 Windows-1250 file → diacritics survive import
+- [x] 2.4 All-valid CSV imports in one click, no report shown — 8fb6be4
+- [x] 2.5 Mixed CSV shows report with correct summary and every invalid row (row #, field, reason) — 8fb6be4
+- [x] 2.6 "Import N valid rows" creates a set with exactly the valid rows — 8fb6be4
+- [x] 2.7 "Cancel" returns to the form, nothing created — 8fb6be4
+- [x] 2.8 All-invalid CSV → report shown, import disabled, only Cancel — 8fb6be4
+- [x] 2.9 File-level error → single error via `ServerError`, no report — 8fb6be4
+- [x] 2.10 CSV with an extra column imports cleanly (extra ignored) — 8fb6be4
+- [x] 2.11 Windows-1250 file → diacritics survive import — 8fb6be4

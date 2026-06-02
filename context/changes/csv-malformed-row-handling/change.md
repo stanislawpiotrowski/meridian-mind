@@ -1,7 +1,7 @@
 ---
 change_id: csv-malformed-row-handling
 title: CSV import with malformed-row reporting and import-valid-or-cancel
-status: implementing
+status: implemented
 created: 2026-06-02
 updated: 2026-06-02
 archived_at: null
