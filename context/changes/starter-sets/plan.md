@@ -222,22 +222,22 @@ None — no schema or data migration. Starter sets are static assets; adding one
 
 #### Automated
 
-- [x] 1.1 Each CSV header is `name,latitude,longitude` and data-row counts are 9 / 48 / 23
-- [x] 1.2 Files are valid UTF-8 (no replacement characters)
+- [x] 1.1 Each CSV header is `name,latitude,longitude` and data-row counts are 9 / 48 / 23 — fcc5970
+- [x] 1.2 Files are valid UTF-8 (no replacement characters) — fcc5970
 
 #### Manual
 
-- [x] 1.3 Spot-check sample coordinates plot correctly on a map
-- [x] 1.4 Park coordinates are centroids, not HQ, for the sample
-- [x] 1.5 Peak names follow `Name (elevation m)`; capitals/parks bare
+- [x] 1.3 Spot-check sample coordinates plot correctly on a map — fcc5970
+- [x] 1.4 Park coordinates are centroids, not HQ, for the sample — fcc5970
+- [x] 1.5 Peak names follow `Name (elevation m)`; capitals/parks bare — fcc5970
 
 ### Phase 2: Starter Registry + Add Island
 
 #### Automated
 
-- [ ] 2.1 Type checking passes (`npm run typecheck`)
-- [ ] 2.2 Linting passes on changed files
-- [ ] 2.3 Build succeeds (`npm run build`)
+- [x] 2.1 Type checking passes (`npm run typecheck`)
+- [x] 2.2 Linting passes on changed files
+- [x] 2.3 Build succeeds (`npm run build`)
 
 #### Manual
 
