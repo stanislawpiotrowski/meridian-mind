@@ -13,7 +13,10 @@
       "PowerShell(npm run *)",
       "Bash(echo \"EMPTY_DIFF_EXIT:$?\")",
       "Skill(10x-impl-review)",
-      "Bash(echo \"exit=$?\")"
+      "Bash(echo \"exit=$?\")",
+      "Bash(echo \"eslint_exit=$?\")",
+      "Bash(echo \"empty_diff_exit=$?\")",
+      "Bash(echo \"recheck_exit=$?\")"
     ]
   }
 }
