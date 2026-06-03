@@ -39,6 +39,19 @@ export const PRIORITIZATION_CONFIG: PrioritizationConfig = Object.freeze({
   stalenessRefMs: 3 * 24 * 60 * 60 * 1000, // 3 days
 });
 
+/**
+ * Cutoff above which a *seen* item counts as **due** (= "to review"). Set to the
+ * contribution of a single dominant term — `min(wError, wRecency)` (≈ 0.5 with
+ * the shipped config) — so an item that is either fully stale OR fully missed
+ * qualifies, while a recently-and-accurately-answered item (both terms low) does
+ * not. Note: staleness alone qualifies a card as "to review" (the staleness term
+ * reaches `wRecency` after `stalenessRefMs` regardless of accuracy). That is
+ * intended — the badge counts items *to review*, not "weak items only". A single
+ * threshold cannot separate "merely stale" from "freshly missed"; both sit near
+ * 0.5, and that is by design. Single point of change for tuning this cutoff.
+ */
+export const DUE_SCORE_THRESHOLD = Math.min(PRIORITIZATION_CONFIG.wError, PRIORITIZATION_CONFIG.wRecency);
+
 /** The most recent prior-session attempt for one flashcard, keyed externally by id. */
 export interface LastAttempt {
   distanceKm: number;
@@ -70,6 +83,20 @@ export function priorityScore(
   const stalenessTerm = Math.min(Math.max(elapsedMs, 0) / config.stalenessRefMs, 1);
 
   return config.wError * errorTerm + config.wRecency * stalenessTerm;
+}
+
+/**
+ * Is this item due (= "to review")? Pure predicate over `priorityScore`, so the
+ * dashboard's notion of urgency and the study queue's ordering share one rule and
+ * can never drift. A never-seen item (`priorityScore` → `+Infinity`) is always
+ * due; a seen item is due once its score crosses `DUE_SCORE_THRESHOLD`.
+ */
+export function isDue(
+  lastAttempt: LastAttempt | undefined,
+  now: Date,
+  config: PrioritizationConfig = PRIORITIZATION_CONFIG,
+): boolean {
+  return priorityScore(lastAttempt, now, config) >= DUE_SCORE_THRESHOLD;
 }
 
 /**
