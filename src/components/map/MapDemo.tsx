@@ -3,6 +3,7 @@ import InteractiveMap, { type Marker } from "@/components/map/InteractiveMap";
 import { haversine, type LatLng } from "@/lib/geo";
 import type { Bbox } from "@/lib/mapProjection";
 import { Button } from "@/components/ui/button";
+import { EUROPE_BBOX } from "@/lib/teaserCapitals";
 
 // Hardcoded target — Warsaw — chosen so it stays in frame at both World and
 // Poland framings. F-02 owns no quiz state; this is demo-only scaffolding.
@@ -11,13 +12,6 @@ const TARGET: Marker = { lat: 52.2297, lng: 21.0122, variant: "target", label: "
 const POLAND_BBOX: Bbox = [
   [14.12, 49.0],
   [24.15, 54.84],
-];
-
-// Continental Europe: British Isles + Iberia in the west to western Russia in
-// the east, Mediterranean to North Cape. Iceland sits at the western edge.
-const EUROPE_BBOX: Bbox = [
-  [-11, 34],
-  [40, 71],
 ];
 
 type Framing = "world" | "europe" | "poland";
