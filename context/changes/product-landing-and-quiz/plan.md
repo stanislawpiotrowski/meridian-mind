@@ -226,14 +226,14 @@ Mount the quiz as a section on `/` and verify the full logged-out and logged-in 
 
 #### Automated
 
-- [x] 3.1 Type checking passes: `npx astro check`
-- [x] 3.2 Linting passes on touched files
-- [x] 3.3 Build succeeds: `npm run build`
+- [x] 3.1 Type checking passes: `npx astro check` — c9568c6
+- [x] 3.2 Linting passes on touched files — c9568c6
+- [x] 3.3 Build succeeds: `npm run build` — c9568c6
 
 #### Manual
 
-- [x] 3.4 Logged-out: full 10-capital loop works (hidden target → reveal → advance → score)
-- [x] 3.5 "Try again" reshuffles; "Sign up" → `/auth/signup`
-- [x] 3.6 Quiz makes zero network requests (DevTools)
-- [x] 3.7 Logged-in: hero CTAs read "Go to my sets"; quiz still playable; no console errors
-- [x] 3.8 Logged-in: teaser end-screen CTA reads "Go to my sets" (→ `/sets`), not "Sign up"
+- [x] 3.4 Logged-out: full 10-capital loop works (hidden target → reveal → advance → score) — c9568c6
+- [x] 3.5 "Try again" reshuffles; "Sign up" → `/auth/signup` — c9568c6
+- [x] 3.6 Quiz makes zero network requests (DevTools) — c9568c6
+- [x] 3.7 Logged-in: hero CTAs read "Go to my sets"; quiz still playable; no console errors — c9568c6
+- [x] 3.8 Logged-in: teaser end-screen CTA reads "Go to my sets" (→ `/sets`), not "Sign up" — c9568c6

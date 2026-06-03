@@ -1,7 +1,7 @@
 ---
 change_id: product-landing-and-quiz
 title: Product landing page + logged-out 10-capital teaser quiz
-status: implementing
+status: implemented
 created: 2026-06-03
 updated: 2026-06-03
 archived_at: null
