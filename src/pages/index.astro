@@ -1,6 +1,10 @@
 ---
 import Welcome from "@/components/Welcome.astro";
 import Layout from "@/layouts/Layout.astro";
+
+// A logged-in visitor lands on their dashboard, not the marketing copy.
+// (`Astro.locals.user` is populated by src/middleware.ts for all routes.)
+if (Astro.locals.user) return Astro.redirect("/dashboard");
 ---
 
 <Layout title="MeridianMind — learn geography by clicking the map">

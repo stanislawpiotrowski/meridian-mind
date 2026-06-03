@@ -260,27 +260,27 @@ Three bounded queries per dashboard load (sets+flashcard-ids, the user's history
 
 #### Automated
 
-- [x] 2.1 Type checking passes: `npm run typecheck`
-- [x] 2.2 Linting passes (changed files): `npx eslint src/pages/dashboard.astro`
-- [x] 2.3 Production build succeeds: `npm run build`
+- [x] 2.1 Type checking passes: `npm run typecheck` — 2af29d6
+- [x] 2.2 Linting passes (changed files): `npx eslint src/pages/dashboard.astro` — 2af29d6
+- [x] 2.3 Production build succeeds: `npm run build` — 2af29d6
 
 #### Manual
 
-- [x] 2.4 Recent list ordered by last activity with due badges matching seeded history
-- [x] 2.5 Primary CTA resumes an open session, else "Start studying" on most-recent set
-- [x] 2.6 Streak matches completed-session history (zero-state line when none)
-- [x] 2.7 Zero-sets user sees only the onboarding card; both links reach `/sets`
+- [x] 2.4 Recent list ordered by last activity with due badges matching seeded history — 2af29d6
+- [x] 2.5 Primary CTA resumes an open session, else "Start studying" on most-recent set — 2af29d6
+- [x] 2.6 Streak matches completed-session history (zero-state line when none) — 2af29d6
+- [x] 2.7 Zero-sets user sees only the onboarding card; both links reach `/sets` — 2af29d6
 
 ### Phase 3: Landing & redirect wiring
 
 #### Automated
 
-- [ ] 3.1 Type checking passes: `npm run typecheck`
-- [ ] 3.2 Linting passes (changed files): `npx eslint src/pages/api/auth/signin.ts src/pages/index.astro`
-- [ ] 3.3 Production build succeeds: `npm run build`
+- [x] 3.1 Type checking passes: `npm run typecheck`
+- [x] 3.2 Linting passes (changed files): `npx eslint src/pages/api/auth/signin.ts src/pages/index.astro`
+- [x] 3.3 Production build succeeds: `npm run build`
 
 #### Manual
 
-- [ ] 3.4 Sign-in redirects to `/dashboard`
-- [ ] 3.5 `/` redirects logged-in users to `/dashboard`; logged-out still see marketing landing
-- [ ] 3.6 Sign-out lands on `/` with no redirect loop
+- [x] 3.4 Sign-in redirects to `/dashboard`
+- [x] 3.5 `/` redirects logged-in users to `/dashboard`; logged-out still see marketing landing
+- [x] 3.6 Sign-out lands on `/` with no redirect loop
