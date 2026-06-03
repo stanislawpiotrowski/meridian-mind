@@ -247,29 +247,29 @@ Three bounded queries per dashboard load (sets+flashcard-ids, the user's history
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `npm run typecheck`
-- [x] 1.2 Linting passes (changed files): `npx eslint src/lib/prioritize.ts src/lib/dashboard.ts`
+- [x] 1.1 Type checking passes: `npm run typecheck` — a6c0af0
+- [x] 1.2 Linting passes (changed files): `npx eslint src/lib/prioritize.ts src/lib/dashboard.ts` — a6c0af0
 
 #### Manual
 
-- [x] 1.3 `isDue` correct for never-seen, stale/missed, and recent-accurate items
-- [x] 1.4 `computeStreak` correct for consecutive, gap, stale-only, and empty inputs
-- [x] 1.5 `getDashboardData` shape matches `DashboardData`; per-set `dueCount` reflects seeded history
+- [x] 1.3 `isDue` correct for never-seen, stale/missed, and recent-accurate items — a6c0af0
+- [x] 1.4 `computeStreak` correct for consecutive, gap, stale-only, and empty inputs — a6c0af0
+- [x] 1.5 `getDashboardData` shape matches `DashboardData`; per-set `dueCount` reflects seeded history — a6c0af0
 
 ### Phase 2: Dashboard page UI
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npm run typecheck`
-- [ ] 2.2 Linting passes (changed files): `npx eslint src/pages/dashboard.astro`
-- [ ] 2.3 Production build succeeds: `npm run build`
+- [x] 2.1 Type checking passes: `npm run typecheck`
+- [x] 2.2 Linting passes (changed files): `npx eslint src/pages/dashboard.astro`
+- [x] 2.3 Production build succeeds: `npm run build`
 
 #### Manual
 
-- [ ] 2.4 Recent list ordered by last activity with due badges matching seeded history
-- [ ] 2.5 Primary CTA resumes an open session, else "Start studying" on most-recent set
-- [ ] 2.6 Streak matches completed-session history (zero-state line when none)
-- [ ] 2.7 Zero-sets user sees only the onboarding card; both links reach `/sets`
+- [x] 2.4 Recent list ordered by last activity with due badges matching seeded history
+- [x] 2.5 Primary CTA resumes an open session, else "Start studying" on most-recent set
+- [x] 2.6 Streak matches completed-session history (zero-state line when none)
+- [x] 2.7 Zero-sets user sees only the onboarding card; both links reach `/sets`
 
 ### Phase 3: Landing & redirect wiring
 
