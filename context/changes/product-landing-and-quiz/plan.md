@@ -193,6 +193,11 @@ Mount the quiz as a section on `/` and verify the full logged-out and logged-in 
 - Public auth-free page precedent: `src/pages/map-demo.astro`
 - Lessons: `context/foundation/lessons.md` (scoped lint on Windows/CRLF)
 
+## Addenda (post-implementation, from impl-review 2026-06-03)
+
+- **Auth back-links (F1)**: Phase 3 added "← Back to home" links to `src/pages/auth/signin.astro` and `signup.astro`. This is outside the original "no auth changes" guardrail but is a pure navigation affordance (no auth logic / middleware / PROTECTED_ROUTES touched), added to fix a UX dead-end found in manual verification. Accepted as in-scope.
+- **Hydration directive (F2)**: The quiz mounts via `client:only="react"`, not the `client:visible` described in the Performance Considerations section above. Reason: `pickTen()` draws a random order per render, so SSR and client hydration disagreed (hydration mismatch); the lint-clean `useEffect` workaround is blocked by a `setState`-in-effect rule. `client:only` removes SSR for the island (matching the `MapDemo` precedent). The Performance section's `client:visible` rationale is superseded by this note.
+
 ## Progress
 
 > Convention: `- [ ]` pending, `- [x]` done. Append ` — <commit sha>` when a step lands. Do not rename step titles.

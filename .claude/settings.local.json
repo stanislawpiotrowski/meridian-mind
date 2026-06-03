@@ -12,7 +12,8 @@
       "PowerShell(Write-Output \"autocrlf: $\\(git config --get core.autocrlf\\)\"; Write-Output \"eol: $\\(git config --get core.eol\\)\"; git ls-files --eol src/components/auth/SignUpForm.tsx)",
       "PowerShell(npm run *)",
       "Bash(echo \"EMPTY_DIFF_EXIT:$?\")",
-      "Skill(10x-impl-review)"
+      "Skill(10x-impl-review)",
+      "Bash(echo \"exit=$?\")"
     ]
   }
 }
