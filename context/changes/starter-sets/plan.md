@@ -222,14 +222,14 @@ None — no schema or data migration. Starter sets are static assets; adding one
 
 #### Automated
 
-- [ ] 1.1 Each CSV header is `name,latitude,longitude` and data-row counts are 9 / 48 / 23
-- [ ] 1.2 Files are valid UTF-8 (no replacement characters)
+- [x] 1.1 Each CSV header is `name,latitude,longitude` and data-row counts are 9 / 48 / 23
+- [x] 1.2 Files are valid UTF-8 (no replacement characters)
 
 #### Manual
 
-- [ ] 1.3 Spot-check sample coordinates plot correctly on a map
-- [ ] 1.4 Park coordinates are centroids, not HQ, for the sample
-- [ ] 1.5 Peak names follow `Name (elevation m)`; capitals/parks bare
+- [x] 1.3 Spot-check sample coordinates plot correctly on a map
+- [x] 1.4 Park coordinates are centroids, not HQ, for the sample
+- [x] 1.5 Peak names follow `Name (elevation m)`; capitals/parks bare
 
 ### Phase 2: Starter Registry + Add Island
 
