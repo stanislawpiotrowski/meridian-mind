@@ -214,26 +214,26 @@ Mount the quiz as a section on `/` and verify the full logged-out and logged-in 
 
 #### Automated
 
-- [x] 2.1 Type checking passes: `npx astro check`
-- [x] 2.2 Linting passes on touched files
-- [x] 2.3 Build succeeds: `npm run build`
+- [x] 2.1 Type checking passes: `npx astro check` — ae3eef5
+- [x] 2.2 Linting passes on touched files — ae3eef5
+- [x] 2.3 Build succeeds: `npm run build` — ae3eef5
 
 #### Manual
 
-- [x] 2.4 Component compiles and is importable
+- [x] 2.4 Component compiles and is importable — ae3eef5
 
 ### Phase 3: Wire-up + cross-state verification
 
 #### Automated
 
-- [ ] 3.1 Type checking passes: `npx astro check`
-- [ ] 3.2 Linting passes on touched files
-- [ ] 3.3 Build succeeds: `npm run build`
+- [x] 3.1 Type checking passes: `npx astro check`
+- [x] 3.2 Linting passes on touched files
+- [x] 3.3 Build succeeds: `npm run build`
 
 #### Manual
 
-- [ ] 3.4 Logged-out: full 10-capital loop works (hidden target → reveal → advance → score)
-- [ ] 3.5 "Try again" reshuffles; "Sign up" → `/auth/signup`
-- [ ] 3.6 Quiz makes zero network requests (DevTools)
-- [ ] 3.7 Logged-in: hero CTAs read "Go to my sets"; quiz still playable; no console errors
-- [ ] 3.8 Logged-in: teaser end-screen CTA reads "Go to my sets" (→ `/sets`), not "Sign up"
+- [x] 3.4 Logged-out: full 10-capital loop works (hidden target → reveal → advance → score)
+- [x] 3.5 "Try again" reshuffles; "Sign up" → `/auth/signup`
+- [x] 3.6 Quiz makes zero network requests (DevTools)
+- [x] 3.7 Logged-in: hero CTAs read "Go to my sets"; quiz still playable; no console errors
+- [x] 3.8 Logged-in: teaser end-screen CTA reads "Go to my sets" (→ `/sets`), not "Sign up"

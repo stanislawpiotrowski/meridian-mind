@@ -30,7 +30,10 @@ type Phase = "awaiting-click" | "revealed";
  * no API. State lives entirely in memory and resets on "Try again".
  */
 export default function TeaserQuiz({ primaryCta }: TeaserQuizProps) {
-  // The 10-capital queue lives in state so "Try again" can reshuffle it.
+  // The 10-capital queue lives in state so "Try again" can reshuffle it. The
+  // random `pickTen()` runs only on the client — the page mounts this island
+  // with `client:only="react"` (no SSR), so there is no server/client render to
+  // mismatch on the random order.
   const [queue, setQueue] = useState<Capital[]>(() => pickTen());
   const [currentIndex, setCurrentIndex] = useState(0);
   const [phase, setPhase] = useState<Phase>("awaiting-click");
@@ -98,7 +101,11 @@ export default function TeaserQuiz({ primaryCta }: TeaserQuizProps) {
           >
             {primaryCta.label}
           </a>
-          <Button variant="outline" onClick={handleTryAgain}>
+          <Button
+            variant="outline"
+            onClick={handleTryAgain}
+            className="border-white/20 bg-transparent text-white hover:bg-white/10 hover:text-white"
+          >
             Try again
           </Button>
         </div>
@@ -130,20 +137,26 @@ export default function TeaserQuiz({ primaryCta }: TeaserQuizProps) {
         />
       </div>
 
-      {phase === "revealed" && distanceKm !== null ? (
-        <div className="rounded-2xl border border-white/10 bg-white/10 p-4 text-white backdrop-blur-xl">
-          <div className="flex items-center justify-between">
-            <p>
-              <span className={correct ? "font-semibold text-emerald-300" : "font-semibold text-amber-300"}>
-                {correct ? "Correct" : "Incorrect"}
-              </span>
-              {" — "}
-              <span className="text-blue-100/80">{distanceKm} km away</span>
-            </p>
-            <Button onClick={handleAcknowledge}>{currentIndex + 1 >= queue.length ? "Finish" : "Next capital"}</Button>
+      {/* Reserve the feedback row's height in both phases so revealing the
+          verdict doesn't shift the map/page up and down between clicks. */}
+      <div className="min-h-[72px]">
+        {phase === "revealed" && distanceKm !== null ? (
+          <div className="rounded-2xl border border-white/10 bg-white/10 p-4 text-white backdrop-blur-xl">
+            <div className="flex items-center justify-between">
+              <p>
+                <span className={correct ? "font-semibold text-emerald-300" : "font-semibold text-amber-300"}>
+                  {correct ? "Correct" : "Incorrect"}
+                </span>
+                {" — "}
+                <span className="text-blue-100/80">{distanceKm} km away</span>
+              </p>
+              <Button onClick={handleAcknowledge}>
+                {currentIndex + 1 >= queue.length ? "Finish" : "Next capital"}
+              </Button>
+            </div>
           </div>
-        </div>
-      ) : null}
+        ) : null}
+      </div>
     </div>
   );
 }
