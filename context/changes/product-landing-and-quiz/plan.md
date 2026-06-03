@@ -201,26 +201,26 @@ Mount the quiz as a section on `/` and verify the full logged-out and logged-in 
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `npx astro check`
-- [x] 1.2 Linting passes on touched files
-- [x] 1.3 Build succeeds: `npm run build`
+- [x] 1.1 Type checking passes: `npx astro check` — d67bed7
+- [x] 1.2 Linting passes on touched files — d67bed7
+- [x] 1.3 Build succeeds: `npm run build` — d67bed7
 
 #### Manual
 
-- [x] 1.4 `/` shows MeridianMind hero + 3 wedge cards; no "10x Astro Starter" remains
-- [x] 1.5 CTAs are auth-adaptive (Sign up/in vs. Go to my sets)
+- [x] 1.4 `/` shows MeridianMind hero + 3 wedge cards; no "10x Astro Starter" remains — d67bed7
+- [x] 1.5 CTAs are auth-adaptive (Sign up/in vs. Go to my sets) — d67bed7
 
 ### Phase 2: Stateless teaser quiz island
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npx astro check`
-- [ ] 2.2 Linting passes on touched files
-- [ ] 2.3 Build succeeds: `npm run build`
+- [x] 2.1 Type checking passes: `npx astro check`
+- [x] 2.2 Linting passes on touched files
+- [x] 2.3 Build succeeds: `npm run build`
 
 #### Manual
 
-- [ ] 2.4 Component compiles and is importable
+- [x] 2.4 Component compiles and is importable
 
 ### Phase 3: Wire-up + cross-state verification
 
