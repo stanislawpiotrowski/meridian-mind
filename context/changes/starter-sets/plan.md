@@ -258,3 +258,17 @@ None — no schema or data migration. Starter sets are static assets; adding one
 - [x] 3.5 Zero-set account sees empty-state nudge toward starters — d2e1f85
 - [x] 3.6 Added set renders pins correctly (Polish centroid + peak) — d2e1f85
 - [x] 3.7 No regression to manual CSV import flow — d2e1f85
+
+## Plan Addenda
+
+### A1 — Duplicate adds are now blocked (reverses an original "What We're NOT Doing" item)
+
+- **Original**: "Not blocking or de-duplicating repeated adds (allow-duplicate ...)";
+  Testing Strategy step 3 asserted a second identical copy is created.
+- **Shipped (d2e1f85)**: duplicates ARE blocked on `/sets`. A starter whose
+  `title` already matches one of the user's set names renders as a disabled
+  "Added ✓" button (`AddStarterSetButton.alreadyAdded` + `existingSetNames`
+  in `index.astro`). No backend change; the manual CSV importer is unaffected.
+- **Why**: manual testing showed it was too easy to accidentally spam "Add"
+  and clutter `/sets` with identical copies, with no real utility.
+- **Supersedes**: the allow-duplicate bullet and Testing Strategy step 3.
