@@ -1,7 +1,7 @@
 ---
 change_id: dashboard-home
 title: Dashboard as a "what to do now" home after login
-status: implementing
+status: implemented
 created: 2026-06-03
 updated: 2026-06-03
 archived_at: null

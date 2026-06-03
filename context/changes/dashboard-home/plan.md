@@ -275,12 +275,12 @@ Three bounded queries per dashboard load (sets+flashcard-ids, the user's history
 
 #### Automated
 
-- [x] 3.1 Type checking passes: `npm run typecheck`
-- [x] 3.2 Linting passes (changed files): `npx eslint src/pages/api/auth/signin.ts src/pages/index.astro`
-- [x] 3.3 Production build succeeds: `npm run build`
+- [x] 3.1 Type checking passes: `npm run typecheck` — 904fbe4
+- [x] 3.2 Linting passes (changed files): `npx eslint src/pages/api/auth/signin.ts src/pages/index.astro` — 904fbe4
+- [x] 3.3 Production build succeeds: `npm run build` — 904fbe4
 
 #### Manual
 
-- [x] 3.4 Sign-in redirects to `/dashboard`
-- [x] 3.5 `/` redirects logged-in users to `/dashboard`; logged-out still see marketing landing
-- [x] 3.6 Sign-out lands on `/` with no redirect loop
+- [x] 3.4 Sign-in redirects to `/dashboard` — 904fbe4
+- [x] 3.5 `/` redirects logged-in users to `/dashboard`; logged-out still see marketing landing — 904fbe4
+- [x] 3.6 Sign-out lands on `/` with no redirect loop — 904fbe4
