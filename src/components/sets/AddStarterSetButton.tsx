@@ -5,9 +5,11 @@ import { ServerError } from "@/components/auth/ServerError";
 interface AddStarterSetButtonProps {
   title: string;
   csv: string;
+  /** True when the user already has a set with this title — render a disabled "Added" state. */
+  alreadyAdded?: boolean;
 }
 
-export default function AddStarterSetButton({ title, csv }: AddStarterSetButtonProps) {
+export default function AddStarterSetButton({ title, csv, alreadyAdded = false }: AddStarterSetButtonProps) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -35,6 +37,14 @@ export default function AddStarterSetButton({ title, csv }: AddStarterSetButtonP
     } finally {
       setLoading(false);
     }
+  }
+
+  if (alreadyAdded) {
+    return (
+      <Button type="button" variant="secondary" disabled>
+        Added ✓
+      </Button>
+    );
   }
 
   return (

@@ -235,26 +235,26 @@ None — no schema or data migration. Starter sets are static assets; adding one
 
 #### Automated
 
-- [x] 2.1 Type checking passes (`npm run typecheck`)
-- [x] 2.2 Linting passes on changed files
-- [x] 2.3 Build succeeds (`npm run build`)
+- [x] 2.1 Type checking passes (`npm run typecheck`) — 7856846
+- [x] 2.2 Linting passes on changed files — 7856846
+- [x] 2.3 Build succeeds (`npm run build`) — 7856846
 
 #### Manual
 
-- [ ] 2.4 Clicking Add creates a set and redirects with correct count
-- [ ] 2.5 Server-rejected add surfaces error inline without navigating
+- [x] 2.4 Clicking Add creates a set and redirects with correct count
+- [x] 2.5 Server-rejected add surfaces error inline without navigating
 
 ### Phase 3: Entry-Point Wiring on `/sets`
 
 #### Automated
 
-- [ ] 3.1 Type checking passes (`npm run typecheck`)
-- [ ] 3.2 Linting passes on changed files
-- [ ] 3.3 Build succeeds (`npm run build`)
+- [x] 3.1 Type checking passes (`npm run typecheck`)
+- [x] 3.2 Linting passes on changed files
+- [x] 3.3 Build succeeds (`npm run build`)
 
 #### Manual
 
-- [ ] 3.4 `/sets` shows three starters; adding yields 9 / 48 / 23 cards
-- [ ] 3.5 Zero-set account sees empty-state nudge toward starters
-- [ ] 3.6 Added set renders pins correctly (Polish centroid + peak)
-- [ ] 3.7 No regression to manual CSV import flow
+- [x] 3.4 `/sets` shows three starters; adding yields 9 / 48 / 23 cards
+- [x] 3.5 Zero-set account sees empty-state nudge toward starters
+- [x] 3.6 Added set renders pins correctly (Polish centroid + peak)
+- [x] 3.7 No regression to manual CSV import flow

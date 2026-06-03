@@ -3,6 +3,8 @@ import AuthLayout from "@/layouts/AuthLayout.astro";
 import { createClient } from "@/lib/supabase";
 import ImportSetForm from "@/components/sets/ImportSetForm";
 import DeleteSetButton from "@/components/sets/DeleteSetButton";
+import AddStarterSetButton from "@/components/sets/AddStarterSetButton";
+import { STARTER_SETS } from "@/data/starter-sets/registry";
 
 const { user } = Astro.locals;
 if (!user) return Astro.redirect("/auth/signin");
@@ -27,6 +29,10 @@ if (supabase) {
 
   sets = data ?? [];
 }
+
+// Existing set names, used to gate duplicate starter adds: a starter whose title
+// already matches one of the user's sets renders as "Added" instead of an Add button.
+const existingSetNames = new Set(sets.map((set) => set.name));
 ---
 
 <AuthLayout title="My Sets">
@@ -39,10 +45,37 @@ if (supabase) {
       <ImportSetForm client:load />
     </div>
 
+    <div class="mb-8 rounded-2xl border border-white/10 bg-white/10 p-6 text-white backdrop-blur-xl">
+      <h2 class="mb-1 text-lg font-semibold">Start with a ready-made set</h2>
+      <p class="mb-4 text-sm text-blue-100/80">
+        Add a curated set to your account in one click — it becomes your own copy.
+      </p>
+      <ul class="divide-y divide-white/10">
+        {
+          STARTER_SETS.map((starter) => (
+            <li class="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0">
+              <div>
+                <p class="font-medium">{starter.title}</p>
+                <p class="mt-0.5 text-sm text-blue-100/50">{starter.count} cards</p>
+              </div>
+              <AddStarterSetButton
+                client:load
+                title={starter.title}
+                csv={starter.csv}
+                alreadyAdded={existingSetNames.has(starter.title)}
+              />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
     {
       sets.length === 0 ? (
         <div class="rounded-2xl border border-white/10 bg-white/10 p-8 text-center text-white backdrop-blur-xl">
-          <p class="text-blue-100/70">No sets yet. Import a CSV above to get started.</p>
+          <p class="text-blue-100/70">
+            No sets yet — add a ready-made set above, or import your own CSV to get started.
+          </p>
         </div>
       ) : (
         <div class="overflow-hidden rounded-2xl border border-white/10 bg-white/10 backdrop-blur-xl">
