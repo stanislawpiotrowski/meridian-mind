@@ -1,6 +1,7 @@
 import crownCsv from "./crown-of-the-earth.csv?raw";
 import capitalsCsv from "./european-capitals.csv?raw";
 import parksCsv from "./polish-national-parks.csv?raw";
+import catalogDestinationsCsv from "./catalog-destinations-2016.csv?raw";
 
 export interface StarterSet {
   /** Stable slug — used as the React key / element id. */
@@ -32,5 +33,11 @@ export const STARTER_SETS: StarterSet[] = [
     title: "National Parks of Poland",
     csv: parksCsv,
     count: countDataRows(parksCsv),
+  },
+  {
+    id: "catalog-destinations-2016",
+    title: "destynacje wg katalogów na egzamin 2016",
+    csv: catalogDestinationsCsv,
+    count: countDataRows(catalogDestinationsCsv),
   },
 ];
