@@ -1,10 +1,10 @@
 ---
 change_id: interactive-map-foundation
 title: Interactive map foundation — clickable blank map + distance util
-status: impl_reviewed
+status: archived
 created: 2026-06-01
-updated: 2026-06-01
-archived_at: null
+updated: 2026-06-05
+archived_at: 2026-06-05T21:18:27Z
 ---
 
 ## Notes
