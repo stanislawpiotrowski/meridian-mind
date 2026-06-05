@@ -171,22 +171,29 @@ export default function StudySession({ sessionId, flashcards, priorAttempts, bbo
         />
       </div>
 
-      {phase === "revealed" && distanceKm !== null ? (
-        <div className="rounded-2xl border border-white/10 bg-white/10 p-4 text-white backdrop-blur-xl">
-          <div className="flex items-center justify-between">
-            <p>
-              <span className={correct ? "font-semibold text-emerald-300" : "font-semibold text-amber-300"}>
-                {correct ? "Correct" : "Incorrect"}
-              </span>
-              {" — "}
-              <span className="text-blue-100/80">{distanceKm} km away</span>
-            </p>
-            <Button onClick={handleAcknowledge}>
-              {currentIndex + 1 >= flashcards.length ? "Finish" : "Next card"}
-            </Button>
-          </div>
+      {/* Always rendered so its height is reserved in the layout: toggling the
+          reveal panel must not shift the page (otherwise the map "jumps" and the
+          panel's bottom edge falls off-screen). Hidden via `invisible` (keeps the
+          space, drops pointer events) until a guess is revealed. */}
+      <div
+        className={`rounded-2xl border border-white/10 bg-white/10 p-4 text-white backdrop-blur-xl ${
+          phase === "revealed" && distanceKm !== null ? "" : "invisible"
+        }`}
+        aria-hidden={!(phase === "revealed" && distanceKm !== null)}
+      >
+        <div className="flex items-center justify-between">
+          <p>
+            <span className={correct ? "font-semibold text-emerald-300" : "font-semibold text-amber-300"}>
+              {correct ? "Correct" : "Incorrect"}
+            </span>
+            {" — "}
+            <span className="text-blue-100/80">{distanceKm ?? 0} km away</span>
+          </p>
+          <Button onClick={handleAcknowledge} tabIndex={phase === "revealed" ? undefined : -1}>
+            {currentIndex + 1 >= flashcards.length ? "Finish" : "Next card"}
+          </Button>
         </div>
-      ) : null}
+      </div>
     </div>
   );
 }

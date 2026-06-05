@@ -53,13 +53,16 @@ export function boundingBox(points: LatLng[], padFraction = 0.15): Bbox {
     if (p.lat > north) north = p.lat;
   }
 
-  // Pad by a fraction of the larger span, with a small floor so a single
-  // point still yields a usable box rather than a zero-size frame.
-  const span = Math.max(east - west, north - south);
-  const pad = Math.max(span * padFraction, 0.5);
+  // Pad each axis by a fraction of ITS OWN span, with a small floor so a single
+  // point (zero span) still yields a usable box. Padding per-axis — not a shared
+  // pad from the larger span — keeps the frame tight and centred: a wide-but-short
+  // set (e.g. a whole-world or broad-longitude set) no longer gets a latitude pad
+  // sized to its longitude, which previously blew the box past the poles.
+  const lngPad = Math.max((east - west) * padFraction, 0.5);
+  const latPad = Math.max((north - south) * padFraction, 0.5);
 
   return [
-    [west - pad, south - pad],
-    [east + pad, north + pad],
+    [west - lngPad, south - latPad],
+    [east + lngPad, north + latPad],
   ];
 }
