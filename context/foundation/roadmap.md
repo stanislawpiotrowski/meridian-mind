@@ -34,7 +34,7 @@ MeridianMind helps a university student cramming for a fixed-syllabus geography 
 | S-01 | csv-set-import-and-list    | import a CSV set and see it listed to pick                          | F-01             | FR-004, FR-005                    | done     |
 | S-02 | first-study-session        | run a full quiz session end-to-end and see a summary                | F-01, F-02, S-01 | US-01, FR-008…FR-014, FR-015      | done     |
 | S-03 | prioritized-return-session | return to an auto-prioritized queue of weak / stale items           | S-02, F-01       | US-02, FR-015, FR-016             | done     |
-| S-04 | delete-set                 | delete a set they previously imported                               | F-01, S-01       | FR-006                            | proposed |
+| S-04 | delete-set                 | delete a set they previously imported                               | F-01, S-01       | FR-006                            | done     |
 | S-05 | csv-malformed-row-handling | see malformed CSV rows reported and choose import-valid or cancel   | S-01             | US-03, FR-007                     | proposed |
 | S-06 | navigation-shell           | see a consistent nav bar on every screen, with no dead-ends         | —                | (UX / post-MVP)                   | proposed |
 | S-07 | dashboard-home             | land on a "what to do now" home after login (due / streak / resume) | F-01, S-03       | (post-MVP)                        | proposed |
@@ -142,7 +142,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Small. Hard delete with an implied confirmation dialog (soft-delete with undo is an explicit Non-Goal). Off the north-star path and fully parallelizable.
-- **Status:** proposed
+- **Status:** done
 
 ### S-05: CSV import with malformed-row handling
 
@@ -257,3 +257,4 @@ This table is the clean handoff to Jira/Linear or any MCP-backed backlog. One ro
 - **S-02: user can start a quiz against a chosen set, see one object name at a time, click the map to answer, get distance + correct/incorrect feedback with the correct location revealed, advance through the full queue on acknowledge, and reach a session summary — with mid-session progress preserved across a tab close.** — Archived 2026-06-05 → `context/archive/2026-06-01-first-study-session/`. Lesson: —.
 - **F-02: (foundation) an interactive map renders, captures click coordinates, projects lat/lon ↔ screen position, and computes click→target distance (haversine) — the reusable mechanic the quiz loop sits on. No user-facing study flow yet.** — Archived 2026-06-05 → `context/archive/2026-06-01-interactive-map-foundation/`. Lesson: —.
 - **S-03: user starting a new session against a previously-studied set gets an auto-prioritized queue — items they got wrong or haven't seen recently appear earlier and more often, while well-known items still recur occasionally — with no configuration required.** — Archived 2026-06-05 → `context/archive/2026-06-02-prioritized-return-session/`. Lesson: —.
+- **S-04: user can delete a set they previously imported.** — Archived 2026-06-05 → `context/archive/2026-06-02-delete-set/`. Lesson: —.
