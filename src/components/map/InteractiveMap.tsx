@@ -8,6 +8,14 @@ import worldTopo from "@/assets/world-50m.json";
 import { createMapProjection, type Bbox } from "@/lib/mapProjection";
 import { haversine, type LatLng } from "@/lib/geo";
 
+// Map palette ("daylight"): light-blue ocean, ivory land, slate borders/ink —
+// a light, classic-atlas look replacing the earlier dark/transparent scheme.
+const OCEAN = "#dbeafe";
+const LAND = "#fefce8";
+const BORDER = "#94a3b8";
+const CONNECTOR = "#334155";
+const INK = "#1e293b";
+
 export interface Marker {
   lat: number;
   lng: number;
@@ -75,6 +83,7 @@ export default function InteractiveMap({
       ref={svgRef}
       viewBox={`0 0 ${String(VIEW_W)} ${String(VIEW_H)}`}
       preserveAspectRatio="xMidYMid meet"
+      style={{ backgroundColor: OCEAN }}
       className={className}
       onClick={handleClick}
       role="presentation"
@@ -82,9 +91,7 @@ export default function InteractiveMap({
       <g>
         {countries.map((f, i) => {
           const d = projection.path(f);
-          return d ? (
-            <path key={i} d={d} fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.25)" strokeWidth={0.5} />
-          ) : null;
+          return d ? <path key={i} d={d} fill={LAND} stroke={BORDER} strokeWidth={0.5} /> : null;
         })}
       </g>
 
@@ -94,7 +101,7 @@ export default function InteractiveMap({
           y1={guessXY[1]}
           x2={targetXY[0]}
           y2={targetXY[1]}
-          stroke="rgba(255,255,255,0.6)"
+          stroke={CONNECTOR}
           strokeWidth={1}
           strokeDasharray="4 3"
         />
@@ -107,7 +114,7 @@ export default function InteractiveMap({
           <g key={i}>
             <circle cx={xy[0]} cy={xy[1]} r={5} fill={MARKER_FILL[m.variant]} stroke="white" strokeWidth={1} />
             {m.label ? (
-              <text x={xy[0] + 8} y={xy[1] + 4} fill="white" fontSize={12}>
+              <text x={xy[0] + 8} y={xy[1] + 4} fill={INK} fontSize={12}>
                 {m.label}
               </text>
             ) : null}
@@ -119,7 +126,7 @@ export default function InteractiveMap({
         <text
           x={(guessXY[0] + targetXY[0]) / 2}
           y={(guessXY[1] + targetXY[1]) / 2 - 6}
-          fill="white"
+          fill={INK}
           fontSize={13}
           fontWeight={600}
           textAnchor="middle"
