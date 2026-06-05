@@ -5,11 +5,12 @@ import type { FeatureCollection } from "geojson";
 // Bundled world-atlas `countries-50m.json` (copied to src/assets at build time);
 // imported as JSON so the basemap loads with no runtime fetch/CORS dependency.
 import worldTopo from "@/assets/world-50m.json";
-import { createMapProjection, type Bbox } from "@/lib/mapProjection";
+import { createMapProjection, type Bbox, type ProjectionKind } from "@/lib/mapProjection";
 import { haversine, type LatLng } from "@/lib/geo";
 
 // Map palette ("daylight"): light-blue ocean, ivory land, slate borders/ink —
-// a light, classic-atlas look replacing the earlier dark/transparent scheme.
+// a light, classic-atlas look. Chosen on the map-preview branch over the older
+// dark/transparent scheme.
 const OCEAN = "#dbeafe";
 const LAND = "#fefce8";
 const BORDER = "#94a3b8";
@@ -28,14 +29,18 @@ export interface InteractiveMapProps {
   markers?: Marker[];
   /** [[west,south],[east,north]] framing box; omitted = world view. */
   bbox?: Bbox;
+  /** Override the world projection; omitted = app default (Winkel Tripel). */
+  projection?: ProjectionKind;
   /** Draw a line + km label between the guess and target markers. */
   connector?: boolean;
   className?: string;
 }
 
-// Fixed viewBox: 2:1 matches equirectangular's full-world aspect. The SVG is
-// CSS-scaled to fill its container; clicks are mapped back to this user-space
-// via getScreenCTM().inverse() before inversion (see Critical Implementation Details).
+// fitExtent target box. The actual SVG viewBox is derived from the projection's
+// tight projected bounds (see projection.bounds) so the map fills its frame for
+// the Winkel Tripel aspect rather than a fixed 2:1. The SVG is CSS-scaled to fill
+// its container; clicks are mapped back to this user-space via
+// getScreenCTM().inverse() before inversion (see Critical Implementation Details).
 const VIEW_W = 1000;
 const VIEW_H = 500;
 
@@ -48,17 +53,18 @@ export default function InteractiveMap({
   onMapClick,
   markers = [],
   bbox,
+  projection: projectionKind,
   connector = false,
   className,
 }: InteractiveMapProps) {
   const svgRef = useRef<SVGSVGElement | null>(null);
 
   const { projection, countries } = useMemo(() => {
-    const proj = createMapProjection(VIEW_W, VIEW_H, bbox);
+    const proj = createMapProjection(VIEW_W, VIEW_H, bbox, projectionKind);
     const topo = worldTopo as unknown as Topology;
     const collection = feature(topo, topo.objects.countries) as FeatureCollection;
     return { projection: proj, countries: collection.features };
-  }, [bbox]);
+  }, [bbox, projectionKind]);
 
   function handleClick(e: React.MouseEvent<SVGSVGElement>) {
     if (!onMapClick) return;
@@ -69,6 +75,18 @@ export default function InteractiveMap({
     const coord = projection.invert(point.x, point.y);
     if (coord) onMapClick(coord);
   }
+
+  // Tight viewBox from the projection's projected bounds, so the map itself isn't
+  // padded with dead space inside the SVG user-space. The element keeps the
+  // consumer's fixed box aspect (e.g. aspect-[2/1]) so page layout stays stable
+  // (no shift when the reveal panel toggles). Winkel Tripel's aspect differs from
+  // the box, so preserveAspectRatio="meet" centres the map and leaves margins —
+  // those margins are painted by the SVG's `backgroundColor: OCEAN` below, so they
+  // read as more ocean rather than a letterbox frame. Markers/clicks share this
+  // same user-space.
+  const [[vbX0, vbY0], [vbX1, vbY1]] = projection.bounds;
+  const vbW = vbX1 - vbX0;
+  const vbH = vbY1 - vbY0;
 
   const guess = markers.find((m) => m.variant === "guess");
   const target = markers.find((m) => m.variant === "target");
@@ -81,7 +99,7 @@ export default function InteractiveMap({
   return (
     <svg
       ref={svgRef}
-      viewBox={`0 0 ${String(VIEW_W)} ${String(VIEW_H)}`}
+      viewBox={`${String(vbX0)} ${String(vbY0)} ${String(vbW)} ${String(vbH)}`}
       preserveAspectRatio="xMidYMid meet"
       style={{ backgroundColor: OCEAN }}
       className={className}
