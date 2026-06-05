@@ -1,10 +1,10 @@
 ---
 change_id: prioritized-return-session
 title: Prioritized return session — auto-ordered queue surfacing weak and stale items
-status: impl_reviewed
+status: archived
 created: 2026-06-02
-updated: 2026-06-02
-archived_at: null
+updated: 2026-06-05
+archived_at: 2026-06-05T21:22:34Z
 ---
 
 ## Notes
