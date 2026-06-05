@@ -38,7 +38,7 @@ MeridianMind helps a university student cramming for a fixed-syllabus geography 
 | S-05 | csv-malformed-row-handling | see malformed CSV rows reported and choose import-valid or cancel   | S-01             | US-03, FR-007                     | done     |
 | S-06 | navigation-shell           | see a consistent nav bar on every screen, with no dead-ends         | —                | (UX / post-MVP)                   | done     |
 | S-07 | dashboard-home             | land on a "what to do now" home after login (due / streak / resume) | F-01, S-03       | (post-MVP)                        | proposed |
-| S-08 | product-landing-and-quiz   | (logged-out) understand the product and try a 10-capital mini-quiz  | F-02             | (post-MVP)                        | proposed |
+| S-08 | product-landing-and-quiz   | (logged-out) understand the product and try a 10-capital mini-quiz  | F-02             | (post-MVP)                        | done     |
 | S-09 | starter-sets               | add a curated ready-made set in one click                           | S-01             | (post-MVP)                        | proposed |
 
 ## Streams
@@ -192,7 +192,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Quiz as a section on `/` vs a dedicated `/try` route. Owner: user. Block: no.
 - **Risk:** Medium — slimming the session component into a logged-out mode. Converts visitors by showing the mechanic rather than describing it.
-- **Status:** proposed
+- **Status:** done
 
 ### S-09: One-click starter sets
 
@@ -260,3 +260,4 @@ This table is the clean handoff to Jira/Linear or any MCP-backed backlog. One ro
 - **S-04: user can delete a set they previously imported.** — Archived 2026-06-05 → `context/archive/2026-06-02-delete-set/`. Lesson: —.
 - **S-05: user importing a CSV with malformed rows sees each invalid row reported before commit (1-indexed row number, which field failed, one-line reason) and chooses to either import valid rows only or cancel to fix the source file.** — Archived 2026-06-05 → `context/archive/2026-06-02-csv-malformed-row-handling/`. Lesson: —.
 - **S-06: a top nav bar (with a logo linking home) renders on every authenticated screen — including the study session — so there are no dead-ends; today `/dashboard` renders no `Topbar` and traps the user. Link order surfaces "My sets" prominently.** — Archived 2026-06-05 → `context/archive/2026-06-02-navigation-shell/`. Lesson: —.
+- **S-08: `/` is rewritten from the generic "10x Astro Starter" template into a MeridianMind landing (spaced repetition / click-to-verify on the map / bring-your-own CSV) plus a mini-quiz: 10 random European capitals, click the map, distance feedback in km, end screen with a sign-up CTA. No account, no persistence (client-side only).** — Archived 2026-06-05 → `context/archive/2026-06-03-product-landing-and-quiz/`. Lesson: —.
