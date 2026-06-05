@@ -31,7 +31,7 @@ MeridianMind helps a university student cramming for a fixed-syllabus geography 
 | ---- | -------------------------- | ------------------------------------------------------------------- | ---------------- | --------------------------------- | -------- |
 | F-01 | domain-data-schema         | (foundation) sets / flashcards / study-history tables + RLS         | —                | FR-004, FR-015, NFR-DataIsolation | done     |
 | F-02 | interactive-map-foundation | (foundation) clickable map + lat/lon projection + haversine util    | —                | FR-010, FR-011, NFR-Latency       | ready    |
-| S-01 | csv-set-import-and-list    | import a CSV set and see it listed to pick                          | F-01             | FR-004, FR-005                    | proposed |
+| S-01 | csv-set-import-and-list    | import a CSV set and see it listed to pick                          | F-01             | FR-004, FR-005                    | done     |
 | S-02 | first-study-session        | run a full quiz session end-to-end and see a summary                | F-01, F-02, S-01 | US-01, FR-008…FR-014, FR-015      | proposed |
 | S-03 | prioritized-return-session | return to an auto-prioritized queue of weak / stale items           | S-02, F-01       | US-02, FR-015, FR-016             | proposed |
 | S-04 | delete-set                 | delete a set they previously imported                               | F-01, S-01       | FR-006                            | proposed |
@@ -104,7 +104,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** — (happy-path import only; malformed-row UX is S-05)
 - **Risk:** Happy-path CSV parse only — non-UTF-8 encodings and malformed rows are explicitly out of this slice (S-05 / Open Question). First user-facing slice; gates the north star, so keep it thin.
-- **Status:** proposed
+- **Status:** done
 
 ### S-02: First full study session
 
@@ -253,3 +253,4 @@ This table is the clean handoff to Jira/Linear or any MCP-backed backlog. One ro
 ## Done
 
 - **F-01: (foundation) domain schema landed — tables for sets, flashcards (name + latitude + longitude), and per-item study history, with row-level security enforcing per-user isolation.** — Archived 2026-06-05 → `context/archive/2026-05-27-domain-data-schema/`. Lesson: —.
+- **S-01: user can upload a CSV (columns `name`, `latitude`, `longitude`) to create a set, and see all their imported sets in a list to pick one to study.** — Archived 2026-06-05 → `context/archive/2026-05-31-csv-set-import-and-list/`. Lesson: —.

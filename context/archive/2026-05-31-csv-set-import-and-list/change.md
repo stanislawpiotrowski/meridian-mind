@@ -1,10 +1,10 @@
 ---
 change_id: csv-set-import-and-list
 title: Import a CSV set and see it listed to pick
-status: implemented
+status: archived
 created: 2026-05-31
-updated: 2026-06-01
-archived_at: null
+updated: 2026-06-05
+archived_at: 2026-06-05T21:13:52Z
 ---
 
 ## Notes
