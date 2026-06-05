@@ -32,7 +32,7 @@ MeridianMind helps a university student cramming for a fixed-syllabus geography 
 | F-01 | domain-data-schema         | (foundation) sets / flashcards / study-history tables + RLS         | —                | FR-004, FR-015, NFR-DataIsolation | done     |
 | F-02 | interactive-map-foundation | (foundation) clickable map + lat/lon projection + haversine util    | —                | FR-010, FR-011, NFR-Latency       | ready    |
 | S-01 | csv-set-import-and-list    | import a CSV set and see it listed to pick                          | F-01             | FR-004, FR-005                    | done     |
-| S-02 | first-study-session        | run a full quiz session end-to-end and see a summary                | F-01, F-02, S-01 | US-01, FR-008…FR-014, FR-015      | proposed |
+| S-02 | first-study-session        | run a full quiz session end-to-end and see a summary                | F-01, F-02, S-01 | US-01, FR-008…FR-014, FR-015      | done     |
 | S-03 | prioritized-return-session | return to an auto-prioritized queue of weak / stale items           | S-02, F-01       | US-02, FR-015, FR-016             | proposed |
 | S-04 | delete-set                 | delete a set they previously imported                               | F-01, S-01       | FR-006                            | proposed |
 | S-05 | csv-malformed-row-handling | see malformed CSV rows reported and choose import-valid or cancel   | S-01             | US-03, FR-007                     | proposed |
@@ -117,7 +117,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Scale-adaptive distance units for sub-country sets (FR-011) — Owner: user. Block: no (MVP target sets are continent-scale; km is the right granularity — see Open Roadmap Questions #1).
 - **Risk:** The validation milestone — bundles the novel spatial-click mechanic with per-item attempt recording (FR-015) and mid-session persistence. The p95 < 500 ms feedback NFR is met client-side: the correct location ships with the flashcard, so distance is local math with no server round-trip. Largest slice; keep the queue logic trivial (full set, each item exactly once) — ordering comes later in S-03.
-- **Status:** proposed
+- **Status:** done
 
 ### S-03: Prioritized return session
 
@@ -254,3 +254,4 @@ This table is the clean handoff to Jira/Linear or any MCP-backed backlog. One ro
 
 - **F-01: (foundation) domain schema landed — tables for sets, flashcards (name + latitude + longitude), and per-item study history, with row-level security enforcing per-user isolation.** — Archived 2026-06-05 → `context/archive/2026-05-27-domain-data-schema/`. Lesson: —.
 - **S-01: user can upload a CSV (columns `name`, `latitude`, `longitude`) to create a set, and see all their imported sets in a list to pick one to study.** — Archived 2026-06-05 → `context/archive/2026-05-31-csv-set-import-and-list/`. Lesson: —.
+- **S-02: user can start a quiz against a chosen set, see one object name at a time, click the map to answer, get distance + correct/incorrect feedback with the correct location revealed, advance through the full queue on acknowledge, and reach a session summary — with mid-session progress preserved across a tab close.** — Archived 2026-06-05 → `context/archive/2026-06-01-first-study-session/`. Lesson: —.
