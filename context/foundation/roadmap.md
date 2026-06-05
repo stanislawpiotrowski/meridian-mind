@@ -27,19 +27,19 @@ MeridianMind helps a university student cramming for a fixed-syllabus geography 
 
 ## At a glance
 
-| ID   | Change ID                  | Outcome (user can …)                                                | Prerequisites    | PRD refs                          | Status   |
-| ---- | -------------------------- | ------------------------------------------------------------------- | ---------------- | --------------------------------- | -------- |
-| F-01 | domain-data-schema         | (foundation) sets / flashcards / study-history tables + RLS         | —                | FR-004, FR-015, NFR-DataIsolation | done     |
-| F-02 | interactive-map-foundation | (foundation) clickable map + lat/lon projection + haversine util    | —                | FR-010, FR-011, NFR-Latency       | done     |
-| S-01 | csv-set-import-and-list    | import a CSV set and see it listed to pick                          | F-01             | FR-004, FR-005                    | done     |
-| S-02 | first-study-session        | run a full quiz session end-to-end and see a summary                | F-01, F-02, S-01 | US-01, FR-008…FR-014, FR-015      | done     |
-| S-03 | prioritized-return-session | return to an auto-prioritized queue of weak / stale items           | S-02, F-01       | US-02, FR-015, FR-016             | done     |
-| S-04 | delete-set                 | delete a set they previously imported                               | F-01, S-01       | FR-006                            | done     |
-| S-05 | csv-malformed-row-handling | see malformed CSV rows reported and choose import-valid or cancel   | S-01             | US-03, FR-007                     | done     |
-| S-06 | navigation-shell           | see a consistent nav bar on every screen, with no dead-ends         | —                | (UX / post-MVP)                   | done     |
-| S-07 | dashboard-home             | land on a "what to do now" home after login (due / streak / resume) | F-01, S-03       | (post-MVP)                        | proposed |
-| S-08 | product-landing-and-quiz   | (logged-out) understand the product and try a 10-capital mini-quiz  | F-02             | (post-MVP)                        | done     |
-| S-09 | starter-sets               | add a curated ready-made set in one click                           | S-01             | (post-MVP)                        | done     |
+| ID   | Change ID                  | Outcome (user can …)                                                | Prerequisites    | PRD refs                          | Status |
+| ---- | -------------------------- | ------------------------------------------------------------------- | ---------------- | --------------------------------- | ------ |
+| F-01 | domain-data-schema         | (foundation) sets / flashcards / study-history tables + RLS         | —                | FR-004, FR-015, NFR-DataIsolation | done   |
+| F-02 | interactive-map-foundation | (foundation) clickable map + lat/lon projection + haversine util    | —                | FR-010, FR-011, NFR-Latency       | done   |
+| S-01 | csv-set-import-and-list    | import a CSV set and see it listed to pick                          | F-01             | FR-004, FR-005                    | done   |
+| S-02 | first-study-session        | run a full quiz session end-to-end and see a summary                | F-01, F-02, S-01 | US-01, FR-008…FR-014, FR-015      | done   |
+| S-03 | prioritized-return-session | return to an auto-prioritized queue of weak / stale items           | S-02, F-01       | US-02, FR-015, FR-016             | done   |
+| S-04 | delete-set                 | delete a set they previously imported                               | F-01, S-01       | FR-006                            | done   |
+| S-05 | csv-malformed-row-handling | see malformed CSV rows reported and choose import-valid or cancel   | S-01             | US-03, FR-007                     | done   |
+| S-06 | navigation-shell           | see a consistent nav bar on every screen, with no dead-ends         | —                | (UX / post-MVP)                   | done   |
+| S-07 | dashboard-home             | land on a "what to do now" home after login (due / streak / resume) | F-01, S-03       | (post-MVP)                        | done   |
+| S-08 | product-landing-and-quiz   | (logged-out) understand the product and try a 10-capital mini-quiz  | F-02             | (post-MVP)                        | done   |
+| S-09 | starter-sets               | add a curated ready-made set in one click                           | S-01             | (post-MVP)                        | done   |
 
 ## Streams
 
@@ -179,7 +179,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - "Due today" and streak counters require per-item review dates / session history. If absent, ship a "lite" version (recent sets + resume) first, counters later. Owner: user. Block: no.
 - **Risk:** Depends on the data model; consider a lite → full split. This is the screen that fixes the "nothing after login" problem.
-- **Status:** proposed
+- **Status:** done
 
 ### S-08: Product landing + teaser quiz
 
@@ -262,3 +262,4 @@ This table is the clean handoff to Jira/Linear or any MCP-backed backlog. One ro
 - **S-06: a top nav bar (with a logo linking home) renders on every authenticated screen — including the study session — so there are no dead-ends; today `/dashboard` renders no `Topbar` and traps the user. Link order surfaces "My sets" prominently.** — Archived 2026-06-05 → `context/archive/2026-06-02-navigation-shell/`. Lesson: —.
 - **S-08: `/` is rewritten from the generic "10x Astro Starter" template into a MeridianMind landing (spaced repetition / click-to-verify on the map / bring-your-own CSV) plus a mini-quiz: 10 random European capitals, click the map, distance feedback in km, end screen with a sign-up CTA. No account, no persistence (client-side only).** — Archived 2026-06-05 → `context/archive/2026-06-03-product-landing-and-quiz/`. Lesson: —.
 - **S-09: curated CSV sets ship inside the app; "add" creates the user's own copy via the existing import path (reuse CSV validation / `ImportSetForm`). Entry points: the S-07 empty state and a "Start with a ready-made set" section in `/sets`.** — Archived 2026-06-05 → `context/archive/2026-06-03-starter-sets/`. Lesson: —.
+- **S-07: after login the user lands on a decision screen instead of `/sets` directly: "Due today: N" + "Start session", a study streak, recent sets / "resume", and an empty state that points to add-a-ready-made-set or import-CSV.** — Archived 2026-06-05 → `context/archive/2026-06-03-dashboard-home/`. Lesson: —.
