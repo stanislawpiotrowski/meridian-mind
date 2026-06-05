@@ -39,7 +39,7 @@ MeridianMind helps a university student cramming for a fixed-syllabus geography 
 | S-06 | navigation-shell           | see a consistent nav bar on every screen, with no dead-ends         | —                | (UX / post-MVP)                   | done     |
 | S-07 | dashboard-home             | land on a "what to do now" home after login (due / streak / resume) | F-01, S-03       | (post-MVP)                        | proposed |
 | S-08 | product-landing-and-quiz   | (logged-out) understand the product and try a 10-capital mini-quiz  | F-02             | (post-MVP)                        | done     |
-| S-09 | starter-sets               | add a curated ready-made set in one click                           | S-01             | (post-MVP)                        | proposed |
+| S-09 | starter-sets               | add a curated ready-made set in one click                           | S-01             | (post-MVP)                        | done     |
 
 ## Streams
 
@@ -208,7 +208,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
   - **A. Crown of the Earth — 9 peaks** (combined Bass+Messner, intentional). `name` carries elevation; continent classification only on the disputed entries: `Mount Everest (8848 m)`, `Aconcagua (6961 m)`, `Denali / McKinley (6190 m)`, `Kilimanjaro (5895 m)`, `Vinson Massif (4892 m)`, `Elbrus (5642 m, Europe per Messner/Bass)`, `Mont Blanc (4810 m, Europe per some geographers)`, `Puncak Jaya (4884 m, Oceania per Messner)`, `Mount Kosciuszko (2230 m, Australia per Bass)`.
   - **B. European capitals — all 48.** `name` = bare name; point = city center.
   - **C. National Parks of Poland — all 23.** `name` = bare name; point = park **centroid** (not the HQ).
-- **Status:** proposed
+- **Status:** done
 
 ## Backlog Handoff
 
@@ -261,3 +261,4 @@ This table is the clean handoff to Jira/Linear or any MCP-backed backlog. One ro
 - **S-05: user importing a CSV with malformed rows sees each invalid row reported before commit (1-indexed row number, which field failed, one-line reason) and chooses to either import valid rows only or cancel to fix the source file.** — Archived 2026-06-05 → `context/archive/2026-06-02-csv-malformed-row-handling/`. Lesson: —.
 - **S-06: a top nav bar (with a logo linking home) renders on every authenticated screen — including the study session — so there are no dead-ends; today `/dashboard` renders no `Topbar` and traps the user. Link order surfaces "My sets" prominently.** — Archived 2026-06-05 → `context/archive/2026-06-02-navigation-shell/`. Lesson: —.
 - **S-08: `/` is rewritten from the generic "10x Astro Starter" template into a MeridianMind landing (spaced repetition / click-to-verify on the map / bring-your-own CSV) plus a mini-quiz: 10 random European capitals, click the map, distance feedback in km, end screen with a sign-up CTA. No account, no persistence (client-side only).** — Archived 2026-06-05 → `context/archive/2026-06-03-product-landing-and-quiz/`. Lesson: —.
+- **S-09: curated CSV sets ship inside the app; "add" creates the user's own copy via the existing import path (reuse CSV validation / `ImportSetForm`). Entry points: the S-07 empty state and a "Start with a ready-made set" section in `/sets`.** — Archived 2026-06-05 → `context/archive/2026-06-03-starter-sets/`. Lesson: —.
