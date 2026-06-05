@@ -1,10 +1,10 @@
 ---
 change_id: navigation-shell
 title: Consistent navigation shell on every authenticated screen (no dead-ends)
-status: impl_reviewed
+status: archived
 created: 2026-06-02
-updated: 2026-06-03
-archived_at: null
+updated: 2026-06-05
+archived_at: 2026-06-05T21:26:22Z
 ---
 
 ## Notes
