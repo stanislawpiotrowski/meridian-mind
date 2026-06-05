@@ -29,9 +29,14 @@ been removed. Staying on `map-preview` for now; not yet merged to `master`.
   frame. See the framing notes below.
 - **Dependency:** `d3-geo-projection@4.0.0` is now permanent; types via the local
   shim `src/lib/d3-geo-projection.d.ts` (trimmed to just `geoWinkel3`).
-- **Still owed before merge:** consider fixing the real root cause in
-  `study.ts boundingBox()` (per-axis padding instead of clamping at the projection
-  boundary) — separate `master` concern, currently compensated by the clamp.
+- **Root cause fixed:** `study.ts boundingBox()` now pads each axis by a fraction
+  of ITS OWN span (was: a shared pad from the larger span, added to both axes).
+  This stops wide-but-short sets from getting a latitude pad sized to their
+  longitude — the original cause of the past-the-poles box. The projection-boundary
+  clamp now only mops up the longitude over-pad (still ±>180 for world sets) and is
+  a safety net rather than the sole defence. Visible win: regional/band sets are
+  framed tighter and better centred (e.g. a 25°-tall Eurasia band went from a ~70°
+  frame to ~32°); compact sets and single points are essentially unchanged.
 
 ## Why we started
 
