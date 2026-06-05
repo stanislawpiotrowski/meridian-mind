@@ -16,7 +16,9 @@
       "Bash(echo \"exit=$?\")",
       "Bash(echo \"eslint_exit=$?\")",
       "Bash(echo \"empty_diff_exit=$?\")",
-      "Bash(echo \"recheck_exit=$?\")"
+      "Bash(echo \"recheck_exit=$?\")",
+      "Bash(awk '/^## Done/{f=1} f' context/foundation/roadmap.md)",
+      "Bash(grep -v '^$')"
     ]
   }
 }
