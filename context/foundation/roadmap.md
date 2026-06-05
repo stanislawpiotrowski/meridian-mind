@@ -3,7 +3,7 @@ project: "MeridianMind"
 version: 1
 status: draft
 created: 2026-05-26
-updated: 2026-06-02
+updated: 2026-06-05
 prd_version: 1
 main_goal: speed
 top_blocker: skills
@@ -29,7 +29,7 @@ MeridianMind helps a university student cramming for a fixed-syllabus geography 
 
 | ID   | Change ID                  | Outcome (user can …)                                                | Prerequisites    | PRD refs                          | Status   |
 | ---- | -------------------------- | ------------------------------------------------------------------- | ---------------- | --------------------------------- | -------- |
-| F-01 | domain-data-schema         | (foundation) sets / flashcards / study-history tables + RLS         | —                | FR-004, FR-015, NFR-DataIsolation | ready    |
+| F-01 | domain-data-schema         | (foundation) sets / flashcards / study-history tables + RLS         | —                | FR-004, FR-015, NFR-DataIsolation | done     |
 | F-02 | interactive-map-foundation | (foundation) clickable map + lat/lon projection + haversine util    | —                | FR-010, FR-011, NFR-Latency       | ready    |
 | S-01 | csv-set-import-and-list    | import a CSV set and see it listed to pick                          | F-01             | FR-004, FR-005                    | proposed |
 | S-02 | first-study-session        | run a full quiz session end-to-end and see a summary                | F-01, F-02, S-01 | US-01, FR-008…FR-014, FR-015      | proposed |
@@ -252,4 +252,4 @@ This table is the clean handoff to Jira/Linear or any MCP-backed backlog. One ro
 
 ## Done
 
-(Empty on first generation. `/10x-archive` appends here — and flips the item's `Status` to `done` — when a change whose `Change ID` matches a roadmap item is archived. Do NOT pre-populate.)
+- **F-01: (foundation) domain schema landed — tables for sets, flashcards (name + latitude + longitude), and per-item study history, with row-level security enforcing per-user isolation.** — Archived 2026-06-05 → `context/archive/2026-05-27-domain-data-schema/`. Lesson: —.
