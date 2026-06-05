@@ -35,7 +35,7 @@ MeridianMind helps a university student cramming for a fixed-syllabus geography 
 | S-02 | first-study-session        | run a full quiz session end-to-end and see a summary                | F-01, F-02, S-01 | US-01, FR-008…FR-014, FR-015      | done     |
 | S-03 | prioritized-return-session | return to an auto-prioritized queue of weak / stale items           | S-02, F-01       | US-02, FR-015, FR-016             | done     |
 | S-04 | delete-set                 | delete a set they previously imported                               | F-01, S-01       | FR-006                            | done     |
-| S-05 | csv-malformed-row-handling | see malformed CSV rows reported and choose import-valid or cancel   | S-01             | US-03, FR-007                     | proposed |
+| S-05 | csv-malformed-row-handling | see malformed CSV rows reported and choose import-valid or cancel   | S-01             | US-03, FR-007                     | done     |
 | S-06 | navigation-shell           | see a consistent nav bar on every screen, with no dead-ends         | —                | (UX / post-MVP)                   | proposed |
 | S-07 | dashboard-home             | land on a "what to do now" home after login (due / streak / resume) | F-01, S-03       | (post-MVP)                        | proposed |
 | S-08 | product-landing-and-quiz   | (logged-out) understand the product and try a 10-capital mini-quiz  | F-02             | (post-MVP)                        | proposed |
@@ -154,7 +154,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Nice-to-have per PRD priority; sequenced last. Under the `speed` goal, ship only if time remains after the must-have path. Header/encoding validation contract is fully specified in US-03 acceptance criteria.
-- **Status:** proposed
+- **Status:** done
 
 ### S-06: Consistent navigation shell
 
@@ -258,3 +258,4 @@ This table is the clean handoff to Jira/Linear or any MCP-backed backlog. One ro
 - **F-02: (foundation) an interactive map renders, captures click coordinates, projects lat/lon ↔ screen position, and computes click→target distance (haversine) — the reusable mechanic the quiz loop sits on. No user-facing study flow yet.** — Archived 2026-06-05 → `context/archive/2026-06-01-interactive-map-foundation/`. Lesson: —.
 - **S-03: user starting a new session against a previously-studied set gets an auto-prioritized queue — items they got wrong or haven't seen recently appear earlier and more often, while well-known items still recur occasionally — with no configuration required.** — Archived 2026-06-05 → `context/archive/2026-06-02-prioritized-return-session/`. Lesson: —.
 - **S-04: user can delete a set they previously imported.** — Archived 2026-06-05 → `context/archive/2026-06-02-delete-set/`. Lesson: —.
+- **S-05: user importing a CSV with malformed rows sees each invalid row reported before commit (1-indexed row number, which field failed, one-line reason) and chooses to either import valid rows only or cancel to fix the source file.** — Archived 2026-06-05 → `context/archive/2026-06-02-csv-malformed-row-handling/`. Lesson: —.
