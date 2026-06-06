@@ -397,10 +397,10 @@ production code changes.
 
 #### Automated
 
-- [x] 4.1 §6.1 no longer contains the "TBD — see §3 Phase 1" placeholder
-- [x] 4.2 Full suite still green: `npm run test:run` exits 0
+- [x] 4.1 §6.1 no longer contains the "TBD — see §3 Phase 1" placeholder — 59ece69
+- [x] 4.2 Full suite still green: `npm run test:run` exits 0 — 59ece69
 
 #### Manual
 
-- [ ] 4.3 §6.1 reads as a usable recipe for a newcomer
-- [ ] 4.4 §3 Phase 1 row shows `complete`; re-running `/10x-test-plan` advances to Phase 2
+- [x] 4.3 §6.1 reads as a usable recipe for a newcomer — 59ece69
+- [x] 4.4 §3 Phase 1 row shows `complete`; re-running `/10x-test-plan` advances to Phase 2 — 59ece69
