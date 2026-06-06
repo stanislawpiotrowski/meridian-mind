@@ -1,10 +1,10 @@
 ---
 change_id: testing-runner-bootstrap-core-math
 title: Runner bootstrap + core spatial-click math unit coverage
-status: implemented
+status: archived
 created: 2026-06-06
 updated: 2026-06-06
-archived_at: null
+archived_at: 2026-06-06T21:28:44Z
 ---
 
 ## Notes
