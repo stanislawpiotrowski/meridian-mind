@@ -372,26 +372,26 @@ production code changes.
 
 #### Automated
 
-- [x] 2.1 All specs pass: `npm run test:run` exits 0
-- [x] 2.2 Suite fails on `<=`→`<` mutation of `isCorrect` (boundary pinned), then reverted
-- [x] 2.3 Smoke spec removed: `src/lib/__smoke__.test.ts` no longer exists
-- [x] 2.4 Lint clean: `npx eslint src/lib/geo.test.ts src/lib/study.test.ts` exits 0
+- [x] 2.1 All specs pass: `npm run test:run` exits 0 — a37a3ed
+- [x] 2.2 Suite fails on `<=`→`<` mutation of `isCorrect` (boundary pinned), then reverted — a37a3ed
+- [x] 2.3 Smoke spec removed: `src/lib/__smoke__.test.ts` no longer exists — a37a3ed
+- [x] 2.4 Lint clean: `npx eslint src/lib/geo.test.ts src/lib/study.test.ts` exits 0 — a37a3ed
 
 #### Manual
 
-- [x] 2.5 Distance tolerances are defensible (reviewer agrees)
+- [x] 2.5 Distance tolerances are defensible (reviewer agrees) — a37a3ed
 
 ### Phase 3: Projection & Framing Math
 
 #### Automated
 
-- [ ] 3.1 All specs pass: `npm run test:run` exits 0
-- [ ] 3.2 Suite fails on transposed `project` axes, then reverted
-- [ ] 3.3 Lint clean: `npx eslint src/lib/mapProjection.test.ts src/lib/study.test.ts` exits 0
+- [x] 3.1 All specs pass: `npm run test:run` exits 0
+- [x] 3.2 Suite fails on transposed `project` axes, then reverted
+- [x] 3.3 Lint clean: `npx eslint src/lib/mapProjection.test.ts src/lib/study.test.ts` exits 0
 
 #### Manual
 
-- [ ] 3.4 Round-trip epsilon is loose-but-meaningful (reviewer agrees)
+- [x] 3.4 Round-trip epsilon is loose-but-meaningful (reviewer agrees)
 
 ### Phase 4: Cookbook + Status Sync
 
