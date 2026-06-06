@@ -30,7 +30,7 @@ export const STARTER_SETS: StarterSet[] = [
   { id: "european-capitals", title: "European Capitals", csv: capitalsCsv, count: countDataRows(capitalsCsv) },
   {
     id: "polish-national-parks",
-    title: "National Parks of Poland",
+    title: "Parki Narodowe w Polsce",
     csv: parksCsv,
     count: countDataRows(parksCsv),
   },
