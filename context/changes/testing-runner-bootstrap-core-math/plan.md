@@ -359,27 +359,27 @@ production code changes.
 
 #### Automated
 
-- [x] 1.1 Vitest installed: `npm ls vitest` resolves a version
-- [x] 1.2 Runner executes green: `npm run test:run` exits 0 with ≥1 passing test
-- [x] 1.3 `@/` alias resolves in a test importing `@/lib/geo`
-- [x] 1.4 Lint clean on changed files: `npx eslint vitest.config.ts src/lib/__smoke__.test.ts` exits 0
+- [x] 1.1 Vitest installed: `npm ls vitest` resolves a version — f91c142
+- [x] 1.2 Runner executes green: `npm run test:run` exits 0 with ≥1 passing test — f91c142
+- [x] 1.3 `@/` alias resolves in a test importing `@/lib/geo` — f91c142
+- [x] 1.4 Lint clean on changed files: `npx eslint vitest.config.ts src/lib/__smoke__.test.ts` exits 0 — f91c142
 
 #### Manual
 
-- [x] 1.5 `npm run test` watch mode starts and re-runs on save
+- [x] 1.5 `npm run test` watch mode starts and re-runs on save — f91c142
 
 ### Phase 2: Distance & Verdict Math
 
 #### Automated
 
-- [ ] 2.1 All specs pass: `npm run test:run` exits 0
-- [ ] 2.2 Suite fails on `<=`→`<` mutation of `isCorrect` (boundary pinned), then reverted
-- [ ] 2.3 Smoke spec removed: `src/lib/__smoke__.test.ts` no longer exists
-- [ ] 2.4 Lint clean: `npx eslint src/lib/geo.test.ts src/lib/study.test.ts` exits 0
+- [x] 2.1 All specs pass: `npm run test:run` exits 0
+- [x] 2.2 Suite fails on `<=`→`<` mutation of `isCorrect` (boundary pinned), then reverted
+- [x] 2.3 Smoke spec removed: `src/lib/__smoke__.test.ts` no longer exists
+- [x] 2.4 Lint clean: `npx eslint src/lib/geo.test.ts src/lib/study.test.ts` exits 0
 
 #### Manual
 
-- [ ] 2.5 Distance tolerances are defensible (reviewer agrees)
+- [x] 2.5 Distance tolerances are defensible (reviewer agrees)
 
 ### Phase 3: Projection & Framing Math
 
