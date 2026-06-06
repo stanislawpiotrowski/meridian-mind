@@ -11,6 +11,8 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "typecheck": "astro check",
+    "test": "vitest",
+    "test:run": "vitest run",
     "db:push": "supabase db push",
     "db:types": "supabase gen types typescript --linked > src/db/database.types.ts"
   },
@@ -64,6 +66,7 @@
     "supabase": "^2.23.4",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.59.2",
+    "vitest": "^4.1.8",
     "wrangler": "^4.90.0"
   },
   "overrides": {
