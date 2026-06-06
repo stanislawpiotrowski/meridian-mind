@@ -6,7 +6,7 @@
 >
 > Refresh: re-run `/10x-test-plan --refresh` when stale (see §8).
 >
-> Last updated: 2026-06-06 (Phase 1 change opened)
+> Last updated: 2026-06-06 (Phase 1 complete)
 
 ## 1. Strategy
 
@@ -76,13 +76,13 @@ Each row is a discrete rollout phase that will open its own change folder
 via `/10x-new`. Status moves left-to-right through the values below; the
 orchestrator updates Status as artifacts appear on disk.
 
-| #   | Phase name                   | Goal (one line)                                                                          | Risks covered | Test types                                              | Status        | Change folder                                       |
-| --- | ---------------------------- | ---------------------------------------------------------------------------------------- | ------------- | ------------------------------------------------------- | ------------- | --------------------------------------------------- |
-| 1   | Runner bootstrap + core math | Stand up the test runner; lock the spatial-click math with independent-oracle unit tests | #1            | unit                                                    | change opened | context/changes/testing-runner-bootstrap-core-math/ |
-| 2   | Domain logic                 | Prove SRS ordering and CSV validation against PRD oracles                                | #3, #5        | unit + integration                                      | not started   | —                                                   |
-| 3   | Authorization & persistence  | No cross-user leak; lossless study state                                                 | #4, #6        | integration                                             | not started   | —                                                   |
-| 4   | Visual review layer          | Map and Dashboard render correctly on 1–3 critical screens                               | #2            | deterministic visual diff + selective multimodal review | not started   | —                                                   |
-| 5   | Quality-gates wiring         | Lock the floor — unit + integration in CI; post-edit hook recommended local              | cross-cutting | gates                                                   | not started   | —                                                   |
+| #   | Phase name                   | Goal (one line)                                                                          | Risks covered | Test types                                              | Status      | Change folder                                       |
+| --- | ---------------------------- | ---------------------------------------------------------------------------------------- | ------------- | ------------------------------------------------------- | ----------- | --------------------------------------------------- |
+| 1   | Runner bootstrap + core math | Stand up the test runner; lock the spatial-click math with independent-oracle unit tests | #1            | unit                                                    | complete    | context/changes/testing-runner-bootstrap-core-math/ |
+| 2   | Domain logic                 | Prove SRS ordering and CSV validation against PRD oracles                                | #3, #5        | unit + integration                                      | not started | —                                                   |
+| 3   | Authorization & persistence  | No cross-user leak; lossless study state                                                 | #4, #6        | integration                                             | not started | —                                                   |
+| 4   | Visual review layer          | Map and Dashboard render correctly on 1–3 critical screens                               | #2            | deterministic visual diff + selective multimodal review | not started | —                                                   |
+| 5   | Quality-gates wiring         | Lock the floor — unit + integration in CI; post-edit hook recommended local              | cross-cutting | gates                                                   | not started | —                                                   |
 
 **Status vocabulary** (fixed — parser literals): `not started` →
 `change opened` → `researched` → `planned` → `implementing` → `complete`.
@@ -139,7 +139,32 @@ relevant rollout phase ships; before that, it reads "TBD — see §3 Phase N."
 
 ### 6.1 Adding a unit test
 
-- TBD — see §3 Phase 1 (spatial-click math: projection + distance verdict, independent geographic oracle).
+Unit tests cover **pure, DOM-free library functions** (`src/lib/*`). They run
+under Vitest in a Node environment — no jsdom, no network, no rendering.
+
+- **Location & naming.** Co-locate the spec next to the code it locks:
+  `src/lib/<module>.test.ts` for `src/lib/<module>.ts`. This is the Vitest
+  default — zero path config. Import the code under test via the `@/` alias
+  (`import { haversine } from "@/lib/geo"`), which `vitest.config.ts` maps to
+  `src/`.
+- **Run commands.** `npm run test` (watch mode, re-runs on save) while
+  developing; `npm run test:run` (single run, CI-friendly) to verify green.
+- **Reference test.** `src/lib/geo.test.ts` is the canonical exemplar — read it
+  before writing a new spec. It shows the structure (`describe` / `it`), the
+  `{ lat, lng }` contract, and the oracle discipline below in practice.
+- **Oracle discipline (load-bearing).** Never assert that a function equals a
+  value re-derived from the same code or formula under test — that only proves
+  the code agrees with itself. Get every oracle from an **independent** source:
+  published great-circle distances (with a tolerance band that absorbs
+  sphere-vs-ellipsoid + rounding, not slop hiding a bug), a literal spec
+  constant from the PRD/FR (e.g. the inclusive `300` km threshold from FR-012,
+  not the imported `DEFAULT_CORRECT_THRESHOLD_KM`), or a geometric invariant
+  (east projects right-of west — catches an axis transpose that a round-trip
+  alone passes). A spec is only as good as its independence from the code.
+- **Prove it fails.** A new spec should go red under a deliberate local mutation
+  of the code it claims to lock (e.g. `<=` → `<`, or transposed axes), then
+  green again on revert. If the suite stays green through the mutation, the test
+  is not pinning what you think.
 
 ### 6.2 Adding a domain-logic test (SRS ordering / CSV validation)
 

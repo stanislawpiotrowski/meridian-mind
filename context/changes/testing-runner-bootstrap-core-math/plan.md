@@ -385,20 +385,20 @@ production code changes.
 
 #### Automated
 
-- [x] 3.1 All specs pass: `npm run test:run` exits 0
-- [x] 3.2 Suite fails on transposed `project` axes, then reverted
-- [x] 3.3 Lint clean: `npx eslint src/lib/mapProjection.test.ts src/lib/study.test.ts` exits 0
+- [x] 3.1 All specs pass: `npm run test:run` exits 0 — 11bfabd
+- [x] 3.2 Suite fails on transposed `project` axes, then reverted — 11bfabd
+- [x] 3.3 Lint clean: `npx eslint src/lib/mapProjection.test.ts src/lib/study.test.ts` exits 0 — 11bfabd
 
 #### Manual
 
-- [x] 3.4 Round-trip epsilon is loose-but-meaningful (reviewer agrees)
+- [x] 3.4 Round-trip epsilon is loose-but-meaningful (reviewer agrees) — 11bfabd
 
 ### Phase 4: Cookbook + Status Sync
 
 #### Automated
 
-- [ ] 4.1 §6.1 no longer contains the "TBD — see §3 Phase 1" placeholder
-- [ ] 4.2 Full suite still green: `npm run test:run` exits 0
+- [x] 4.1 §6.1 no longer contains the "TBD — see §3 Phase 1" placeholder
+- [x] 4.2 Full suite still green: `npm run test:run` exits 0
 
 #### Manual
 
