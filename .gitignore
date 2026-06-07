@@ -34,3 +34,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# temporary scratch context
+context/sp_temp/
