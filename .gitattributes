@@ -1,0 +1,17 @@
+# Normalize line endings: store as LF in the repo AND check out as LF on every OS.
+# This stops the endless CRLF<->LF churn on Windows where ESLint/Prettier write LF
+# but core.autocrlf wants CRLF.
+* text=auto eol=lf
+
+# Binary files: never touch their bytes.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.pdf binary
