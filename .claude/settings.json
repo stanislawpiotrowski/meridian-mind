@@ -1,4 +1,23 @@
 {
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx eslint --fix . --quiet",
+            "timeout": 30000
+          },
+          {
+            "type": "command",
+            "command": "npx astro check --minimumSeverity error",
+            "timeout": 60000
+          }
+        ]
+      }
+    ]
+  },
   "permissions": {
     "allow": [
       "Bash(npm *)",
@@ -16,14 +35,7 @@
       "Edit",
       "Write"
     ],
-    "ask": [
-      "Bash(curl *)",
-      "Bash(wget *)",
-      "Bash(git push *)",
-      "Bash(git push)"
-    ],
-    "deny": [
-      "Bash(rm -rf *)"
-    ]
+    "ask": ["Bash(curl *)", "Bash(wget *)", "Bash(git push *)", "Bash(git push)"],
+    "deny": ["Bash(rm -rf *)"]
   }
 }
