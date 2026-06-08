@@ -18,7 +18,12 @@
       "Bash(echo \"empty_diff_exit=$?\")",
       "Bash(echo \"recheck_exit=$?\")",
       "Bash(awk '/^## Done/{f=1} f' context/foundation/roadmap.md)",
-      "Bash(grep -v '^$')"
+      "Bash(grep -v '^$')",
+      "Bash(playwright-cli fill *)",
+      "Bash(playwright-cli click *)",
+      "Bash(playwright-cli close *)",
+      "Bash(git check-ignore *)",
+      "PowerShell($conns = Get-NetTCPConnection -LocalPort 4321 -State Listen -ErrorAction SilentlyContinue; foreach \\($c in $conns\\) { Write-Output \"stopping pid $\\($c.OwningProcess\\)\"; Stop-Process -Id $c.OwningProcess -Force -ErrorAction SilentlyContinue }; if \\(Test-Path node_modules/.vite\\) { Remove-Item -Recurse -Force node_modules/.vite; Write-Output \"cleared .vite\" } else { Write-Output \"no .vite dir\" })"
     ]
   }
 }
