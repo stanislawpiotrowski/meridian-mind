@@ -99,13 +99,13 @@ date so future readers can see which lines need re-verification.
 Recommendations are grounded in the local manifest plus the MCP/tools
 exposed in the current session.
 
-| Layer                    | Tool                        | Version | Notes                                                                                                                |
-| ------------------------ | --------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------- |
-| unit + integration       | none yet — see §3 Phase 1   | —       | No runner installed. Vitest is the natural fit (Vite 7 already in the dep tree via Astro); Phase 1 bootstraps it.    |
-| API mocking              | none yet — see §3 Phase 3   | —       | Supabase write/read boundary; mock at the network/client edge only, never internal modules.                          |
-| e2e                      | none yet — see §3 Phase 3/4 | —       | Astro on Cloudflare Workers; evaluate Playwright if an integration layer cannot cover R6 resume. checked: 2026-06-06 |
-| visual diff / multimodal | none yet — see §3 Phase 4   | —       | 1–3 critical screens (study map, dashboard). Tool choice deferred to Phase 4 research. checked: 2026-06-06           |
-| accessibility            | not planned                 | —       | Accessibility is an explicit PRD Non-Goal (§7).                                                                      |
+| Layer                    | Tool                      | Version | Notes                                                                                                                                                                   |
+| ------------------------ | ------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| unit + integration       | none yet — see §3 Phase 1 | —       | No runner installed. Vitest is the natural fit (Vite 7 already in the dep tree via Astro); Phase 1 bootstraps it.                                                       |
+| API mocking              | none yet — see §3 Phase 3 | —       | Supabase write/read boundary; mock at the network/client edge only, never internal modules.                                                                             |
+| e2e                      | Playwright                | 1.60.0  | Installed for the R6 study-resume flow (browser-level: island → attempts API → DB → SSR reload). storageState auth, dev-server webServer. See §6.6. checked: 2026-06-08 |
+| visual diff / multimodal | none yet — see §3 Phase 4 | —       | 1–3 critical screens (study map, dashboard). Tool choice deferred to Phase 4 research. checked: 2026-06-06                                                              |
+| accessibility            | not planned               | —       | Accessibility is an explicit PRD Non-Goal (§7).                                                                                                                         |
 
 **Stack grounding tools (current session):**
 
@@ -181,6 +181,49 @@ under Vitest in a Node environment — no jsdom, no network, no rendering.
 ### 6.5 Per-rollout-phase notes
 
 - (Filled in by `/10x-implement` as phases land.)
+
+### 6.6 Adding an E2E test (Playwright)
+
+E2E is the slowest, most brittle layer — reserve it for risks that cross several
+system boundaries (auth → routing → API → DB) or live only in the rendered UI.
+If an isolated function or a single endpoint contract can prove the risk, use a
+unit/integration test instead. Drive generation with `/10x-e2e <risk-id>`, which
+governs output with the seed test + the E2E rules in the `CLAUDE-m3l4` block.
+
+- **Location & naming.** `tests/e2e/<feature>.spec.ts`, one test per file, named
+  after the risk: `test('study progress persists after page reload', …)`, not
+  `test('test 1', …)`. `tests/e2e/seed.spec.ts` is the canonical exemplar — read
+  it before writing a new spec (it shows the four conventions below in practice).
+- **Run commands.** `npm run test:e2e` (whole suite), `npm run test:e2e:ui`
+  (interactive), `npx playwright test <file>` (single spec). Playwright starts the
+  Astro dev server itself (`webServer` in `playwright.config.ts`) and reuses one
+  already running.
+- **Auth via storageState.** `tests/e2e/auth.setup.ts` logs in once (creds from
+  `.env`: `E2E_USER_EMAIL` / `E2E_USER_PASSWORD`) and saves the session to
+  `playwright/.auth/user.json` (gitignored). Feature tests start authenticated and
+  never touch the login UI (§7 excludes the auth mechanism itself).
+- **Conventions (what the seed demonstrates).** Role-based locators
+  (`getByRole`/`getByLabel`; `getByTestId` only when there is no accessible handle
+  — e.g. the `InteractiveMap` svg is `role="presentation"`, so it carries
+  `data-testid="interactive-map"`). Wait for state, never time
+  (`waitForResponse`/`waitForURL`/`toBeVisible`). Unique test data
+  (`` `… ${Date.now()}` ``). Full setup → action → assert → cleanup in one test.
+- **Astro hydration gotchas (load-bearing here).** React islands hydrate
+  asynchronously (`client:load`): filling/clicking before hydration leaves
+  controlled-input React state empty and the submit silently no-ops. Wait for
+  hydration, then assert the value stuck (`await expect(box).toHaveValue(…)`).
+  If hydration fails outright (island present, no `__reactProps`, console 404 on
+  `/node_modules/.vite/deps/*.js?v=<hash>`), the dev server has a stale Vite
+  optimized-deps cache — stop it, `rm -rf node_modules/.vite`, restart.
+- **Single dev-server account → serialize.** `workers: 1`: all tests share one
+  dev-test account and one dev server, where Vite re-optimizes deps on-demand and
+  reloads server-wide, corrupting an in-flight parallel test. Unique ids still
+  protect re-runs; CI against a production build could raise parallelism.
+- **Prove it fails (deliberate break).** A green E2E test is not enough — a naive
+  assertion is also green. After it passes, invert the production behavior the
+  risk targets (e.g. ignore the persisted `study_history` on resume), confirm the
+  test goes red, then revert immediately. Never commit the break. Control
+  question: would this assertion fail if the §2 risk materialized?
 
 ## 7. What We Deliberately Don't Test
 

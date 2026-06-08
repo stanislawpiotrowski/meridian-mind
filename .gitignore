@@ -37,3 +37,10 @@ pnpm-debug.log*
 
 # temporary scratch context
 context/sp_temp/
+
+# playwright e2e
+playwright/.auth/
+test-results/
+playwright-report/
+.playwright/
+.playwright-cli/

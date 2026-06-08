@@ -105,6 +105,7 @@ export default function InteractiveMap({
       className={className}
       onClick={handleClick}
       role="presentation"
+      data-testid="interactive-map"
     >
       <g>
         {countries.map((f, i) => {
