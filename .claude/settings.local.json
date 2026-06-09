@@ -23,7 +23,14 @@
       "Bash(playwright-cli click *)",
       "Bash(playwright-cli close *)",
       "Bash(git check-ignore *)",
-      "PowerShell($conns = Get-NetTCPConnection -LocalPort 4321 -State Listen -ErrorAction SilentlyContinue; foreach \\($c in $conns\\) { Write-Output \"stopping pid $\\($c.OwningProcess\\)\"; Stop-Process -Id $c.OwningProcess -Force -ErrorAction SilentlyContinue }; if \\(Test-Path node_modules/.vite\\) { Remove-Item -Recurse -Force node_modules/.vite; Write-Output \"cleared .vite\" } else { Write-Output \"no .vite dir\" })"
+      "PowerShell($conns = Get-NetTCPConnection -LocalPort 4321 -State Listen -ErrorAction SilentlyContinue; foreach \\($c in $conns\\) { Write-Output \"stopping pid $\\($c.OwningProcess\\)\"; Stop-Process -Id $c.OwningProcess -Force -ErrorAction SilentlyContinue }; if \\(Test-Path node_modules/.vite\\) { Remove-Item -Recurse -Force node_modules/.vite; Write-Output \"cleared .vite\" } else { Write-Output \"no .vite dir\" })",
+      "Bash(grep -iE \"\\\\.\\(ts|tsx|js|astro\\)$\")",
+      "Bash(grep -iE \"\\\\.\\(ts|tsx\\)$\")",
+      "Bash(xargs grep -lE \"catch\")",
+      "Bash(grep -vE \"test|\\\\.md$\")",
+      "Bash(echo \"exit: $?\")",
+      "Bash(echo \"exit $?\")"
     ]
-  }
+  },
+  "enabledMcpjsonServers": ["sentry"]
 }
