@@ -282,25 +282,25 @@ scale; see Migration Notes for scaling.
 
 #### Automated
 
-- [x] 1.1 Dependencies install: `NODE_OPTIONS=--use-system-ca npm install`
-- [x] 1.2 Build passes with no DSN set: `npm run build`
-- [x] 1.3 Type checking passes: `npm run typecheck`
-- [x] 1.4 Linting passes on changed files: `npx eslint sentry.server.config.ts`
+- [x] 1.1 Dependencies install: `NODE_OPTIONS=--use-system-ca npm install` — 8499a28
+- [x] 1.2 Build passes with no DSN set: `npm run build` — 8499a28
+- [x] 1.3 Type checking passes: `npm run typecheck` — 8499a28
+- [x] 1.4 Linting passes on changed files: `npx eslint sentry.server.config.ts` — 8499a28
 
 #### Manual
 
-- [x] 1.5 App runs locally with no DSN and behaves exactly as before
+- [x] 1.5 App runs locally with no DSN and behaves exactly as before — 8499a28
 
 ### Phase 2: Sentry account + real-event verification
 
 #### Automated
 
-- [ ] 2.1 Build still passes: `npm run build`
+- [x] 2.1 Build still passes: `npm run build`
 
 #### Manual
 
-- [ ] 2.2 With DSN set, `/api/debug/sentry-test` produces a warn issue AND an error issue in Sentry
-- [ ] 2.3 The temporary endpoint file is deleted after verification
+- [x] 2.2 With DSN set, `/api/debug/sentry-test` produces a warn issue AND an error issue in Sentry
+- [x] 2.3 The temporary endpoint file is deleted after verification
 
 ### Phase 3: Sentry MCP server in Claude Code
 
