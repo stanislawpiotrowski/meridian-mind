@@ -306,8 +306,8 @@ scale; see Migration Notes for scaling.
 
 #### Automated
 
-- [x] 3.1 `.mcp.json` is valid JSON
+- [x] 3.1 `.mcp.json` is valid JSON — c020870
 
 #### Manual
 
-- [ ] 3.2 Sentry MCP server connects and `search_issues` returns the project's issues
+- [x] 3.2 Sentry MCP server connects and `search_issues` returns the project's issues — c020870
