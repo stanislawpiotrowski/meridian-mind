@@ -295,18 +295,18 @@ scale; see Migration Notes for scaling.
 
 #### Automated
 
-- [x] 2.1 Build still passes: `npm run build`
+- [x] 2.1 Build still passes: `npm run build` — 8b95dfd
 
 #### Manual
 
-- [x] 2.2 With DSN set, `/api/debug/sentry-test` produces a warn issue AND an error issue in Sentry
-- [x] 2.3 The temporary endpoint file is deleted after verification
+- [x] 2.2 With DSN set, `/api/debug/sentry-test` produces a warn issue AND an error issue in Sentry — 8b95dfd
+- [x] 2.3 The temporary endpoint file is deleted after verification — 8b95dfd
 
 ### Phase 3: Sentry MCP server in Claude Code
 
 #### Automated
 
-- [ ] 3.1 `.mcp.json` is valid JSON
+- [x] 3.1 `.mcp.json` is valid JSON
 
 #### Manual
 
