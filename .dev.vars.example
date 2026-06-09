@@ -1,0 +1,4 @@
+# Cloudflare Worker local secrets (copy to .dev.vars — gitignored).
+# Sentry DSN for error monitoring. Leave empty for a no-op SDK (local/dev default).
+# In production set it with: wrangler secret put SENTRY_DSN
+SENTRY_DSN=
